@@ -1,4 +1,3 @@
-import { getLabData } from "$lib/server";
 import type { Building } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";

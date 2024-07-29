@@ -10,9 +10,10 @@ export const GET: RequestHandler = async () => {
 		number: lab["Bldg Number"],
 	}));
 
-	const seenBuildingNumbers = new Set<number>();
+	const seenBuildingNumbers = new Set<string>();
+
 	const uniqueBuildings = buildings.filter((building) => {
-		if (seenBuildingNumbers.has(building.number)) {
+		if (seenBuildingNumbers.has(building.number) || !building.number) {
 			return false;
 		}
 		seenBuildingNumbers.add(building.number);

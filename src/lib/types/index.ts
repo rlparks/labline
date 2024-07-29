@@ -26,9 +26,9 @@ export interface SafeUser {
 }
 
 export interface Lab {
-	"Bldg Number": number;
+	"Bldg Number": string;
 	"Bldg Name": string;
-	"Room Number": number;
+	"Room Number": string;
 	"Lab Name": string;
 	"PI Last Name": string;
 	"PI First Name": string;
@@ -43,5 +43,5 @@ export interface Lab {
 
 export interface Building {
 	name: string;
-	number: number;
+	number: string;
 }
