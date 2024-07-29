@@ -15,7 +15,7 @@
 		</div>
 		<div class="max"></div>
 		<div id="link" class="right-align">
-			<a href={`/buildings/${building.number}`} class="button">Start</a>
+			<a href={`/buildings/${building.number}`} class="button">Go</a>
 		</div>
 	</nav>
 </article>
