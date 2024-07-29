@@ -5,7 +5,7 @@
 	import ESD from "$lib/images/ESD.png";
 </script>
 
-<Header user={data.user} />
+<Header user={data.user} provider={data.ssoProviders[0]} />
 
 <div class="center-align">
 	<div class="space"></div>

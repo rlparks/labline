@@ -6,6 +6,8 @@ export const TABLE_NAMES = {
 	users: "users",
 };
 
+export const PROVIDER_KEY = "provider";
+
 /**
  * Removes unnecessary info from User objects returned from
  * PocketBase, like email.
