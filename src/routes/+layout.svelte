@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { Header } from "$lib/components";
 	import "beercss";
-	const { children, data } = $props();
+	import "./theme.css";
 	import ESD from "$lib/images/ESD.png";
+
+	const { children, data } = $props();
 </script>
 
 <Header user={data.user} provider={data.ssoProviders?.[0]} />
