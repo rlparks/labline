@@ -6,5 +6,5 @@ export const actions = {
 		locals.pb.authStore.clear();
 		locals.user = undefined;
 		return redirect(303, "/");
-	}
+	},
 } satisfies Actions;
