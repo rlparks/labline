@@ -1,0 +1,23 @@
+services:
+  knowledger:
+    container_name: knowledger
+    image: ghcr.io/rlparks/knowledger:main
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    environment:
+      PB_URL: http://knowledger-pb:8080
+      PB_ADMIN_EMAIL: PBECCA@example.com
+      PB_ADMIN_PASSWORD: superSecurePassword
+    depends_on:
+      - knowledger-pb
+  knowledger-pb:
+    container_name: knowledger-pb
+    build:
+      dockerfile: ./pb-Dockerfile
+    ports:
+      # be careful who can access this admin UI!
+      - 8080
+    restart: unless-stopped
+    volumes:
+      - ./pb:/pb/pb_data
