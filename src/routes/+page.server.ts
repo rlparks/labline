@@ -1,8 +1,13 @@
 import { getLabData } from "$lib/server";
 import type { Building } from "$lib/types";
+import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ locals }) => {
+	if (!locals.user) {
+		return error(401, "Unauthorized");
+	}
+
 	try {
 		const labs = await getLabData();
 		const buildings: Building[] = labs.map((lab) => ({

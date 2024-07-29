@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/private";
 import { NODE_ENV } from "$env/static/private";
 import type { SafeUser } from "$lib/types";
-import { error, type Handle } from "@sveltejs/kit";
+import { error, redirect, type Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
 if (!env.PB_URL || !env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
@@ -24,6 +24,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.user = event.locals.pb.authStore.model as SafeUser;
 	} else {
 		event.locals.user = undefined;
+	}
+	if (
+		!event.locals.user &&
+		event.route.id &&
+		!(event.route.id === "login" || event.route.id === "/")
+	) {
+		return redirect(303, "/");
 	}
 
 	const result = await resolve(event);

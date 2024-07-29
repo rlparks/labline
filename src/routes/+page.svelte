@@ -1,7 +1,6 @@
 <script lang="ts">
 	import BuildingCard from "$lib/components/BuildingCard.svelte";
 	import Fuse from "fuse.js";
-	import ESD from "$lib/images/ESD.png";
 
 	const { data } = $props();
 
@@ -18,11 +17,6 @@
 	<title>knowledger</title>
 </svelte:head>
 
-<div class="center-align">
-	<div class="space"></div>
-	<img width="400px" class="" src={ESD} alt="ESD" />
-	<div class="space"></div>
-</div>
 <h3 class="center-align">Emergency Contacts</h3>
 
 <div class="field label border">
@@ -44,11 +38,3 @@
 		</div>
 	</div>
 {/if}
-
-<style>
-	@media (max-width: 600px) {
-		img {
-			width: 300px;
-		}
-	}
-</style>
