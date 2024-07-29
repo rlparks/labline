@@ -26,14 +26,20 @@
 			alert("Error: Provider not found.");
 		}
 	}
+
+	let width = $state<number>();
 </script>
+
+<svelte:window bind:innerWidth={width} />
 
 <header>
 	<nav>
 		<Title />
 		<div class="max"></div>
-		{#if user}<form action="/api/auth/logout" method="POST" use:enhance>
-				<button type="submit">
+		{#if user}
+			<span>{user.username}</span>
+			<form action="/api/auth/logout" method="POST" use:enhance>
+				<button type="submit" class={width && width <= 600 ? "circle" : ""}>
 					<i>logout</i>
 					<span>Logout</span>
 				</button>
