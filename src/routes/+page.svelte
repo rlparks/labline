@@ -18,10 +18,14 @@
 </svelte:head>
 
 <h3 class="center-align">Emergency Contacts</h3>
+<div class="space"></div>
+<div class="center-align">
+	<a class="button" href="/labs">Search All Labs (slow)</a>
+</div>
 
 <div class="field label border">
-	<input id="input-search" bind:value={search} />
-	<label for="input-search">Building Name or Number</label>
+	<input id="input-search-buildings" bind:value={search} />
+	<label for="input-search-buildings">Building Name or Number</label>
 	<i>search</i>
 </div>
 

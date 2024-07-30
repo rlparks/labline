@@ -3,13 +3,15 @@
 
 	const { data } = $props();
 
-	const title = $derived(
-		data.labs[0] ? `${data.labs[0]["Bldg Number"]} · ${data.labs[0]["Bldg Name"]}` : "building",
-	);
+	const title = "All Labs";
 </script>
 
 <svelte:head>
 	<title>knowledger · {title}</title>
 </svelte:head>
+
+<div class="center-align">
+	<a class="button" href="/">Search by Building</a>
+</div>
 
 <LabsSearch labs={data.labs} {title} />

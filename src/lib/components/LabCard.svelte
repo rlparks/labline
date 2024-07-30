@@ -3,8 +3,9 @@
 
 	type Props = {
 		lab: Lab;
+		showBuildingName?: boolean;
 	};
-	const { lab }: Props = $props();
+	const { lab, showBuildingName = false }: Props = $props();
 </script>
 
 <article class="border">
