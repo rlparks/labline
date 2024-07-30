@@ -19,10 +19,19 @@
 	});
 
 	const filteredLabs = $derived(fuse.search<Lab>(search));
+	const title = $derived(
+		data.labs[0] ? `${data.labs[0]["Bldg Number"]} · ${data.labs[0]["Bldg Name"]}` : "building",
+	);
+	const count = $derived(search ? filteredLabs.length : data.labs.length);
 </script>
 
+<svelte:head>
+	<title>knowledger · {title}</title>
+</svelte:head>
+
 {#if data.labs[0]}
-	<h3 class="center-align">{data.labs[0]["Bldg Name"]}</h3>
+	<h3 class="center-align">{title}</h3>
+	<h5 class="center-align">{count === 1 ? "1 lab" : `${count} labs`}</h5>
 	<div class="field label border">
 		<input id="input-search" bind:value={search} />
 		<label for="input-search">Lab Name, Room Number, or Super or PI Name</label>
