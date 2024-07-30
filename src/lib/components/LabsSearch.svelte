@@ -3,13 +3,14 @@
 	import LabCard from "$lib/components/LabCard.svelte";
 	import type { Lab } from "$lib/types/index.js";
 
-	const { labs, title }: { labs: Lab[]; title: string } = $props();
+	type Props = { labs: Lab[]; title: string; showLabsWhenNoSearch: boolean };
+	const { labs, title, showLabsWhenNoSearch }: Props = $props();
 
 	let search = $state<string>("");
 
 	const fuse = getLabFuse(labs);
 
-	const filteredLabs = $derived(fuse.search<Lab>(search));
+	const filteredLabs = $derived(fuse.search<Lab>(search, { limit: 300 }));
 	const count = $derived(search ? filteredLabs.length : labs.length);
 </script>
 
@@ -24,9 +25,21 @@
 {/if}
 
 {#if !search}
-	{#each labs as lab (lab["Lab Name"] + lab["Bldg Number"])}
-		<LabCard {lab} />
-	{/each}
+	{#if showLabsWhenNoSearch}
+		{#each labs as lab (lab["Lab Name"] + lab["Bldg Number"])}
+			<LabCard {lab} />
+		{/each}
+	{:else}
+		<div class="medium middle-align center-align">
+			<div>
+				<i class="extra"> experiment </i>
+				<h5 class="center-align">No labs found</h5>
+				<p class="center-align">
+					Try searching using a lab name, room number, or the name of the supervisor or PI
+				</p>
+			</div>
+		</div>
+	{/if}
 {:else}
 	{#each filteredLabs as lab (lab.item["Lab Name"] + lab.item["Bldg Number"])}
 		<LabCard lab={lab.item} />

@@ -20,7 +20,7 @@
 <h3 class="center-align">Emergency Contacts</h3>
 <div class="space"></div>
 <div class="center-align">
-	<a class="button" href="/labs">Search All Labs (slow)</a>
+	<a class="button" href="/labs">Search All Labs</a>
 </div>
 
 <div class="field label border">

@@ -29,9 +29,9 @@ export const handle: Handle = async ({ event, resolve }) => {
 	}
 
 	// Redirect to home page (and get 401) if not allowed
-	// if (!event.locals.user && event.route.id && !ALLOWED_ROUTES.includes(event.route.id)) {
-	// 	return redirect(303, "/");
-	// }
+	if (!event.locals.user && event.route.id && !ALLOWED_ROUTES.includes(event.route.id)) {
+		return redirect(303, "/");
+	}
 
 	const result = await resolve(event);
 
