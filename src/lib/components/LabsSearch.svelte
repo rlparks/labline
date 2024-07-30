@@ -7,9 +7,8 @@
 		labs: Lab[];
 		title: string;
 		showLabsWhenNoSearch: boolean;
-		showBuildingNames: boolean;
 	};
-	const { labs, title, showLabsWhenNoSearch, showBuildingNames }: Props = $props();
+	const { labs, title, showLabsWhenNoSearch }: Props = $props();
 
 	let search = $state<string>("");
 
@@ -24,7 +23,7 @@
 	<h5 class="center-align">{count === 1 ? "1 lab" : `${count} labs`}</h5>
 	<div class="field label border">
 		<input id="input-search-labs" bind:value={search} />
-		<label for="input-search-labs">Lab Name, Room Number, or Super or PI Name</label>
+		<label for="input-search-labs">Lab Name, Room Number, Super/PI</label>
 		<i>search</i>
 	</div>
 {/if}
@@ -32,7 +31,7 @@
 {#if !search}
 	{#if showLabsWhenNoSearch}
 		{#each labs as lab (lab["Lab Name"] + lab["Bldg Number"])}
-			<LabCard {lab} showBuildingName={showBuildingNames} />
+			<LabCard {lab} />
 		{/each}
 	{:else}
 		<div class="medium middle-align center-align">
@@ -47,6 +46,6 @@
 	{/if}
 {:else}
 	{#each filteredLabs as lab (lab.item["Lab Name"] + lab.item["Bldg Number"])}
-		<LabCard lab={lab.item} showBuildingName={showBuildingNames} />
+		<LabCard lab={lab.item} />
 	{/each}
 {/if}

@@ -14,4 +14,4 @@
 	<a class="button" href="/">Search by Building</a>
 </div>
 
-<LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} showBuildingNames={true} />
+<LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} />
