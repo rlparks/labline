@@ -12,7 +12,7 @@
 
 <article class="border">
 	<nav>
-		<div>
+		<div style="max-width: 100%;">
 			<h5><strong>{lab["Lab Name"]}</strong></h5>
 			<p>{lab["Bldg Number"]} · {lab["Bldg Name"]}</p>
 
@@ -43,3 +43,9 @@
 	<h6><strong>Secondary Contact:</strong></h6>
 	<p>{lab["Secondary Contact"]}</p>
 {/snippet}
+
+<style>
+	p {
+		text-wrap: balance;
+	}
+</style>
