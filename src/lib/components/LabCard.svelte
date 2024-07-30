@@ -3,15 +3,18 @@
 
 	type Props = {
 		lab: Lab;
-		showBuildingName?: boolean;
+		showBuildingName: boolean;
 	};
-	const { lab, showBuildingName = false }: Props = $props();
+	const { lab, showBuildingName }: Props = $props();
 </script>
 
 <article class="border">
 	<nav>
 		<div>
 			<h5>{lab["Lab Name"]}</h5>
+			{#if showBuildingName}
+				<p>{lab["Bldg Number"]} · {lab["Bldg Name"]}</p>
+			{/if}
 			<p>{lab["Room Number"]}</p>
 		</div>
 	</nav>

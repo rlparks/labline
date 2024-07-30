@@ -12,4 +12,4 @@
 	<title>knowledger · {title}</title>
 </svelte:head>
 
-<LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={true} />
+<LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={true} showBuildingNames={false} />

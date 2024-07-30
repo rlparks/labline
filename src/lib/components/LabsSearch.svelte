@@ -3,8 +3,13 @@
 	import LabCard from "$lib/components/LabCard.svelte";
 	import type { Lab } from "$lib/types/index.js";
 
-	type Props = { labs: Lab[]; title: string; showLabsWhenNoSearch: boolean };
-	const { labs, title, showLabsWhenNoSearch }: Props = $props();
+	type Props = {
+		labs: Lab[];
+		title: string;
+		showLabsWhenNoSearch: boolean;
+		showBuildingNames: boolean;
+	};
+	const { labs, title, showLabsWhenNoSearch, showBuildingNames }: Props = $props();
 
 	let search = $state<string>("");
 
@@ -27,7 +32,7 @@
 {#if !search}
 	{#if showLabsWhenNoSearch}
 		{#each labs as lab (lab["Lab Name"] + lab["Bldg Number"])}
-			<LabCard {lab} />
+			<LabCard {lab} showBuildingName={showBuildingNames} />
 		{/each}
 	{:else}
 		<div class="medium middle-align center-align">
@@ -42,6 +47,6 @@
 	{/if}
 {:else}
 	{#each filteredLabs as lab (lab.item["Lab Name"] + lab.item["Bldg Number"])}
-		<LabCard lab={lab.item} />
+		<LabCard lab={lab.item} showBuildingName={showBuildingNames} />
 	{/each}
 {/if}
