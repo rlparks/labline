@@ -4,7 +4,7 @@ import type { PageServerLoad } from "./$types";
 export const load = (async ({ fetch }) => {
 	const labRes = await fetch(`/api/labs`);
 	if (!labRes.ok) {
-		return error(500, labRes.statusText);
+		return error(500, "Error retrieving labs");
 	}
 
 	const labs = await labRes.json();

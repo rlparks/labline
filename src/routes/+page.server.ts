@@ -7,8 +7,9 @@ export const load = (async ({ fetch, locals }) => {
 		return error(401, "Unauthorized");
 	}
 	const buildingRes = await fetch("/api/buildings");
+
 	if (!buildingRes.ok) {
-		return { buildings: [] };
+		return error(500, "Error retrieving buildings");
 	}
 	const buildings = (await buildingRes.json()) as Building[];
 	return { buildings };
