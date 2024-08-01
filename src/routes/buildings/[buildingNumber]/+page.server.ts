@@ -13,7 +13,7 @@ export const load = (async ({ params, fetch }) => {
 	const labs = await labRes.json();
 
 	if (!labs || labs.length === 0) {
-		return error(404, "Building not found or has no labs");
+		return error(404, "Building not found");
 	}
 	return { labs };
 }) satisfies PageServerLoad;
