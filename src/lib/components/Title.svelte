@@ -4,11 +4,17 @@
 
 <a href="/">
 	<img src={icon} height="40px" alt="knowledger logo" />
-	<h4 class="center-align middle-align no-margin">knowledger</h4>
+	<!-- <div class="middle-align"> -->
+	<h4 class="no-margin">knowledger</h4>
+	<!-- </div> -->
 </a>
 
 <style>
 	img {
 		margin-right: 10px;
+	}
+	h4 {
+		font-family: Oswald, sans-serif;
+		padding-bottom: 5px;
 	}
 </style>

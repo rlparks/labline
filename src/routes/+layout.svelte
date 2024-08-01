@@ -2,6 +2,7 @@
 	import { Header } from "$lib/components";
 	import "beercss";
 	import "./theme.css";
+	import "./fonts.css";
 	import ESD from "$lib/images/ESD.png";
 
 	const { children, data } = $props();
