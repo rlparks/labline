@@ -4,9 +4,7 @@
 
 <a href="/">
 	<img src={icon} height="40px" alt="knowledger logo" />
-	<!-- <div class="middle-align"> -->
 	<h4 class="no-margin">knowledger</h4>
-	<!-- </div> -->
 </a>
 
 <style>
@@ -15,6 +13,6 @@
 	}
 	h4 {
 		font-family: Oswald, sans-serif;
-		padding-bottom: 5px;
+		padding-bottom: 7px;
 	}
 </style>
