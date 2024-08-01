@@ -1,5 +1,5 @@
 <script lang="ts">
-	import icon from "$lib/images/knowledger-128.png";
+	import icon from "$lib/images/icon/knowledger-128.png";
 </script>
 
 <a href="/">
