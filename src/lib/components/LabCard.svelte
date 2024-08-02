@@ -38,14 +38,23 @@
 	<a class="link" href={`mailto:${email}`}>{email}</a>
 {/snippet}
 {#snippet contacts()}
-	<h6><strong>Primary Contact:</strong></h6>
-	<p>{lab["Primary Contact"]}</p>
-	<h6><strong>Secondary Contact:</strong></h6>
-	<p>{lab["Secondary Contact"]}</p>
+	<div class="right-align-if-l">
+		<h6><strong>Primary Contact:</strong></h6>
+		<p>{lab["Primary Contact"]}</p>
+
+		<h6><strong>Secondary Contact:</strong></h6>
+		<p>{lab["Secondary Contact"]}</p>
+	</div>
 {/snippet}
 
 <style>
 	p {
 		text-wrap: balance;
+	}
+
+	.right-align-if-l {
+		@media (min-width: 993px) {
+			text-align: end;
+		}
 	}
 </style>
