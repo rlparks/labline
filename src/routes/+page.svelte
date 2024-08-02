@@ -16,10 +16,14 @@
 </svelte:head>
 
 <h3 class="center-align">Emergency Contacts</h3>
+
 <div class="space"></div>
+
 <div class="center-align">
 	<a class="button" href="/labs">Search All Labs</a>
 </div>
+
+<h3 class="center-align">Search by Building</h3>
 
 <div class="field label border">
 	<input id="input-search-buildings" bind:value={search} />

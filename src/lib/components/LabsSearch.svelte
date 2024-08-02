@@ -16,11 +16,13 @@
 
 	const filteredLabs = $derived(searcher.search(search));
 	const count = $derived(search ? filteredLabs.length : labs.length);
+	const countText = $derived(count === 1 ? "1 lab" : `${count} labs`);
+
+	const labsAreShown = $derived(search || showLabsWhenNoSearch);
 </script>
 
 {#if labs[0]}
-	<h3 class="center-align">{title}</h3>
-	<h5 class="center-align">{count === 1 ? "1 lab" : `${count} labs`}</h5>
+	<h3 class="center-align">{title}{labsAreShown ? ` · ${countText}` : ""}</h3>
 	<div class="field label border">
 		<input id="input-search-labs" bind:value={search} />
 		<label for="input-search-labs">Lab Name, Room Number, Super/PI</label>
