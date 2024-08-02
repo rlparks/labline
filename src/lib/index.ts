@@ -1,7 +1,6 @@
 // place files you want to import through the `$lib` alias in this folder.
 
-import Fuse from "fuse.js";
-import type { Lab, RawUser, SafeUser } from "./types";
+import type { RawUser, SafeUser } from "./types";
 
 export const TABLE_NAMES = {
 	users: "users",
@@ -23,17 +22,4 @@ export function makeUserSafe(user: RawUser): SafeUser {
 		name: user.name,
 		hasAvatar: !!user.avatar,
 	};
-}
-
-export function getLabFuse(labs: Lab[]) {
-	return new Fuse(labs, {
-		keys: [
-			"Lab Name",
-			"PI First Name",
-			"PI Last Name",
-			"Super First Name",
-			"Super Last Name",
-			"Room Number",
-		],
-	});
 }

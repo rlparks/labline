@@ -1,16 +1,14 @@
 <script lang="ts">
 	import BuildingCard from "$lib/components/BuildingCard.svelte";
-	import Fuse from "fuse.js";
+	import { FuzzyBuildingSearch } from "$lib/search/FuzzyBuildingSearch.js";
 
 	const { data } = $props();
 
 	let search = $state<string>("");
 
-	const fuse = new Fuse(data.buildings, {
-		keys: ["name", "number"],
-	});
+	const searcher = new FuzzyBuildingSearch(data.buildings);
 
-	const filteredBuildings = $derived(fuse.search(search));
+	const filteredBuildings = $derived(searcher.search(search));
 </script>
 
 <svelte:head>

@@ -1,6 +1,7 @@
 import { env } from "$env/dynamic/private";
 import { NODE_ENV } from "$env/static/private";
-import type { SafeUser } from "$lib/types";
+import { makeUserSafe } from "$lib";
+import type { RawUser } from "$lib/types";
 import { error, redirect, type Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
@@ -23,7 +24,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pb.authStore.loadFromCookie(event.request.headers.get("cookie") || "");
 
 	if (event.locals.pb.authStore.isValid) {
-		event.locals.user = event.locals.pb.authStore.model as SafeUser;
+		event.locals.user = makeUserSafe(event.locals.pb.authStore.model as RawUser);
 	} else {
 		event.locals.user = undefined;
 	}

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getLabFuse } from "$lib";
 	import LabCard from "$lib/components/LabCard.svelte";
+	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
 	import type { Lab } from "$lib/types/index.js";
 
 	type Props = {
@@ -12,9 +12,9 @@
 
 	let search = $state<string>("");
 
-	const fuse = getLabFuse(labs);
+	const searcher = new FuzzyLabSearch(labs);
 
-	const filteredLabs = $derived(fuse.search<Lab>(search, { limit: 300 }));
+	const filteredLabs = $derived(searcher.search(search));
 	const count = $derived(search ? filteredLabs.length : labs.length);
 </script>
 
