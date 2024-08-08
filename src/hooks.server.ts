@@ -13,6 +13,20 @@ if (!env.PB_URL || !env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
 	process.exit(1);
 }
 
+try {
+	const adminPb = new PocketBase(env.PB_URL);
+	await adminPb.admins.create({
+		email: env.PB_ADMIN_EMAIL,
+		password: env.PB_ADMIN_PASSWORD,
+		passwordConfirm: env.PB_ADMIN_PASSWORD,
+	});
+
+	const pbWebUrl = `${env.PB_URL}/_`;
+	console.log(`PB admin created! Please log in to ${pbWebUrl} and add your OIDC provider.`);
+} catch {
+	console.log("PB admin already exists");
+}
+
 export const handle: Handle = async ({ event, resolve }) => {
 	event.locals.pb = new PocketBase(env.PB_URL);
 	try {
