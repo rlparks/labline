@@ -14,6 +14,13 @@ export async function getLabData(): Promise<Lab[]> {
 
 		const labs = Papa.parse<Lab>(file, { header: true });
 
+		// somehow the end of the data is
+		// { 'Campus Number': '' }
+		const lastLab = labs.data[labs.data.length - 1];
+		if (lastLab && !("Lab Name" in lastLab)) {
+			labs.data.pop();
+		}
+
 		return labs.data;
 	} catch {
 		throw new Error("File not found");
