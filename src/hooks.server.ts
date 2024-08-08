@@ -2,10 +2,11 @@ import { env } from "$env/dynamic/private";
 import { NODE_ENV } from "$env/static/private";
 import { makeUserSafe } from "$lib";
 import type { RawUser } from "$lib/types";
-import { error, redirect, type Handle } from "@sveltejs/kit";
+import { error, json, redirect, type Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
-const ALLOWED_ROUTES = ["/", "/api/auth/methods", "/login/callback", "/api/auth/login/oidc"];
+const UNSECURE_PAGE_ROUTES = ["/", "/login/callback"];
+const UNSECURE_API_ROUTES = ["/api/auth/methods", "/api/auth/login/oidc"];
 
 if (!env.PB_URL || !env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
 	console.log("PB_URL, PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set");
@@ -29,9 +30,18 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.user = undefined;
 	}
 
-	// Redirect to home page (and get 401) if not allowed
-	if (!event.locals.user && event.route.id && !ALLOWED_ROUTES.includes(event.route.id)) {
-		return redirect(303, "/");
+	if (event.route.id && !event.locals.user) {
+		if (!event.route.id.startsWith("/api")) {
+			if (!UNSECURE_PAGE_ROUTES.includes(event.route.id)) {
+				// Redirect to home page (and get 401) if not allowed
+				return redirect(303, "/");
+			}
+		} else {
+			// API route
+			if (!UNSECURE_API_ROUTES.includes(event.route.id)) {
+				return json({ error: "Unauthorized" }, { status: 401 });
+			}
+		}
 	}
 
 	const result = await resolve(event);
