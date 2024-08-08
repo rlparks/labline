@@ -36,8 +36,4 @@
 			width: 300px;
 		}
 	}
-
-	noscript {
-		height: 100vh;
-	}
 </style>
