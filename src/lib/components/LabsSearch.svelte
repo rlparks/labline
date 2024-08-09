@@ -1,7 +1,7 @@
 <script lang="ts">
-	import LabCard from "$lib/components/LabCard.svelte";
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
 	import type { Lab } from "$lib/types/index.js";
+	import { Message, LabCard } from "$lib/components";
 
 	type Props = {
 		labs: Lab[];
@@ -36,15 +36,11 @@
 			<LabCard {lab} />
 		{/each}
 	{:else}
-		<div class="medium middle-align center-align">
-			<div>
-				<i class="extra"> experiment </i>
-				<h5 class="center-align">No labs found</h5>
-				<p class="center-align">
-					Try searching using a lab name, room number, or the name of the supervisor or PI
-				</p>
-			</div>
-		</div>
+		<Message
+			iconText="experiment"
+			headerText="No labs found"
+			messageText="Try searching using a lab name, room number, or the name of the supervisor or PI"
+		/>
 	{/if}
 {:else}
 	{#each filteredLabs as lab (lab.item["Lab Name"] + lab.item["Bldg Number"])}

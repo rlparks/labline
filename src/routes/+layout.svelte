@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Header } from "$lib/components";
+	import { Header, Message } from "$lib/components";
 	import ESD from "$lib/images/ESD.png";
 	import "beercss";
 	import "./fonts.css";
@@ -9,13 +9,13 @@
 </script>
 
 <noscript>
-	<div class="medium middle-align center-align">
-		<div>
-			<i class="extra">javascript</i>
-			<h5 class="center-align">Sorry, JavaScript is required to use this resource</h5>
-			<p class="center-align">Please enable JavaScript</p>
-		</div>
-	</div>
+	<div class="space"></div>
+	<Message
+		iconText="javascript"
+		headerText="Sorry, JavaScript is required to use this site"
+		messageText="Please enable JavaScript"
+	/>
+	<div class="space"></div>
 </noscript>
 
 <Header user={data.user} provider={data.ssoProviders?.[0]} />

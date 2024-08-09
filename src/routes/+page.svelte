@@ -1,5 +1,5 @@
 <script lang="ts">
-	import BuildingCard from "$lib/components/BuildingCard.svelte";
+	import { Message, BuildingCard } from "$lib/components";
 	import { FuzzyBuildingSearch } from "$lib/search/FuzzyBuildingSearch.js";
 
 	const { data } = $props();
@@ -36,11 +36,9 @@
 {/each}
 
 {#if filteredBuildings.length === 0}
-	<div class="medium middle-align center-align">
-		<div>
-			<i class="extra"> domain </i>
-			<h5 class="center-align">No buildings found</h5>
-			<p class="center-align">Try searching using a building name or number</p>
-		</div>
-	</div>
+	<Message
+		iconText="domain"
+		headerText="No buildings found"
+		messageText="Try searching using a building name or number"
+	/>
 {/if}
