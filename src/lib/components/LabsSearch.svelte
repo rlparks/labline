@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
 	import type { Lab } from "$lib/types/index.js";
-	import { Message, LabCard } from "$lib/components";
+	import { Message, LabCard, SearchInput } from "$lib/components";
 
 	type Props = {
 		labs: Lab[];
@@ -23,11 +23,7 @@
 
 {#if labs[0]}
 	<h3 class="center-align">{title}{labsAreShown ? ` · ${countText}` : ""}</h3>
-	<div class="field label border">
-		<input id="input-search-labs" bind:value={search} />
-		<label for="input-search-labs">Lab Name, Room Number, Super/PI</label>
-		<i>search</i>
-	</div>
+	<SearchInput label="Lab Name, Room Number, Super/PI" bind:value={search} />
 {/if}
 
 {#if !search}

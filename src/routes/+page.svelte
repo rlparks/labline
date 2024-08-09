@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Message, BuildingCard } from "$lib/components";
+	import { Message, BuildingCard, SearchInput } from "$lib/components";
 	import { FuzzyBuildingSearch } from "$lib/search/FuzzyBuildingSearch.js";
 
 	const { data } = $props();
@@ -25,11 +25,7 @@
 
 <h3 class="center-align">Search by Building</h3>
 
-<div class="field label border">
-	<input id="input-search-buildings" bind:value={search} />
-	<label for="input-search-buildings">Building Name or Number</label>
-	<i>search</i>
-</div>
+<SearchInput label="Building Name or Number" bind:value={search} />
 
 {#each filteredBuildings as building (building.item.number)}
 	<BuildingCard building={building.item} />
