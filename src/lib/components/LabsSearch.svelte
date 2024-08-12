@@ -1,3 +1,23 @@
+<!-- 
+ @component
+ 
+ A searchable list of `Lab`s.
+
+ ## Props
+ 
+ | Name | Type | Default | Description |
+ | --- | --- | --- | --- |
+ | `labs` | `Lab[]` | Required | The labs to display. |
+ | `title` | `string` | Required | The title of the search. |
+ | `showLabsWhenNoSearch` | `boolean` | Required | Whether to show all labs when no search is applied. |
+
+ ## Example
+ 
+ ```svelte
+ <LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} />
+ ```
+  -->
+
 <script lang="ts">
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
 	import type { Lab } from "$lib/types/index.js";

@@ -1,3 +1,21 @@
+<!-- 
+@component
+
+A card displaying information about a building. Responsive to screen width.
+
+## Props
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `building` | `Building` | Required | The building to display. |
+
+## Example
+
+```svelte
+<BuildingCard {building} />
+```
+
+-->
+
 <script lang="ts">
 	import type { Building } from "$lib/types";
 

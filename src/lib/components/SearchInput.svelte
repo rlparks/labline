@@ -1,3 +1,22 @@
+<!--
+@component
+
+A styled search input. The `value` prop should be bound to a state variable.
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `value` | `string` | Required | (Bindable) The value of the search input. |
+| `label` | `string` | Required | The label of the search input, displayed above the input with BeerCSS styling. |
+
+## Example
+
+```svelte
+<SearchInput label="Search Labs" bind:value={search} />
+```
+ -->
+
 <script lang="ts">
 	type Props = {
 		value: string;

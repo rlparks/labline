@@ -1,3 +1,9 @@
+<!-- 
+@component
+
+The logo and title of the app.
+-->
+
 <script lang="ts">
 	import icon from "$lib/images/icon/knowledger-128.png";
 </script>

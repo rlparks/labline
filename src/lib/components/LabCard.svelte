@@ -1,3 +1,22 @@
+<!-- 
+@component
+
+A card displaying information about a lab. Responsive to screen width.
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `lab` | `Lab` | Required | The lab to display. |
+
+## Example
+
+```svelte
+<LabCard {lab} />
+```
+
+-->
+
 <script lang="ts">
 	import type { Lab } from "$lib/types";
 

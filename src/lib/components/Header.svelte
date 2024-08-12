@@ -1,3 +1,23 @@
+<!-- 
+@component
+
+The header (navigation bar) of the application.
+
+## Props
+
+| Name | Type | Default | Description |
+| --- | --- | --- | --- |
+| `user` | `SafeUser \| undefined` | Required | The current user, displayed in the header. |
+| `provider` | `AuthProviderInfo \| undefined` | Required | The provider to use for OIDC login. |
+
+## Example
+
+```svelte
+<Header {user} {provider} />
+```
+
+-->
+
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { enhance } from "$app/forms";
