@@ -20,7 +20,7 @@
 
 <script lang="ts">
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
-	import type { Lab } from "$lib/types/index.js";
+	import type { Lab } from "$lib/types";
 	import { Message, LabCard, SearchInput } from "$lib/components";
 
 	type Props = {

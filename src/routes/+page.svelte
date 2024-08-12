@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { Message, BuildingCard, SearchInput } from "$lib/components";
-	import { FuzzyBuildingSearch } from "$lib/search/FuzzyBuildingSearch.js";
+	import { FuzzyBuildingSearch } from "$lib/search/FuzzyBuildingSearch";
 
 	const { data } = $props();
 
