@@ -18,7 +18,7 @@
 	<div class="space"></div>
 </noscript>
 
-<Header user={data.user} provider={data.ssoProviders?.[0]} />
+<Header user={data.user} provider={data.ssoProvider} />
 
 <div class="center-align">
 	<div class="space"></div>

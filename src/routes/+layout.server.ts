@@ -1,6 +1,21 @@
+import type { AuthProviderInfo } from "pocketbase";
 import type { LayoutServerLoad } from "./$types";
 
+type ProviderResponse = {
+	authProviders: AuthProviderInfo[];
+	usernamePassword: boolean;
+	emailPassword: boolean;
+	onlyVerified: boolean;
+};
+
 export const load = (async ({ fetch, locals }) => {
-	const ssoProviders = !locals.user ? await (await fetch("/api/auth/methods")).json() : undefined;
-	return { user: locals.user, ssoProviders: ssoProviders?.authProviders };
+	const shouldGetProvider = !locals.user;
+	let ssoProvider: AuthProviderInfo | undefined;
+	if (shouldGetProvider) {
+		const ssoRes = await fetch("/api/auth/methods");
+		const ssoProviders = (await ssoRes.json()) as ProviderResponse;
+		ssoProvider = ssoProviders.authProviders[0];
+	}
+
+	return { user: locals.user, ssoProvider };
 }) satisfies LayoutServerLoad;
