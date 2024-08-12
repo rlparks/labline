@@ -25,6 +25,9 @@ export interface SafeUser {
 	hasAvatar: boolean;
 }
 
+/**
+ * Lab information obtained from Chematix.
+ */
 export interface Lab {
 	"Bldg Number": string;
 	"Bldg Name": string;
@@ -41,6 +44,9 @@ export interface Lab {
 	"Secondary Contact": string;
 }
 
+/**
+ * A building on UGA's campus.
+ */
 export interface Building {
 	name: string;
 	number: string;

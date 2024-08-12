@@ -2,6 +2,9 @@ import { FuzzySearch } from "./FuzzySearch";
 import type { Lab } from "$lib/types";
 import Fuse from "fuse.js";
 
+/**
+ * Fuzzy search for {@link Lab}s.
+ */
 export class FuzzyLabSearch extends FuzzySearch<Lab> {
 	fuse: Fuse<Lab>;
 	private static FUSE_LAB_OPTIONS = {

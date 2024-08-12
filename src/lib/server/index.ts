@@ -1,11 +1,22 @@
 import { env } from "$env/dynamic/private";
-import type { Lab } from "$lib/types";
+import type { Lab, RawUser, SafeUser } from "$lib/types";
 import * as fs from "node:fs/promises";
 import Papa from "papaparse";
 
+/**
+ * The "authoritative" file from the Chematix server
+ */
 const SERVER_FILE_NAME = "ACTIVE_LABORATORIES.csv";
+
+/**
+ * The prefix of all files exported from the Chematix web interface.
+ */
 const LAB_FILE_PREFIX = "E__www_chematix_barcodes__ACTIVE_LABORATORIES_";
 
+/**
+ * @returns all {@link Lab}s stored in the lab file
+ * @throws if the file was not found on the server
+ */
 export async function getLabData(): Promise<Lab[]> {
 	const path: string = await getFilePath();
 
@@ -27,8 +38,12 @@ export async function getLabData(): Promise<Lab[]> {
 	}
 }
 
-// returns the file directly from the share if possible,
-// else the latest file downloaded from Chematix
+/**
+ * Returns the file directly from the share if possible,
+ * else the latest file downloaded from Chematix
+ *
+ * @returns the path to the "best" lab file or `""` if not found
+ */
 async function getFilePath(): Promise<string> {
 	const directoryPath = env.ABSOLUTE_DIR_PATH;
 
@@ -58,4 +73,20 @@ async function getFilePath(): Promise<string> {
 		console.error("Error reading directory", err);
 	}
 	return "";
+}
+
+/**
+ * Removes unnecessary info from User objects returned from
+ * PocketBase, like email.
+ *
+ * @param user the full {@link RawUser} object
+ * @returns a {@link SafeUser} object with a minimum amount of info
+ */
+export function makeUserSafe(user: RawUser): SafeUser {
+	return {
+		id: user.id,
+		username: user.username,
+		name: user.name,
+		hasAvatar: !!user.avatar,
+	};
 }

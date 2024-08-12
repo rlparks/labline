@@ -1,6 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { NODE_ENV } from "$env/static/private";
-import { makeUserSafe } from "$lib";
+import { makeUserSafe } from "$lib/server";
 import type { RawUser } from "$lib/types";
 import { error, json, redirect, type Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
