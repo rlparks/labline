@@ -59,13 +59,19 @@ The header (navigation bar) of the application.
 		{#if user}
 			<span>{user.username}</span>
 			<form action="/api/auth/logout" method="POST" use:enhance>
-				<button type="submit" class={width && width <= 600 ? "circle" : ""}>
+				<button
+					type="submit"
+					class={width && width <= 600 ? "circle" : ""}
+					data-umami-event="button-logout"
+				>
 					<i>logout</i>
 					<span>Logout</span>
 				</button>
 			</form>
 		{:else}
-			<button onclick={performRedirect}> <i>login</i><span>Login</span></button>
+			<button onclick={performRedirect} data-umami-event="button-login">
+				<i>login</i><span>Login</span></button
+			>
 		{/if}
 	</nav>
 </header>

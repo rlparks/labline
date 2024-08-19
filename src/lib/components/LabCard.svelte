@@ -54,7 +54,12 @@ A card displaying information about a lab. Responsive to screen width.
 </article>
 
 {#snippet emailLink(email: string)}
-	<a class="link" href={`mailto:${email}`}>{email}</a>
+	<a
+		class="link"
+		href={`mailto:${email}`}
+		data-umami-event="link-email"
+		data-umami-event-email={email}>{email}</a
+	>
 {/snippet}
 {#snippet contacts()}
 	<div class="right-align-if-l">
