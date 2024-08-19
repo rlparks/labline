@@ -20,7 +20,7 @@
 <div class="space"></div>
 
 <div class="center-align">
-	<a class="button" href="/labs" data-umami-event="link-search-all-labs">Search All Labs</a>
+	<a class="button" href="/labs">Search All Labs</a>
 </div>
 
 <h3 class="center-align">Search by Building</h3>

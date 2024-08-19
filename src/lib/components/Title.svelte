@@ -8,7 +8,7 @@ The logo and title of the app.
 	import icon from "$lib/images/icon/knowledger-128.png";
 </script>
 
-<a href="/" data-umami-event="link-home-title">
+<a href="/">
 	<img src={icon} height="40px" alt="knowledger logo" />
 	<h4 class="no-margin">knowledger</h4>
 </a>

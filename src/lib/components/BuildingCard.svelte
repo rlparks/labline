@@ -33,12 +33,7 @@ A card displaying information about a building. Responsive to screen width.
 		</div>
 		<div class="max"></div>
 		<div id="link" class="right-align">
-			<a
-				href={`/buildings/${building.number}`}
-				class="button"
-				data-umami-event="link-building"
-				data-umami-event-building-number={building.number}>Go</a
-			>
+			<a href={`/buildings/${building.number}`} class="button">Go</a>
 		</div>
 	</nav>
 </article>
