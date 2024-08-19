@@ -63,6 +63,7 @@ The header (navigation bar) of the application.
 					type="submit"
 					class={width && width <= 600 ? "circle" : ""}
 					data-umami-event="button-logout"
+					data-umami-event-username={user.username}
 				>
 					<i>logout</i>
 					<span>Logout</span>
