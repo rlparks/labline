@@ -11,3 +11,13 @@ export const TABLE_NAMES = {
  * Key used to store the OIDC provider in SessionStorage.
  */
 export const PROVIDER_KEY = "provider";
+
+/**
+ * User used if `BYPASS_ACCOUNT_REQUIREMENT` is set to `true`.
+ */
+export const DEMO_USER = {
+	id: "demo",
+	username: "demo",
+	name: "Demo User",
+	hasAvatar: false,
+};

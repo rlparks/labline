@@ -1,5 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { NODE_ENV } from "$env/static/private";
+import { DEMO_USER } from "$lib";
 import { makeUserSafe } from "$lib/server";
 import type { RawUser } from "$lib/types";
 import { error, json, redirect, type Handle } from "@sveltejs/kit";
@@ -7,6 +8,8 @@ import PocketBase from "pocketbase";
 
 const UNSECURE_PAGE_ROUTES = ["/", "/login/callback"];
 const UNSECURE_API_ROUTES = ["/api/auth/methods", "/api/auth/login/oidc"];
+
+const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
 
 if (!env.PB_URL || !env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
 	console.log("PB_URL, PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set");
@@ -41,7 +44,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 	if (event.locals.pb.authStore.isValid) {
 		event.locals.user = makeUserSafe(event.locals.pb.authStore.model as RawUser);
 	} else {
-		event.locals.user = undefined;
+		if (!BYPASS_ACCOUNT_REQUIREMENT) {
+			event.locals.user = undefined;
+		} else {
+			event.locals.user = DEMO_USER;
+		}
 	}
 
 	if (event.route.id && !event.locals.user) {
