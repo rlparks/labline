@@ -1,4 +1,5 @@
-:root {
+:root,
+body.light {
 	--font: "Merriweather Sans", sans-serif;
 
 	--primary: #ba0c2f;
