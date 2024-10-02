@@ -27,42 +27,51 @@ A card displaying information about a lab. Responsive to screen width.
 
 	const piName = $derived(`${lab["PI First Name"]} ${lab["PI Last Name"]}`);
 	const superName = $derived(`${lab["Super First Name"]} ${lab["Super Last Name"]}`);
+	$inspect(piName);
 
-	function parsePhoneNumbers(contactLine: string): string {
+	type Contact = {
+		text: string;
+		phoneNumber: string;
+	};
+
+	const emergencyContacts: {
+		primary: Contact[];
+		secondary: Contact[];
+	} = {
+		primary: [],
+		secondary: [],
+	};
+
+	emergencyContacts.primary = parsePhoneNumbers(lab["Primary Contact"]);
+	emergencyContacts.secondary = parsePhoneNumbers(lab["Secondary Contact"]);
+
+	function parsePhoneNumbers(contactLine: string): Contact[] {
 		const PHONE_NUMBER_LENGTH = 16; // (123) 456 - 7890
 
-		let searchIndex = contactLine.indexOf("(");
-		while (searchIndex !== -1) {
-			const endIndex = searchIndex + PHONE_NUMBER_LENGTH;
-			const phoneNumber = contactLine.substring(searchIndex, endIndex);
-			const phoneNumberDigits = removeNonDigits(phoneNumber); // 1234567890
+		const contacts = [];
 
-			const phoneLink = `<a class="link" href="tel:${phoneNumberDigits}">${phoneNumber}</a>`;
+		let beginningIndex = 0;
+		let parIndex = contactLine.indexOf("(");
+		while (parIndex !== -1) {
+			const phoneEndIndex = parIndex + PHONE_NUMBER_LENGTH;
+			const phoneNumber = contactLine.substring(parIndex, phoneEndIndex);
+			contacts.push({ text: contactLine.substring(beginningIndex, parIndex), phoneNumber });
 
-			contactLine =
-				contactLine.substring(0, searchIndex) +
-				phoneLink +
-				contactLine.substring(searchIndex + PHONE_NUMBER_LENGTH);
-			searchIndex = contactLine.indexOf("(", searchIndex + phoneLink.length);
+			beginningIndex = parIndex + PHONE_NUMBER_LENGTH;
+			parIndex = contactLine.indexOf("(", beginningIndex);
 		}
 
-		return contactLine;
+		// catches anything else remaining at the end, like "-"
+		const otherRemainingText = contactLine.substring(beginningIndex);
+		if (otherRemainingText.length > 0) {
+			contacts.push({ text: otherRemainingText, phoneNumber: "" });
+		}
+
+		return contacts;
 	}
 
 	function removeNonDigits(textPhoneNumber: string): string {
 		return textPhoneNumber.replace(/\D/g, "");
-	}
-
-	// escape HTML here so no nonsense like <script>s are rendered
-	// needed because {@html} is necessary for linking phone numbers
-	// https://stackoverflow.com/a/6234804
-	function escapeHtml(unsafeText: string): string {
-		return unsafeText
-			.replace(/&/g, "&amp;")
-			.replace(/</g, "&lt;")
-			.replace(/>/g, "&gt;")
-			.replace(/"/g, "&quot;")
-			.replace(/'/g, "&#039;");
 	}
 </script>
 
@@ -101,10 +110,22 @@ A card displaying information about a lab. Responsive to screen width.
 {#snippet contacts()}
 	<div class="right-align-if-l">
 		<h6><strong>Primary Contact:</strong></h6>
-		<p>{@html parsePhoneNumbers(escapeHtml(lab["Primary Contact"]))}</p>
+		<p>
+			{#each emergencyContacts.primary as contact}
+				{contact.text}<a class="link" href="tel:{removeNonDigits(contact.phoneNumber)}"
+					>{contact.phoneNumber}</a
+				>
+			{/each}
+		</p>
 
 		<h6><strong>Secondary Contact:</strong></h6>
-		<p>{@html parsePhoneNumbers(escapeHtml(lab["Secondary Contact"]))}</p>
+		<p>
+			{#each emergencyContacts.secondary as contact}
+				{contact.text}<a class="link" href="tel:{removeNonDigits(contact.phoneNumber)}"
+					>{contact.phoneNumber}</a
+				>
+			{/each}
+		</p>
 	</div>
 {/snippet}
 
