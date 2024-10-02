@@ -27,6 +27,43 @@ A card displaying information about a lab. Responsive to screen width.
 
 	const piName = $derived(`${lab["PI First Name"]} ${lab["PI Last Name"]}`);
 	const superName = $derived(`${lab["Super First Name"]} ${lab["Super Last Name"]}`);
+
+	function parsePhoneNumbers(contactLine: string): string {
+		const PHONE_NUMBER_LENGTH = 16; // (123) 456 - 7890
+
+		let searchIndex = contactLine.indexOf("(");
+		while (searchIndex !== -1) {
+			const endIndex = searchIndex + PHONE_NUMBER_LENGTH;
+			const phoneNumber = contactLine.substring(searchIndex, endIndex);
+			const phoneNumberDigits = removeNonDigits(phoneNumber); // 1234567890
+
+			const phoneLink = `<a class="link" href="tel:${phoneNumberDigits}">${phoneNumber}</a>`;
+
+			contactLine =
+				contactLine.substring(0, searchIndex) +
+				phoneLink +
+				contactLine.substring(searchIndex + PHONE_NUMBER_LENGTH);
+			searchIndex = contactLine.indexOf("(", searchIndex + phoneLink.length);
+		}
+
+		return contactLine;
+	}
+
+	function removeNonDigits(textPhoneNumber: string): string {
+		return textPhoneNumber.replace(/\D/g, "");
+	}
+
+	// escape HTML here so no nonsense like <script>s are rendered
+	// needed because {@html} is necessary for linking phone numbers
+	// https://stackoverflow.com/a/6234804
+	function escapeHtml(unsafeText: string): string {
+		return unsafeText
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#039;");
+	}
 </script>
 
 <article class="border">
@@ -64,10 +101,10 @@ A card displaying information about a lab. Responsive to screen width.
 {#snippet contacts()}
 	<div class="right-align-if-l">
 		<h6><strong>Primary Contact:</strong></h6>
-		<p>{lab["Primary Contact"]}</p>
+		<p>{@html parsePhoneNumbers(escapeHtml(lab["Primary Contact"]))}</p>
 
 		<h6><strong>Secondary Contact:</strong></h6>
-		<p>{lab["Secondary Contact"]}</p>
+		<p>{@html parsePhoneNumbers(escapeHtml(lab["Secondary Contact"]))}</p>
 	</div>
 {/snippet}
 
