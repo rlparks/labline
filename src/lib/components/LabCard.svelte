@@ -25,9 +25,8 @@ A card displaying information about a lab. Responsive to screen width.
 	};
 	const { lab }: Props = $props();
 
-	const piName = $derived(`${lab["PI First Name"]} ${lab["PI Last Name"]}`);
-	const superName = $derived(`${lab["Super First Name"]} ${lab["Super Last Name"]}`);
-	$inspect(piName);
+	const piName = `${lab["PI First Name"]} ${lab["PI Last Name"]}`;
+	const superName = `${lab["Super First Name"]} ${lab["Super Last Name"]}`;
 
 	type Contact = {
 		text: string;
