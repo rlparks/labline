@@ -14,7 +14,7 @@
 <div class="space"></div>
 
 <div class="center-align">
-	<a class="button" href="/">Search by Building</a>
+	<a class="button" href="/"><i>domain</i>Search by Building</a>
 </div>
 
 <LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} />
