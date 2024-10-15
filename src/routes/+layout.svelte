@@ -31,6 +31,8 @@
 		{@render children()}
 	</main>
 
+	<div class="space"></div>
+
 	<footer>
 		<Footer />
 	</footer>
@@ -43,6 +45,7 @@
 		}
 	}
 
+	/* https://reddit.com/r/sveltejs/comments/16904vm/place_footer_at_end_of_page/jz0ho59/ */
 	.content {
 		min-height: 100vh;
 	}
