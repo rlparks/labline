@@ -17,18 +17,22 @@
 	const mtimeDate = new Date(fileStats.stats.mtimeMs);
 	const birthtimeDate = new Date(fileStats.stats.birthtimeMs);
 	const lastModified = formatDate(mtimeDate);
+
+	function printStats() {
+		console.log(`File name: ${fileStats.fileName}`);
+		console.log(`File size: ${fileSizeKb} KB`);
+		console.log(`Last accessed: ${formatDate(atimeDate)}`);
+		console.log(`Last modified: ${formatDate(mtimeDate)}`);
+		console.log(`File created: ${formatDate(birthtimeDate)}`);
+	}
 </script>
 
 <nav>
-	<div id="left">
-		Last updated: {lastModified}
-		<div class="tooltip right max">
-			<p>File name: {fileStats.fileName}</p>
-			<p>File size: {fileSizeKb} KB</p>
-			<p>Last accessed: {formatDate(atimeDate)}</p>
-			<p>File created: {formatDate(birthtimeDate)}</p>
-		</div>
-	</div>
+	<button class="chip" onclick={printStats}>
+		<i>today</i>
+		<span>{lastModified}</span>
+		<div class="tooltip">Last updated</div>
+	</button>
 	<div class="max"></div>
 	<div id="right">
 		<Attribution />
