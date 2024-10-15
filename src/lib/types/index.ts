@@ -51,3 +51,16 @@ export interface Building {
 	name: string;
 	number: string;
 }
+
+/**
+ * File stats for the Chematix lab file.
+ */
+export interface FileStats {
+	fileName: string;
+	stats: {
+		sizeBytes: number;
+		atimeMs: number;
+		mtimeMs: number;
+		birthtimeMs: number;
+	};
+}

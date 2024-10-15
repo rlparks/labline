@@ -34,7 +34,7 @@
 	<div class="space"></div>
 
 	<footer>
-		<Footer />
+		<Footer fileStats={data.fileStats} />
 	</footer>
 </div>
 

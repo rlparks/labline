@@ -1,5 +1,6 @@
 import type { AuthProviderInfo } from "pocketbase";
 import type { LayoutServerLoad } from "./$types";
+import type { FileStats } from "$lib/types";
 
 type ProviderResponse = {
 	authProviders: AuthProviderInfo[];
@@ -17,5 +18,8 @@ export const load = (async ({ fetch, locals }) => {
 		ssoProvider = ssoProviders?.authProviders?.[0];
 	}
 
-	return { user: locals.user, ssoProvider };
+	const fileStatsRes = await fetch("/api/status");
+	const fileStats = (await fileStatsRes.json()) as FileStats;
+
+	return { user: locals.user, ssoProvider, fileStats };
 }) satisfies LayoutServerLoad;
