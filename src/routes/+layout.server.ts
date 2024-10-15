@@ -14,7 +14,7 @@ export const load = (async ({ fetch, locals }) => {
 	if (shouldGetProvider) {
 		const ssoRes = await fetch("/api/auth/methods");
 		const ssoProviders = (await ssoRes.json()) as ProviderResponse;
-		ssoProvider = ssoProviders.authProviders[0];
+		ssoProvider = ssoProviders?.authProviders?.[0];
 	}
 
 	return { user: locals.user, ssoProvider };

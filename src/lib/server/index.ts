@@ -104,7 +104,26 @@ async function getFilePath(): Promise<string> {
  */
 export async function getLabFileStats() {
 	const path: string = await getFilePath();
-	return getFileStats(path);
+
+	if (path !== "") {
+		const pathPieces = path.split("/");
+		const fileName = pathPieces.pop();
+
+		const rawStats = await getFileStats(path);
+
+		if (rawStats) {
+			return {
+				fileName,
+				stats: {
+					sizeBytes: rawStats.size,
+					atimeMs: rawStats.atimeMs,
+					mtimeMs: rawStats.mtimeMs,
+					birthtimeMs: rawStats.birthtimeMs,
+				},
+			};
+		}
+	}
+	return null;
 }
 
 /**
