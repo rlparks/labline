@@ -5,5 +5,17 @@ import LabCard from "./LabCard.svelte";
 import LabsSearch from "./LabsSearch.svelte";
 import Message from "./Message.svelte";
 import SearchInput from "./SearchInput.svelte";
+import Footer from "./Footer.svelte";
+import Attribution from "./Attribution.svelte";
 
-export { Header, Title, BuildingCard, LabCard, LabsSearch, Message, SearchInput };
+export {
+	Header,
+	Title,
+	BuildingCard,
+	LabCard,
+	LabsSearch,
+	Message,
+	SearchInput,
+	Footer,
+	Attribution,
+};

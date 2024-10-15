@@ -97,15 +97,43 @@ async function getFilePath(): Promise<string> {
 }
 
 /**
+ * Exposes lab file stats - useful for determining the
+ * freshness of the data.
+ *
+ * @returns the stats of the "best" lab file
+ */
+export async function getLabFileStats() {
+	const path: string = await getFilePath();
+	return getFileStats(path);
+}
+
+/**
  * Helper function to check if the Chematix lab file is valid.
  *
  * @param potentialServerFilePath the file to check
  * @returns true if file exists and is above the minimum size
  */
 async function isLabFileValid(potentialServerFilePath: string) {
-	const fileStats = await fs.stat(potentialServerFilePath);
+	const fileStats = await getFileStats(potentialServerFilePath);
+	if (!fileStats) {
+		return false;
+	}
 
 	return fileStats.isFile() && fileStats.size > MINIMUM_VALID_FILE_SIZE_BYTES;
+}
+
+/**
+ * Helper function to get FS stats
+ *
+ * @param filePath file path
+ * @returns stats
+ */
+async function getFileStats(filePath: string) {
+	try {
+		return await fs.stat(filePath);
+	} catch {
+		return null;
+	}
 }
 
 /**
