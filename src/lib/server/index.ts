@@ -9,9 +9,10 @@ import Papa from "papaparse";
 const SERVER_FILE_NAME = "ACTIVE_LABORATORIES.csv";
 
 /**
- * The prefix of all files exported from the Chematix web interface.
+ * The prefix of the secondary files to check.
  */
-const LAB_FILE_PREFIX = "E__www_chematix_barcodes__ACTIVE_LABORATORIES_";
+// const LAB_FILE_PREFIX = "E__www_chematix_barcodes__ACTIVE_LABORATORIES_";
+const LAB_FILE_PREFIX = "ACTIVE_LABORATORIES_";
 
 /**
  * The minimum size of the laboratories file to be considered valid.
@@ -57,32 +58,54 @@ async function getFilePath(): Promise<string> {
 
 		if (fileNames.includes(SERVER_FILE_NAME)) {
 			const potentialServerFilePath = `${directoryPath}/${SERVER_FILE_NAME}`;
-			const fileStats = await fs.stat(potentialServerFilePath);
+			const authoritativeFileIsValid = await isLabFileValid(potentialServerFilePath);
 
-			if (fileStats.isFile() && fileStats.size > MINIMUM_VALID_FILE_SIZE_BYTES) {
-				// if complete file exists, return path
+			if (authoritativeFileIsValid) {
 				return potentialServerFilePath;
 			}
 		}
 
+		// authoritative file is not valid
+		// check secondary files
+
 		const activeLabFileNames = fileNames.filter((fileName) => fileName.startsWith(LAB_FILE_PREFIX));
 
-		if (activeLabFileNames.length === 0) {
-			throw new Error("No lab files found");
+		if (activeLabFileNames.length !== 0) {
+			// otherwise find latest date
+			activeLabFileNames.sort();
+			// [
+			// 	"E__www_chematix_barcodes__ACTIVE_LABORATORIES_2024-07-29.csv",
+			// 	"E__www_chematix_barcodes__ACTIVE_LABORATORIES_2024-08-01.csv",
+			// ]
+
+			// return the last good file
+			for (let currentIndex = activeLabFileNames.length - 1; currentIndex >= 0; currentIndex--) {
+				const currentFileName = activeLabFileNames[currentIndex];
+				const currentFilePath = `${directoryPath}/${currentFileName}`;
+				const currentFileIsValid = await isLabFileValid(currentFilePath);
+				if (currentFileIsValid) {
+					return currentFilePath;
+				}
+			}
 		}
 
-		// otherwise find latest date
-		activeLabFileNames.sort();
-		// [
-		// 	"E__www_chematix_barcodes__ACTIVE_LABORATORIES_2024-07-29.csv",
-		// 	"E__www_chematix_barcodes__ACTIVE_LABORATORIES_2024-08-01.csv",
-		// ]
-		const latestFileName = activeLabFileNames[activeLabFileNames.length - 1];
-		return `${directoryPath}/${latestFileName}`;
+		throw new Error("No lab files found");
 	} catch (err) {
 		console.error("Error reading directory", err);
 	}
 	return "";
+}
+
+/**
+ * Helper function to check if the Chematix lab file is valid.
+ *
+ * @param potentialServerFilePath the file to check
+ * @returns true if file exists and is above the minimum size
+ */
+async function isLabFileValid(potentialServerFilePath: string) {
+	const fileStats = await fs.stat(potentialServerFilePath);
+
+	return fileStats.isFile() && fileStats.size > MINIMUM_VALID_FILE_SIZE_BYTES;
 }
 
 /**
