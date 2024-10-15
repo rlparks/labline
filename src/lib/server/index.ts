@@ -14,6 +14,11 @@ const SERVER_FILE_NAME = "ACTIVE_LABORATORIES.csv";
 const LAB_FILE_PREFIX = "E__www_chematix_barcodes__ACTIVE_LABORATORIES_";
 
 /**
+ * The minimum size of the laboratories file to be considered valid.
+ */
+const MINIMUM_VALID_FILE_SIZE_BYTES = 200 * 1024;
+
+/**
  * @returns all {@link Lab}s stored in the lab file
  * @throws if the file was not found on the server
  */
@@ -51,8 +56,13 @@ async function getFilePath(): Promise<string> {
 		const fileNames = await fs.readdir(directoryPath);
 
 		if (fileNames.includes(SERVER_FILE_NAME)) {
-			// if complete file exists, return path
-			return `${directoryPath}/${SERVER_FILE_NAME}`;
+			const potentialServerFilePath = `${directoryPath}/${SERVER_FILE_NAME}`;
+			const fileStats = await fs.stat(potentialServerFilePath);
+
+			if (fileStats.isFile() && fileStats.size > MINIMUM_VALID_FILE_SIZE_BYTES) {
+				// if complete file exists, return path
+				return potentialServerFilePath;
+			}
 		}
 
 		const activeLabFileNames = fileNames.filter((fileName) => fileName.startsWith(LAB_FILE_PREFIX));
