@@ -170,3 +170,12 @@ export function makeUserSafe(user: RawUser): SafeUser {
 		hasAvatar: !!user.avatar,
 	};
 }
+
+/**
+ * @returns a readable date/time
+ */
+export function getCurrentFormattedDateTime(): string {
+	const now = new Date();
+	const dateString = now.toISOString().split("T")[0];
+	return `${dateString} ${now.toLocaleTimeString()}`;
+}

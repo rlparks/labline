@@ -2,6 +2,7 @@ import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import { ClientResponseError, type AuthProviderInfo } from "pocketbase";
 import { TABLE_NAMES } from "$lib";
+import { getCurrentFormattedDateTime } from "$lib/server";
 
 export const actions = {
 	default: async ({ locals, request }) => {
@@ -42,7 +43,9 @@ export const actions = {
 				}
 			}
 
-			console.log("OIDC LOGIN SUCCESS: " + authData.record.username);
+			console.log(
+				getCurrentFormattedDateTime() + " · OIDC LOGIN SUCCESS: " + authData.record.username,
+			);
 		} catch (err) {
 			if (err instanceof ClientResponseError) {
 				console.error("Client response error:", err.originalError.data.data);
