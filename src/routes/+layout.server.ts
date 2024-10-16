@@ -19,7 +19,7 @@ export const load = (async ({ fetch, locals }) => {
 	}
 
 	const fileStatsRes = await fetch("/api/status");
-	const fileStats = (await fileStatsRes.json()) as FileStats;
+	const fileStats = fileStatsRes.ok ? ((await fileStatsRes.json()) as FileStats) : null;
 
 	return { user: locals.user, ssoProvider, fileStats };
 }) satisfies LayoutServerLoad;

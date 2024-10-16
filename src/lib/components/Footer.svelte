@@ -3,36 +3,47 @@
 	import { Attribution } from ".";
 
 	type Props = {
-		fileStats: FileStats;
+		fileStats: FileStats | null;
+		showDate: boolean;
 	};
 
-	const { fileStats }: Props = $props();
+	const { fileStats, showDate }: Props = $props();
 
 	function formatDate(date: Date) {
 		return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
 	}
 
-	const fileSizeKb = (fileStats.stats.sizeBytes / 1024).toFixed(2);
-	const atimeDate = new Date(fileStats.stats.atimeMs);
-	const mtimeDate = new Date(fileStats.stats.mtimeMs);
-	const birthtimeDate = new Date(fileStats.stats.birthtimeMs);
-	const lastModified = formatDate(mtimeDate);
+	const fileSizeKb = fileStats ? (fileStats.stats.sizeBytes / 1024).toFixed(2) : null;
+	const atimeDate = fileStats ? new Date(fileStats.stats.atimeMs) : null;
+	const mtimeDate = fileStats ? new Date(fileStats.stats.mtimeMs) : null;
+	const birthtimeDate = fileStats ? new Date(fileStats.stats.birthtimeMs) : null;
+	const lastModified = mtimeDate ? formatDate(mtimeDate) : null;
 
 	function printStats() {
-		console.log(`File name: ${fileStats.fileName}`);
-		console.log(`File size: ${fileSizeKb} KB`);
-		console.log(`Last accessed: ${formatDate(atimeDate)}`);
-		console.log(`Last modified: ${formatDate(mtimeDate)}`);
-		console.log(`File created: ${formatDate(birthtimeDate)}`);
+		if (fileStats && atimeDate && mtimeDate && birthtimeDate) {
+			console.log(`File name: ${fileStats.fileName}`);
+			console.log(`File size: ${fileSizeKb} KB`);
+			console.log(`Last accessed: ${formatDate(atimeDate)}`);
+			console.log(`Last modified: ${formatDate(mtimeDate)}`);
+			console.log(`File created: ${formatDate(birthtimeDate)}`);
+		}
 	}
 </script>
 
 <nav>
-	<button class="chip" onclick={printStats}>
-		<i>today</i>
-		<span>{lastModified}</span>
-		<div class="tooltip">Last updated</div>
-	</button>
+	{#if showDate}
+		<button class="chip" onclick={printStats}>
+			<i>today</i>
+			{#if fileStats}
+				<span>{lastModified}</span>
+			{:else}
+				<span>?</span>
+			{/if}
+			<div class="tooltip">Last updated</div>
+		</button>
+	{:else}
+		<div></div>
+	{/if}
 	<div class="max"></div>
 	<div id="right">
 		<Attribution />
@@ -41,6 +52,12 @@
 
 <style>
 	nav {
+		@media (max-width: 600px) {
+			flex-direction: column;
+		}
+	}
+
+	div.max {
 		@media (max-width: 600px) {
 			flex-direction: column;
 		}

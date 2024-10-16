@@ -34,7 +34,7 @@
 	<div class="space"></div>
 
 	<footer>
-		<Footer fileStats={data.fileStats} />
+		<Footer fileStats={data.fileStats} showDate={Boolean(data.user)} />
 	</footer>
 </div>
 
