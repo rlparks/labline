@@ -32,7 +32,7 @@
 
 <nav>
 	{#if showDate}
-		<button class="chip" onclick={printStats}>
+		<button id="button-stats" class="chip" onclick={printStats}>
 			<i>today</i>
 			{#if fileStats}
 				<span>{lastModified}</span>
@@ -74,5 +74,9 @@
 		@media (max-width: 600px) {
 			display: none;
 		}
+	}
+
+	#button-stats {
+		cursor: help;
 	}
 </style>
