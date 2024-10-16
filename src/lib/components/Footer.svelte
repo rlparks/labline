@@ -54,12 +54,25 @@
 	nav {
 		@media (max-width: 600px) {
 			flex-direction: column;
+			justify-content: center;
+		}
+	}
+
+	nav > button {
+		@media (max-width: 600px) {
+			margin-top: 10px;
+		}
+	}
+
+	nav > #right {
+		@media (max-width: 600px) {
+			margin-bottom: 10px;
 		}
 	}
 
 	div.max {
 		@media (max-width: 600px) {
-			flex-direction: column;
+			display: none;
 		}
 	}
 </style>
