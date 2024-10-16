@@ -39,28 +39,27 @@
 
 <h3 class="center-align">{title}</h3>
 
-<div class="center-align">
-	<p>Number of buildings: {data.buildings.length}</p>
-	<p>Number of labs: {data.labs.length}</p>
+<article class="center-align border">
+	{@render infoLine("Number of buildings", data.buildings.length)}
+	{@render infoLine("Number of labs", data.labs.length)}
+	{@render infoLine(
+		"Number of labs with both contacts",
+		`${stats.labsWithBothContacts} (${getPercentOfTotalLabs(stats.labsWithBothContacts)})`,
+	)}
+	{@render infoLine(
+		"Number of labs with only primary contact",
+		`${stats.labsWithOnlyPrimaryContact} (${getPercentOfTotalLabs(stats.labsWithOnlyPrimaryContact)})`,
+	)}
+	{@render infoLine(
+		"Number of labs with only secondary contact",
+		`${stats.labsWithOnlySecondaryContact} (${getPercentOfTotalLabs(stats.labsWithOnlySecondaryContact)})`,
+	)}
+	{@render infoLine(
+		"Number of labs with no contact",
+		`${stats.labsWithNoContact} (${getPercentOfTotalLabs(stats.labsWithNoContact)})`,
+	)}
+</article>
 
-	<p>
-		Number of labs with both contacts: {stats.labsWithBothContacts} ({getPercentOfTotalLabs(
-			stats.labsWithBothContacts,
-		)})
-	</p>
-	<p>
-		Number of labs with only primary contact: {stats.labsWithOnlyPrimaryContact} ({getPercentOfTotalLabs(
-			stats.labsWithOnlyPrimaryContact,
-		)})
-	</p>
-	<p>
-		Number of labs with only secondary contact: {stats.labsWithOnlySecondaryContact} ({getPercentOfTotalLabs(
-			stats.labsWithOnlySecondaryContact,
-		)})
-	</p>
-	<p>
-		Number of labs with no contact: {stats.labsWithNoContact} ({getPercentOfTotalLabs(
-			stats.labsWithNoContact,
-		)})
-	</p>
-</div>
+{#snippet infoLine(label: string, value: string | number)}
+	<p><strong>{label}</strong>: {value}</p>
+{/snippet}
