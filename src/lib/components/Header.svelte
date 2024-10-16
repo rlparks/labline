@@ -26,7 +26,7 @@ The header (navigation bar) of the application.
 	import type { SafeUser } from "$lib/types";
 	import type { AuthProviderInfo } from "pocketbase";
 
-	const NAV_BREAKPOINT = 875;
+	const NAV_BREAKPOINT = 1020;
 	const BUTTON_CIRCLE_BREAKPOINT = 600;
 
 	const {
@@ -93,6 +93,7 @@ The header (navigation bar) of the application.
 {#snippet navButtons()}
 	{@render navButton("/", "domain", "Search by Building")}
 	{@render navButton("/labs", "experiment", "Search All Labs")}
+	{@render navButton("/summary", "list", "Summary")}
 {/snippet}
 
 {#snippet navButton(url: string, icon: string, text: string)}
