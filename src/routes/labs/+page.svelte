@@ -11,10 +11,5 @@
 </svelte:head>
 
 <h3 class="center-align">Emergency Contacts</h3>
-<div class="space"></div>
-
-<div class="center-align">
-	<a class="button" href="/"><i>domain</i>Search by Building</a>
-</div>
 
 <LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} />

@@ -21,9 +21,13 @@ The header (navigation bar) of the application.
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { enhance } from "$app/forms";
+	import { page } from "$app/stores";
 	import { Title } from "$lib/components";
 	import type { SafeUser } from "$lib/types";
 	import type { AuthProviderInfo } from "pocketbase";
+
+	const NAV_BREAKPOINT = 875;
+	const BUTTON_CIRCLE_BREAKPOINT = 600;
 
 	const {
 		user,
@@ -55,13 +59,16 @@ The header (navigation bar) of the application.
 <header>
 	<nav>
 		<Title />
+		{#if user && width && width > NAV_BREAKPOINT}
+			{@render navButtons()}
+		{/if}
 		<div class="max"></div>
 		{#if user}
 			<span>{user.username}</span>
 			<form action="/api/auth/logout" method="POST" use:enhance>
 				<button
 					type="submit"
-					class={width && width <= 600 ? "circle" : ""}
+					class:circle={width && width <= BUTTON_CIRCLE_BREAKPOINT}
 					data-umami-event="button-logout"
 					data-umami-event-username={user.username}
 				>
@@ -75,7 +82,30 @@ The header (navigation bar) of the application.
 			>
 		{/if}
 	</nav>
+
+	{#if user && width && width <= NAV_BREAKPOINT}
+		<div class="row center-align no-margin">
+			{@render navButtons()}
+		</div>
+	{/if}
 </header>
+
+{#snippet navButtons()}
+	{@render navButton("/", "domain", "Search by Building")}
+	{@render navButton("/labs", "experiment", "Search All Labs")}
+{/snippet}
+
+{#snippet navButton(url: string, icon: string, text: string)}
+	<a
+		class="button"
+		class:border={$page.url.pathname !== url}
+		class:circle={width && width <= BUTTON_CIRCLE_BREAKPOINT && $page.url.pathname !== url}
+		href={url}
+		><i>{icon}</i>
+		{#if (width && width > BUTTON_CIRCLE_BREAKPOINT) || $page.url.pathname === url}
+			{text}{/if}</a
+	>
+{/snippet}
 
 <style>
 	button {

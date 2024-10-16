@@ -17,12 +17,6 @@
 
 <h3 class="center-align">Emergency Contacts</h3>
 
-<div class="space"></div>
-
-<div class="center-align">
-	<a class="button" href="/labs"><i>experiment</i>Search All Labs</a>
-</div>
-
 <h3 class="center-align">Search by Building</h3>
 
 <SearchInput label="Building Name or Number" bind:value={search} />
