@@ -1,3 +1,11 @@
+<!--
+@component
+
+The footer of the application. Stays anchored to the bottom of
+the page and contains the "last updated" date and attribution.
+
+-->
+
 <script lang="ts">
 	import type { FileStats } from "$lib/types";
 	import { Attribution } from ".";
