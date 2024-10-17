@@ -42,10 +42,10 @@ the page and contains the "last updated" date and attribution.
 	{#if showDate}
 		<button id="button-stats" class="chip" onclick={printStats}>
 			<i>today</i>
-			{#if fileStats}
+			{#if fileStats && lastModified}
 				<span>{lastModified}</span>
 			{:else}
-				<span>?</span>
+				<span>error</span>
 			{/if}
 			<div class="tooltip">Last updated</div>
 		</button>
