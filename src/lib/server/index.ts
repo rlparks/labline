@@ -1,5 +1,5 @@
 import { env } from "$env/dynamic/private";
-import type { Lab, RawUser, SafeUser } from "$lib/types";
+import type { FileStats, Lab, RawUser, SafeUser } from "$lib/types";
 import * as fs from "node:fs/promises";
 import Papa from "papaparse";
 
@@ -102,7 +102,7 @@ async function getFilePath(): Promise<string> {
  *
  * @returns the stats of the "best" lab file
  */
-export async function getLabFileStats() {
+export async function getLabFileStats(): Promise<FileStats | null> {
 	const path: string = await getFilePath();
 
 	if (path !== "") {
@@ -111,7 +111,7 @@ export async function getLabFileStats() {
 
 		const rawStats = await getFileStats(path);
 
-		if (rawStats) {
+		if (rawStats && fileName) {
 			return {
 				fileName,
 				stats: {
