@@ -72,5 +72,13 @@ export const handle: Handle = async ({ event, resolve }) => {
 		event.locals.pb.authStore.exportToCookie({ secure: NODE_ENV === "production" }),
 	);
 
+	// https://developer.mozilla.org/en-US/observatory suggestions
+	result.headers.set("referrer-policy", "strict-origin-when-cross-origin");
+	result.headers.set("x-content-type-options", "nosniff");
+	result.headers.set("content-security-policy", "frame-ancestors 'none'");
+	result.headers.set("x-frame-options", "DENY");
+	result.headers.set("cross-origin-resource-policy", "same-origin");
+	result.headers.set("strict-transport-security", "max-age=600");
+
 	return result;
 };
