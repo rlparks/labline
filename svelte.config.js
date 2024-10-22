@@ -17,13 +17,13 @@ const config = {
 			directives: {
 				"script-src": ["self", "https://analytics.esd.uga.edu/script.js"],
 				"object-src": ["none"],
-				"style-src": ["self"],
+				"style-src": ["self", "unsafe-inline"],
 				"default-src": ["none"],
 				"base-uri": ["none"],
 				"form-action": ["none"],
 				"frame-ancestors": ["none"],
 				"font-src": ["self", "https://cdn.jsdelivr.net"], // beercss?
-				"img-src": ["self", "data:image/png"],
+				"img-src": ["self", "data:image/png;base64"],
 				"connect-src": ["self", "https://analytics.esd.uga.edu"],
 				"upgrade-insecure-requests": true,
 			},
