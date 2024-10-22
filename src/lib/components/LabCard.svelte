@@ -76,7 +76,7 @@ A card displaying information about a lab. Responsive to screen width.
 
 <article class="border">
 	<nav>
-		<div style="max-width: 100%;">
+		<div id="container-labcard">
 			<h5><strong>{lab["Lab Name"]}</strong></h5>
 			<p>{lab["Bldg Number"]} · {lab["Bldg Name"]}</p>
 
@@ -137,5 +137,9 @@ A card displaying information about a lab. Responsive to screen width.
 		@media (min-width: 993px) {
 			text-align: end;
 		}
+	}
+
+	#container-labcard {
+		max-width: 100%;
 	}
 </style>
