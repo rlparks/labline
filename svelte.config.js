@@ -12,6 +12,22 @@ const config = {
 		// If your environment is not supported, or you settled on a specific environment, switch out the adapter.
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter(),
+
+		csp: {
+			directives: {
+				"script-src": ["self", "https://analytics.esd.uga.edu/script.js"],
+				"object-src": ["none"],
+				"style-src": ["self"],
+				"default-src": ["none"],
+				"base-uri": ["none"],
+				"form-action": ["none"],
+				"frame-ancestors": ["none"],
+				"font-src": ["self", "https://cdn.jsdelivr.net"], // beercss?
+				"img-src": ["self"],
+				"connect-src": ["self"],
+				"upgrade-insecure-requests": true,
+			},
+		},
 	},
 };
 
