@@ -1,15 +1,12 @@
-import { getLabData } from "$lib/server";
 import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
-export const GET: RequestHandler = async ({ params }) => {
-	const { buildingNumber } = params;
+export const GET: RequestHandler = async (event) => {
+	const { buildingNumber } = event.params;
 	try {
-		const labs = await getLabData();
+		const labs = await event.locals.knowledger.getBuildingLabs(buildingNumber);
 
-		const buildingLabs = labs.filter((lab) => lab["Bldg Number"] === buildingNumber);
-
-		return json(buildingLabs);
+		return json(labs);
 	} catch {
 		return error(500, "Error retrieving labs");
 	}

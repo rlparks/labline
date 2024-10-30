@@ -1,7 +1,7 @@
 import { env } from "$env/dynamic/private";
-import { NODE_ENV } from "$env/static/private";
 import { DEMO_USER } from "$lib";
 import { makeUserSafe } from "$lib/server";
+import Knowledger from "$lib/server/api/Knowledger";
 import type { RawUser } from "$lib/types";
 import { error, json, redirect, type Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
@@ -65,12 +65,11 @@ export const handle: Handle = async ({ event, resolve }) => {
 		}
 	}
 
+	event.locals.knowledger = new Knowledger();
+
 	const result = await resolve(event);
 
-	result.headers.append(
-		"set-cookie",
-		event.locals.pb.authStore.exportToCookie({ secure: NODE_ENV === "production" }),
-	);
+	result.headers.append("set-cookie", event.locals.pb.authStore.exportToCookie({ secure: true }));
 
 	// https://developer.mozilla.org/en-US/observatory suggestions
 	result.headers.set("referrer-policy", "strict-origin-when-cross-origin");

@@ -1,6 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import type { SafeUser } from "$lib/types";
+import Knowledger from "$lib/server/api/Knowledger";
 import PocketBase from "pocketbase";
 
 // for information about these interfaces
@@ -10,6 +11,7 @@ declare global {
 		interface Locals {
 			pb: PocketBase;
 			user: SafeUser | undefined;
+			knowledger: Knowledger;
 		}
 		// interface PageData {}
 		// interface PageState {}
