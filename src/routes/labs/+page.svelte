@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { LabsSearch } from "$lib/components";
+	import { LabsSearch, Message } from "$lib/components";
 
 	const { data } = $props();
 
@@ -12,4 +12,9 @@
 
 <h3 class="center-align">Emergency Contacts</h3>
 
-<LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} />
+{#await data.labs}
+	<div class="space"></div>
+	<Message iconText="sync" headerText="Please wait" messageText="Retrieving labs from server..." />
+{:then labs}
+	<LabsSearch {labs} {title} showLabsWhenNoSearch={false} />
+{/await}
