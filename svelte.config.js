@@ -20,7 +20,7 @@ const config = {
 				"style-src": ["self", "unsafe-inline"],
 				"default-src": ["none"],
 				"base-uri": ["none"],
-				"form-action": ["none"],
+				"form-action": ["self"],
 				"frame-ancestors": ["none"],
 				"font-src": ["self", "https://cdn.jsdelivr.net"], // beercss?
 				"img-src": ["self", "data:"],
