@@ -35,6 +35,7 @@
 
 <svelte:head>
 	<title>knowledger · {title}</title>
+	<meta name="description" content="UGA Lab Summary Stats." />
 </svelte:head>
 
 <h3 class="center-align">{title}</h3>

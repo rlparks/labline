@@ -8,6 +8,7 @@
 
 <svelte:head>
 	<title>knowledger · {title}</title>
+	<meta name="description" content="UGA Lab Emergency Contacts for All Labs." />
 </svelte:head>
 
 <h3 class="center-align">Emergency Contacts</h3>

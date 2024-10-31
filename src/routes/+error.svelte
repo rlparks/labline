@@ -15,5 +15,9 @@
 		messageText="Try logging in with your UGA account"
 	/>
 {:else}
-	<h3 class="center-align">{$page.status}: {$page.error?.message}</h3>
+	<Message
+		iconText="error"
+		headerText="{$page.status}: {$page.error?.message}"
+		messageText="Sorry, an error has occurred."
+	/>
 {/if}

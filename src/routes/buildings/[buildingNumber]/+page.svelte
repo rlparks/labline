@@ -10,6 +10,7 @@
 
 <svelte:head>
 	<title>knowledger · {title}</title>
+	<meta name="description" content="UGA Lab Emergency Contacts for {title}." />
 </svelte:head>
 
 <LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={true} />

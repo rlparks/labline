@@ -34,6 +34,7 @@
 
 <svelte:head>
 	<title>knowledger · SSO Callback</title>
+	<meta name="description" content="knowledger OIDC callback page. How did you end up here?" />
 </svelte:head>
 
 <h3 class="center-align">OIDC Login</h3>
