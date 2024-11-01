@@ -4,6 +4,7 @@
 	import "beercss";
 	import "./fonts.css";
 	import "./theme.css";
+	import { navigating } from "$app/stores";
 
 	const { children, data } = $props();
 </script>
@@ -21,14 +22,20 @@
 
 	<Header user={data.user} provider={data.ssoProvider} />
 
-	<div class="center-align">
-		<div class="space"></div>
-		<img width="400px" class="" src={ESD} alt="ESD" />
-		<div class="space"></div>
-	</div>
+	{@render esdLogo()}
 
 	<main class="responsive">
-		{@render children()}
+		{#if !$navigating}
+			{@render children()}
+		{:else}
+			<div class="space"></div>
+			<Message
+				iconText="sync"
+				headerText="Please wait..."
+				messageText="Retrieving data from server"
+			/>
+			<div class="space"></div>
+		{/if}
 	</main>
 
 	<div class="space"></div>
@@ -37,6 +44,14 @@
 		<Footer fileStats={data.fileStats} showDate={Boolean(data.user)} />
 	</footer>
 </div>
+
+{#snippet esdLogo()}
+	<div class="center-align">
+		<div class="space"></div>
+		<img width="400px" class="" src={ESD} alt="ESD" />
+		<div class="space"></div>
+	</div>
+{/snippet}
 
 <style>
 	@media (max-width: 600px) {
