@@ -4,7 +4,6 @@ export const users = pgTable("users", {
 	id: text("id").primaryKey(),
 	username: text("username").notNull().unique(),
 	name: text("name").notNull(),
-	passwordHash: text("password_hash").notNull(),
 });
 
 export const sessions = pgTable("sessions", {
