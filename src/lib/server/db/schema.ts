@@ -1,18 +1,29 @@
-import { pgTable, serial, text, integer, timestamp } from "drizzle-orm/pg-core";
+import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
-export const user = pgTable("user", {
+export const users = pgTable("users", {
 	id: text("id").primaryKey(),
-	age: integer("age"),
+	username: text("username").notNull().unique(),
+	name: text("name").notNull(),
+	passwordHash: text("password_hash").notNull(),
 });
 
-export const session = pgTable("session", {
+export const sessions = pgTable("sessions", {
 	id: text("id").primaryKey(),
 	userId: text("user_id")
 		.notNull()
-		.references(() => user.id),
+		.references(() => users.id),
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
 });
 
-export type Session = typeof session.$inferSelect;
+export const roles = pgEnum("roles", ["admin"]);
 
-export type User = typeof user.$inferSelect;
+export const userRoles = pgTable("user_roles", {
+	userId: text("user_id")
+		.notNull()
+		.references(() => users.id),
+	role: roles("role").notNull(),
+});
+
+export type Session = typeof sessions.$inferSelect;
+
+export type User = typeof users.$inferSelect;

@@ -2,15 +2,13 @@
 
 import type { SafeUser } from "$lib/types";
 import Knowledger from "$lib/server/api/Knowledger";
-import PocketBase from "pocketbase";
 
 // for information about these interfaces
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			pb: PocketBase;
-			user: SafeUser | undefined;
+			user: SafeUser | null;
 			knowledger: Knowledger;
 			session: import("$lib/server/auth").SessionValidationResult["session"];
 		}

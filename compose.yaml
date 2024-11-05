@@ -21,3 +21,5 @@ services:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: local
+    volumes:
+      - ./db:/var/lib/postgresql/data

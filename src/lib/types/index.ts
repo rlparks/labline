@@ -22,7 +22,6 @@ export interface SafeUser {
 	id: string;
 	username: string;
 	name: string;
-	hasAvatar: boolean;
 }
 
 /**
