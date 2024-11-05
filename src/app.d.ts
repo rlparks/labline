@@ -12,6 +12,7 @@ declare global {
 			pb: PocketBase;
 			user: SafeUser | undefined;
 			knowledger: Knowledger;
+			session: import("$lib/server/auth").SessionValidationResult["session"];
 		}
 		// interface PageData {}
 		// interface PageState {}

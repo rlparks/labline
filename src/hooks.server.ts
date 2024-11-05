@@ -1,3 +1,5 @@
+import { sequence } from "@sveltejs/kit/hooks";
+import * as auth from "$lib/server/auth.js";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER } from "$lib";
 import { makeUserSafe } from "$lib/server";
@@ -30,7 +32,7 @@ try {
 	console.log("PB admin already exists");
 }
 
-export const handle: Handle = async ({ event, resolve }) => {
+const originalHandle: Handle = async ({ event, resolve }) => {
 	event.locals.pb = new PocketBase(env.PB_URL);
 	try {
 		await event.locals.pb.health.check();
@@ -80,3 +82,26 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return result;
 };
+
+const handleAuth: Handle = async ({ event, resolve }) => {
+	const sessionToken = event.cookies.get(auth.sessionCookieName);
+	if (!sessionToken) {
+		event.locals.user = null;
+		event.locals.session = null;
+		return resolve(event);
+	}
+
+	const { session, user } = await auth.validateSessionToken(sessionToken);
+	if (session) {
+		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+	} else {
+		auth.deleteSessionTokenCookie(event);
+	}
+
+	event.locals.user = user;
+	event.locals.session = session;
+
+	return resolve(event);
+};
+
+export const handle = sequence(originalHandle, handleAuth);
