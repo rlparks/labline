@@ -1,21 +1,30 @@
-import { sequence } from "@sveltejs/kit/hooks";
-import * as auth from "$lib/server/auth.js";
 import { env } from "$env/dynamic/private";
-import { DEMO_USER } from "$lib";
-import { makeUserSafe } from "$lib/server";
 import Knowledger from "$lib/server/api/Knowledger";
-import type { RawUser } from "$lib/types";
-import { error, json, redirect, type Handle } from "@sveltejs/kit";
+import * as auth from "$lib/server/auth.js";
+import { User, Session } from "$lib/server/db/entity";
+import { json, redirect, type Handle } from "@sveltejs/kit";
+import { sequence } from "@sveltejs/kit/hooks";
 
 const UNSECURE_PAGE_ROUTES = ["/", "/login/callback"];
-const UNSECURE_API_ROUTES = ["/api/auth/methods", "/api/auth/login/oidc"];
+const UNSECURE_API_ROUTES = ["/api/auth/login/oidc"];
 
 const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
+const REQUIRED_ENV_VARIABLES = [
+	"DATABASE_URL",
+	"OIDC_DISCOVERY_ENDPOINT",
+	"OIDC_CLIENT_ID",
+	"OIDC_CLIENT_SECRET",
+	"ABSOLUTE_DIR_PATH",
+];
 
-if (!env.DATABASE_URL) {
-	console.log("DATABASE_URL must be set");
-	process.exit(1);
+for (const envVar of REQUIRED_ENV_VARIABLES) {
+	if (!env[envVar]) {
+		console.log(`${envVar} must be set`);
+		process.exit(1);
+	}
 }
+
+console.log(await Session.getUserSessionBySessionId("E"));
 
 const originalHandle: Handle = async ({ event, resolve }) => {
 	if (event.route.id && !event.locals.user) {

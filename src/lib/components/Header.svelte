@@ -24,28 +24,25 @@ The header (navigation bar) of the application.
 	import { page } from "$app/stores";
 	import { Title } from "$lib/components";
 	import type { SafeUser } from "$lib/types";
-	import type { AuthProviderInfo } from "pocketbase";
 
 	const NAV_BREAKPOINT = 1020;
 	const BUTTON_CIRCLE_BREAKPOINT = 600;
 
-	const {
-		user,
-		provider,
-	}: {
+	type Props = {
 		user: SafeUser | undefined;
-		provider: AuthProviderInfo | undefined;
-	} = $props();
+		authEndpoint: URL;
+	};
+
+	const { user, authEndpoint }: Props = $props();
 
 	const oidcRedirectUrl = $derived(
 		browser ? `${window.location.origin}/login/callback` : undefined,
 	);
 
 	function performRedirect() {
-		if (provider) {
-			window.sessionStorage.setItem("provider", JSON.stringify(provider));
-
-			window.location.href = provider.authUrl + oidcRedirectUrl;
+		if (authEndpoint && oidcRedirectUrl) {
+			authEndpoint.searchParams.set("redirect_uri", oidcRedirectUrl);
+			window.location.href = authEndpoint.toString();
 		} else {
 			alert("Error: Provider not found.");
 		}
