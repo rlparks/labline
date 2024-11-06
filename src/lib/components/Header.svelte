@@ -22,6 +22,7 @@ The header (navigation bar) of the application.
 	import { browser } from "$app/environment";
 	import { enhance } from "$app/forms";
 	import { page } from "$app/stores";
+	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
 	import type { SafeUser } from "$lib/types";
 
@@ -30,19 +31,28 @@ The header (navigation bar) of the application.
 
 	type Props = {
 		user: SafeUser | null;
-		authEndpoint: URL;
+		authInfo: {
+			authEndpoint: string;
+			tokenEndpoint: string;
+			userinfoEndpoint: string;
+			endSessionEndpoint: string;
+			state: string;
+		};
 	};
 
-	const { user, authEndpoint }: Props = $props();
+	const { user, authInfo }: Props = $props();
 
 	const oidcRedirectUrl = $derived(
 		browser ? `${window.location.origin}/login/callback` : undefined,
 	);
 
 	function performRedirect() {
-		if (authEndpoint && oidcRedirectUrl) {
-			authEndpoint.searchParams.set("redirect_uri", oidcRedirectUrl);
-			window.location.href = authEndpoint.toString();
+		if (authInfo.authEndpoint && oidcRedirectUrl) {
+			window.sessionStorage.setItem(OIDC_STATE_KEY, authInfo.state);
+
+			const authEndpointUrl = new URL(authInfo.authEndpoint);
+			authEndpointUrl.searchParams.set("redirect_uri", oidcRedirectUrl);
+			window.location.href = authEndpointUrl.toString();
 		} else {
 			alert("Error: Provider not found.");
 		}

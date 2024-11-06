@@ -20,7 +20,7 @@
 		<div class="space"></div>
 	</noscript>
 
-	<Header user={data.user} authEndpoint={new URL(data.ssoAuthUrl)} />
+	<Header user={data.user} authInfo={data.authInfo} />
 
 	{@render esdLogo()}
 

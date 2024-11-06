@@ -2,11 +2,28 @@
 	import { enhance } from "$app/forms";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
-	import { PROVIDER_KEY } from "$lib";
+	import { OIDC_STATE_KEY } from "$lib";
 
 	let loading = $state(true);
 
-	$effect(() => {});
+	let oidcForm: HTMLFormElement;
+	let codeInput: HTMLInputElement;
+
+	$effect(() => {
+		const code = $page.url.searchParams.get("code");
+		const urlState = $page.url.searchParams.get("state");
+
+		if (code && urlState) {
+			const savedState = window.sessionStorage.getItem(OIDC_STATE_KEY);
+			window.sessionStorage.removeItem(OIDC_STATE_KEY);
+
+			if (savedState === urlState) {
+				codeInput.value = code;
+				oidcForm.submit();
+				loading = false;
+			}
+		}
+	});
 </script>
 
 <svelte:head>
@@ -15,13 +32,12 @@
 </svelte:head>
 
 <h3 class="center-align">OIDC Login</h3>
-{#if loading}
+{#if !$page.error}
 	<p class="center-align">Logging in...</p>
 {:else}
-	<p class="center-align">Failed to login. Please try again.</p>
+	<p class="center-align">{$page.error.message}</p>
 {/if}
 
-<form id="oidcLogin" action="/api/auth/login/oidc" method="POST" use:enhance>
-	<input id="providerInput" name="provider" type="hidden" />
-	<input id="codeInput" name="code" type="hidden" />
+<form bind:this={oidcForm} method="POST" use:enhance>
+	<input bind:this={codeInput} name="code" type="hidden" />
 </form>

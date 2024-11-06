@@ -17,15 +17,17 @@ export async function getAuthProviderInfo() {
 	if (result.ok) {
 		const json = await result.json();
 
+		const state = generateSessionToken();
+
 		const authEndpoint = new URL(json.authorization_endpoint);
 		authEndpoint.searchParams.set("response_type", "code");
 		authEndpoint.searchParams.set("scope", "openid");
 		authEndpoint.searchParams.set("client_id", env.OIDC_CLIENT_ID);
+		authEndpoint.searchParams.set("state", state);
 
 		const tokenEndpoint = String(json.token_endpoint);
 		const userinfoEndpoint = String(json.userinfo_endpoint);
 		const endSessionEndpoint = String(json.end_session_endpoint);
-		const state = generateSessionToken();
 		return {
 			authEndpoint: authEndpoint.toString(),
 			tokenEndpoint,
