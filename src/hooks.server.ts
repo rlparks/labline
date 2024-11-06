@@ -1,7 +1,6 @@
 import { env } from "$env/dynamic/private";
 import Knowledger from "$lib/server/api/Knowledger";
 import * as auth from "$lib/server/auth.js";
-import { User, Session } from "$lib/server/db/entity";
 import { json, redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -23,8 +22,6 @@ for (const envVar of REQUIRED_ENV_VARIABLES) {
 		process.exit(1);
 	}
 }
-
-console.log(await Session.getUserSessionBySessionId("E"));
 
 const originalHandle: Handle = async ({ event, resolve }) => {
 	if (event.route.id && !event.locals.user) {
@@ -62,8 +59,8 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		event.locals.session = null;
 		return resolve(event);
 	}
-
 	const { session, user } = await auth.validateSessionToken(sessionToken);
+
 	if (session) {
 		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
 	} else {

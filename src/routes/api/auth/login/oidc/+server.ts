@@ -1,10 +1,14 @@
-import { getAuthProviderInfo } from "$lib/server/auth";
+import * as auth from "$lib/server/auth";
 import { error } from "@sveltejs/kit";
-import type { RequestHandler } from "./$types";
+import type { RequestEvent, RequestHandler } from "./$types";
 import { env } from "$env/dynamic/private";
+import { User } from "$lib/server/db/entity";
+import { getCurrentFormattedDateTime } from "$lib/server";
+
+const { OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_USERNAME_CLAIM } = env;
 
 export const POST: RequestHandler = async (event) => {
-	const authInfo = await getAuthProviderInfo();
+	const authInfo = await auth.getAuthProviderInfo();
 
 	if (!authInfo) {
 		return error(500, "Auth provider unavailable.");
@@ -17,13 +21,20 @@ export const POST: RequestHandler = async (event) => {
 		return error(400, "Invalid code");
 	}
 
-	const tokenJson = await getAccessToken(
+	const { access_token, id_token } = await getAccessToken(
 		code,
 		authInfo.tokenEndpoint,
 		`${event.url.origin}/login/callback`,
 	);
 
-	const { access_token, id_token } = tokenJson;
+	const userInfo = await getUserInfo(access_token, authInfo.userinfoEndpoint);
+	const username = OIDC_USERNAME_CLAIM in userInfo ? userInfo[OIDC_USERNAME_CLAIM] : null;
+
+	if (!username) {
+		return error(400, "Missing username");
+	}
+
+	await loginUser(username, event);
 
 	return new Response("OK", { status: 200 });
 };
@@ -55,8 +66,6 @@ function tokenResponseIsValid(tokenJson: unknown): tokenJson is TokenResponse {
 }
 
 async function getAccessToken(code: string, tokenEndpoint: string, redirectUri: string) {
-	const { OIDC_CLIENT_ID, OIDC_CLIENT_SECRET } = env;
-
 	const body = new URLSearchParams();
 	body.append("grant_type", "authorization_code");
 	body.append("client_id", OIDC_CLIENT_ID);
@@ -72,8 +81,6 @@ async function getAccessToken(code: string, tokenEndpoint: string, redirectUri: 
 		body,
 	});
 
-	console.log(await result.json());
-
 	if (!result.ok) {
 		return error(500, "Failure getting auth token");
 	}
@@ -85,4 +92,66 @@ async function getAccessToken(code: string, tokenEndpoint: string, redirectUri: 
 	}
 
 	return tokenJson;
+}
+
+async function getUserInfo(accessToken: string, userInfoEndpoint: string) {
+	const userInfoResponse = await fetch(userInfoEndpoint, {
+		headers: {
+			Authorization: `Bearer ${accessToken}`,
+		},
+	});
+
+	if (!userInfoResponse.ok) {
+		return error(500, "Failure getting user info");
+	}
+
+	const userInfoJson = await userInfoResponse.json();
+
+	// authentik openid profile
+	// {
+	//     sub: '559d7b0af124e9fa495c0cf00f2c0f337458e2337488faf7f9c02e5222f912b0',
+	//     name: 'Rebecca Pakrs',
+	//     given_name: 'Rebecca Pakrs',
+	//     preferred_username: 'rlparks',
+	//     nickname: 'rlparks',
+	//     groups: [
+	//         'authentik Admins',
+	//         'headscale',
+	//         'planka-admin',
+	//         'Brown McCook',
+	//         'Proxmox Admins',
+	//         'Backups'
+	//     ]
+	// }
+
+	if (!userInfoResponseIsValid(userInfoJson)) {
+		return error(500, "Failure getting user info");
+	}
+
+	return userInfoJson;
+}
+
+type UserInfoResponse = Record<string, string>;
+
+function userInfoResponseIsValid(userInfoJson: unknown): userInfoJson is UserInfoResponse {
+	return (
+		typeof userInfoJson === "object" && userInfoJson !== null && OIDC_USERNAME_CLAIM in userInfoJson
+	);
+}
+
+async function loginUser(username: string, event: RequestEvent) {
+	const user = await User.getUserByUsername(username);
+	if (!user) {
+		console.log(
+			`${getCurrentFormattedDateTime()} · User "${username}" attempted login but does not exist.`,
+		);
+		return error(400, "User does not exist");
+	}
+
+	const session = await auth.createSession(user.id);
+	console.log(
+		`${getCurrentFormattedDateTime()} · User "${username}" logged in, session expiring on ${session.expiresAt.toLocaleDateString()}.`,
+	);
+
+	auth.setSessionTokenCookie(event, session.token, session.expiresAt);
 }

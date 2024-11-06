@@ -6,6 +6,7 @@ import { Session } from "./db/entity";
 import { env } from "$env/dynamic/private";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const SCOPES = ["openid", "profile"];
 
 export async function getAuthProviderInfo() {
 	const oidcDiscoveryUrl = env.OIDC_DISCOVERY_ENDPOINT;
@@ -21,7 +22,7 @@ export async function getAuthProviderInfo() {
 
 		const authEndpoint = new URL(json.authorization_endpoint);
 		authEndpoint.searchParams.set("response_type", "code");
-		authEndpoint.searchParams.set("scope", "openid");
+		authEndpoint.searchParams.set("scope", SCOPES.join(" "));
 		authEndpoint.searchParams.set("client_id", env.OIDC_CLIENT_ID);
 		authEndpoint.searchParams.set("state", state);
 
@@ -48,15 +49,17 @@ export function generateSessionToken() {
 	return token;
 }
 
-export async function createSession(token: string, userId: string) {
+export async function createSession(userId: string) {
+	const token = generateSessionToken();
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
 	const session: table.Session = {
 		id: sessionId,
 		userId,
-		expiresAt: new Date(Date.now() + DAY_IN_MS * 30),
+		expiresAt,
 	};
 	Session.createSession(session);
-	return session;
+	return { token, expiresAt };
 }
 
 export async function validateSessionToken(token: string) {
@@ -91,8 +94,11 @@ export async function invalidateSession(sessionId: string) {
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
 	event.cookies.set(sessionCookieName, token, {
-		expires: expiresAt,
 		path: "/",
+		sameSite: "strict",
+		expires: expiresAt,
+		httpOnly: true,
+		secure: true,
 	});
 }
 

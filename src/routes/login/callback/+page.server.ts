@@ -7,9 +7,11 @@ export const load = (async () => {
 
 export const actions: Actions = {
 	async default(event) {
+		console.time("loginaction");
 		const formData = await event.request.formData();
 		const code = formData.get("code");
 
+		console.timeLog("loginaction");
 		const apiRes = await event.fetch("/api/auth/login/oidc", {
 			method: "POST",
 			body: JSON.stringify({ code }),
@@ -18,9 +20,14 @@ export const actions: Actions = {
 			},
 		});
 
+		console.timeLog("loginaction");
+
 		if (!apiRes.ok) {
-			return error(500, "Failed to log in. Please try again.");
+			const resBody = await apiRes.json();
+			const message: string = resBody.message || "Error logging in";
+			return error(apiRes.status, message);
 		}
+		console.timeEnd("loginaction");
 
 		return redirect(303, "/");
 	},
