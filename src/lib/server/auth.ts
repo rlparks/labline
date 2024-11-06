@@ -22,10 +22,17 @@ export async function getAuthProviderInfo() {
 		authEndpoint.searchParams.set("scope", "openid");
 		authEndpoint.searchParams.set("client_id", env.OIDC_CLIENT_ID);
 
-		const tokenEndpoint = json.token_endpoint;
-		const userinfoEndpoint = json.userinfo_endpoint;
+		const tokenEndpoint = String(json.token_endpoint);
+		const userinfoEndpoint = String(json.userinfo_endpoint);
+		const endSessionEndpoint = String(json.end_session_endpoint);
 		const state = generateSessionToken();
-		return { authEndpoint, tokenEndpoint, userinfoEndpoint, state };
+		return {
+			authEndpoint: authEndpoint.toString(),
+			tokenEndpoint,
+			userinfoEndpoint,
+			endSessionEndpoint,
+			state,
+		};
 	}
 
 	throw new Error("Error retrieving auth provider info");

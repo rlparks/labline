@@ -1,19 +1,4 @@
-/**
- * `User`s directly returned from PocketBase.
- */
-export type RawUser = {
-	avatar: string;
-	collectionId: string;
-	collectionName: string;
-	created: string;
-	email: string;
-	emailVisibility: boolean;
-	id: string;
-	name: string;
-	updated: string;
-	username: string;
-	verified: boolean;
-};
+export type { User, Session } from "$lib/server/db/schema";
 
 /**
  * `User`s with additional info removed.

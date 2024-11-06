@@ -29,7 +29,7 @@ The header (navigation bar) of the application.
 	const BUTTON_CIRCLE_BREAKPOINT = 600;
 
 	type Props = {
-		user: SafeUser | undefined;
+		user: SafeUser | null;
 		authEndpoint: URL;
 	};
 

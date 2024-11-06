@@ -3,8 +3,7 @@ import type { Actions } from "./$types";
 
 export const actions = {
 	default: async ({ locals }) => {
-		locals.pb.authStore.clear();
-		locals.user = undefined;
+		locals.user = null;
 		return redirect(303, "/");
 	},
 } satisfies Actions;
