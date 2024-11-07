@@ -27,8 +27,8 @@ for (const envVar of REQUIRED_ENV_VARIABLES) {
 
 if (env.CREATE_ACCOUNT) {
 	try {
-		User.createUser(env.CREATE_ACCOUNT, "Initial User");
-		console.log(`Created user ${env.CREATE_ACCOUNT}`);
+		const newUser = await User.createUser(env.CREATE_ACCOUNT, "Initial User");
+		console.log(`Created user ${newUser.username}`);
 	} catch (e) {
 		if (e instanceof Error) {
 			console.log(e.message);
