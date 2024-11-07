@@ -60,6 +60,5 @@ export async function updateSessionExpiresAt(
  * @returns the deleted Session
  */
 export async function deleteSession(sessionId: string) {
-	console.log(`Deleting session ${sessionId}`);
 	return await db.delete(table.sessions).where(eq(table.sessions.id, sessionId)).returning();
 }

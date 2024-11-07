@@ -10,8 +10,16 @@ export const actions = {
 		await auth.deleteSessionTokenCookie(event);
 		await auth.invalidateSession(event.locals.session.id);
 
+		const idToken = event.locals.session.idToken;
+
 		event.locals.user = null;
 		event.locals.session = null;
+
+		if (idToken) {
+			const authInfo = await auth.getAuthProviderInfo();
+			return redirect(303, authInfo.endSessionEndpoint + "?id_token_hint=" + idToken);
+		}
+
 		return redirect(303, "/");
 	},
 } satisfies Actions;
