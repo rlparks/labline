@@ -1,5 +1,5 @@
 import { db } from "$lib/server/db";
-import type { User, Session } from "$lib/server/db/schema";
+import type { User } from "$lib/server/db/schema";
 import * as table from "$lib/server/db/schema";
 import { generateRandomString } from "@oslojs/crypto/random";
 import { eq } from "drizzle-orm";

@@ -149,10 +149,9 @@ async function loginUser(username: string, idToken: string, event: RequestEvent)
 	}
 
 	const ipAddress = event.getClientAddress();
-	const userAgent = event.request.headers.get("user-agent");
 
 	try {
-		const session = await auth.createSession(user.id, idToken, ipAddress, userAgent);
+		const session = await auth.createSession(user.id, idToken, ipAddress);
 		console.log(
 			`${getCurrentFormattedDateTime()} · User "${username}" logged in, session expiring on ${session.expiresAt.toLocaleDateString()}.`,
 		);

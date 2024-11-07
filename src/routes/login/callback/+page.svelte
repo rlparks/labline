@@ -1,10 +1,7 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
-	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import { OIDC_STATE_KEY } from "$lib";
-
-	let loading = $state(true);
 
 	let oidcForm: HTMLFormElement;
 	let codeInput: HTMLInputElement;
@@ -20,7 +17,6 @@
 			if (savedState === urlState) {
 				codeInput.value = code;
 				oidcForm.submit();
-				loading = false;
 			}
 		}
 	});

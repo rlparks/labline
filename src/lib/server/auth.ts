@@ -49,12 +49,7 @@ export function generateSessionToken() {
 	return token;
 }
 
-export async function createSession(
-	userId: string,
-	idToken: string,
-	ipAddress: string,
-	userAgent: string | null,
-) {
+export async function createSession(userId: string, idToken: string, ipAddress: string) {
 	const token = generateSessionToken();
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
@@ -64,7 +59,6 @@ export async function createSession(
 		expiresAt,
 		idToken,
 		ipAddress,
-		userAgent,
 	};
 	Session.createSession(session);
 	return { token, expiresAt };
@@ -86,9 +80,8 @@ export async function validateSessionToken(token: string, event: RequestEvent) {
 	}
 
 	// protect against session hijacking
-	const userAgent = event.request.headers.get("user-agent");
 	const ipAddress = event.getClientAddress();
-	if (session.userAgent !== userAgent || session.ipAddress !== ipAddress) {
+	if (session.ipAddress !== ipAddress) {
 		return { session: null, user: null };
 	}
 
