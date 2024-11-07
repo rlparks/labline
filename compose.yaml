@@ -6,21 +6,20 @@ services:
       - 3000:3000
     restart: unless-stopped
     environment:
-      PB_URL: http://knowledger-pb:8080
-      PB_ADMIN_EMAIL: PBECCA@example.com
-      PB_ADMIN_PASSWORD: superSecurePassword
+      DATABASE_URL: postgres://root:mysecretpassword@knowledger-db:5432/local
       ABSOLUTE_DIR_PATH: /opt/knowledger
     volumes:
       - ./labs:/opt/knowledger
     depends_on:
-      - knowledger-pb
-  knowledger-pb:
-    container_name: knowledger-pb
-    build:
-      dockerfile: ./pb-Dockerfile
-    ports:
-      # be careful who can access this admin UI!
-      - 8080
+      - knowledger-db
+  knowledger-db:
+    image: postgres
     restart: unless-stopped
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: local
     volumes:
-      - ./pb:/pb/pb_data
+      - ./db:/var/lib/postgresql/data

@@ -9,7 +9,7 @@ export const load = (async ({ fetch, locals }) => {
 	const buildingRes = await fetch("/api/buildings");
 
 	if (!buildingRes.ok) {
-		return error(500, "Error retrieving buildings");
+		return error(buildingRes.status, "Error retrieving buildings");
 	}
 	const buildings = (await buildingRes.json()) as Building[];
 	return { buildings };

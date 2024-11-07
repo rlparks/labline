@@ -1,54 +1,32 @@
 import { env } from "$env/dynamic/private";
 import { DEMO_USER } from "$lib";
-import { makeUserSafe } from "$lib/server";
 import Knowledger from "$lib/server/api/Knowledger";
-import type { RawUser } from "$lib/types";
-import { error, json, redirect, type Handle } from "@sveltejs/kit";
-import PocketBase from "pocketbase";
+import * as auth from "$lib/server/auth.js";
+import { json, redirect, type Handle } from "@sveltejs/kit";
+import { sequence } from "@sveltejs/kit/hooks";
 
 const UNSECURE_PAGE_ROUTES = ["/", "/login/callback"];
-const UNSECURE_API_ROUTES = ["/api/auth/methods", "/api/auth/login/oidc"];
+const UNSECURE_API_ROUTES = ["/api/auth/login/oidc"];
 
 const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
+const REQUIRED_ENV_VARIABLES = [
+	"DATABASE_URL",
+	"OIDC_DISCOVERY_ENDPOINT",
+	"OIDC_CLIENT_ID",
+	"OIDC_CLIENT_SECRET",
+	"ABSOLUTE_DIR_PATH",
+];
 
-if (!env.PB_URL || !env.PB_ADMIN_EMAIL || !env.PB_ADMIN_PASSWORD) {
-	console.log("PB_URL, PB_ADMIN_EMAIL and PB_ADMIN_PASSWORD must be set");
-	process.exit(1);
-}
-
-try {
-	const adminPb = new PocketBase(env.PB_URL);
-	await adminPb.admins.create({
-		email: env.PB_ADMIN_EMAIL,
-		password: env.PB_ADMIN_PASSWORD,
-		passwordConfirm: env.PB_ADMIN_PASSWORD,
-	});
-
-	const pbWebUrl = `${env.PB_URL}/_`;
-	console.log(`PB admin created! Please log in to ${pbWebUrl} and add your OIDC provider.`);
-} catch {
-	console.log("PB admin already exists");
-}
-
-export const handle: Handle = async ({ event, resolve }) => {
-	event.locals.pb = new PocketBase(env.PB_URL);
-	try {
-		await event.locals.pb.health.check();
-	} catch (err) {
-		console.log(err);
-		return error(500, "Error: Unable to access the database.");
+for (const envVar of REQUIRED_ENV_VARIABLES) {
+	if (!env[envVar]) {
+		console.log(`${envVar} must be set`);
+		process.exit(1);
 	}
+}
 
-	event.locals.pb.authStore.loadFromCookie(event.request.headers.get("cookie") || "");
-
-	if (event.locals.pb.authStore.isValid) {
-		event.locals.user = makeUserSafe(event.locals.pb.authStore.model as RawUser);
-	} else {
-		if (!BYPASS_ACCOUNT_REQUIREMENT) {
-			event.locals.user = undefined;
-		} else {
-			event.locals.user = DEMO_USER;
-		}
+const originalHandle: Handle = async ({ event, resolve }) => {
+	if (BYPASS_ACCOUNT_REQUIREMENT && !event.locals.user) {
+		event.locals.user = DEMO_USER;
 	}
 
 	if (event.route.id && !event.locals.user) {
@@ -69,8 +47,6 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	const result = await resolve(event);
 
-	result.headers.append("set-cookie", event.locals.pb.authStore.exportToCookie({ secure: true }));
-
 	// https://developer.mozilla.org/en-US/observatory suggestions
 	result.headers.set("referrer-policy", "strict-origin-when-cross-origin");
 	result.headers.set("x-content-type-options", "nosniff");
@@ -80,3 +56,26 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	return result;
 };
+
+const handleAuth: Handle = async ({ event, resolve }) => {
+	const sessionToken = event.cookies.get(auth.sessionCookieName);
+	if (!sessionToken) {
+		event.locals.user = null;
+		event.locals.session = null;
+		return resolve(event);
+	}
+	const { session, user } = await auth.validateSessionToken(sessionToken, event);
+
+	if (session) {
+		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+	} else {
+		auth.deleteSessionTokenCookie(event);
+	}
+
+	event.locals.user = user;
+	event.locals.session = session;
+
+	return resolve(event);
+};
+
+export const handle = sequence(handleAuth, originalHandle);

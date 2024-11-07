@@ -22,30 +22,37 @@ The header (navigation bar) of the application.
 	import { browser } from "$app/environment";
 	import { enhance } from "$app/forms";
 	import { page } from "$app/stores";
+	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
 	import type { SafeUser } from "$lib/types";
-	import type { AuthProviderInfo } from "pocketbase";
 
 	const NAV_BREAKPOINT = 1020;
 	const BUTTON_CIRCLE_BREAKPOINT = 600;
 
-	const {
-		user,
-		provider,
-	}: {
-		user: SafeUser | undefined;
-		provider: AuthProviderInfo | undefined;
-	} = $props();
+	type Props = {
+		user: SafeUser | null;
+		authInfo: {
+			authEndpoint: string;
+			tokenEndpoint: string;
+			userinfoEndpoint: string;
+			endSessionEndpoint: string;
+			state: string;
+		};
+	};
+
+	const { user, authInfo }: Props = $props();
 
 	const oidcRedirectUrl = $derived(
 		browser ? `${window.location.origin}/login/callback` : undefined,
 	);
 
 	function performRedirect() {
-		if (provider) {
-			window.sessionStorage.setItem("provider", JSON.stringify(provider));
+		if (authInfo.authEndpoint && oidcRedirectUrl) {
+			window.sessionStorage.setItem(OIDC_STATE_KEY, authInfo.state);
 
-			window.location.href = provider.authUrl + oidcRedirectUrl;
+			const authEndpointUrl = new URL(authInfo.authEndpoint);
+			authEndpointUrl.searchParams.set("redirect_uri", oidcRedirectUrl);
+			window.location.href = authEndpointUrl.toString();
 		} else {
 			alert("Error: Provider not found.");
 		}

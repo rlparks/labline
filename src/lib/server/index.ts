@@ -1,4 +1,4 @@
-import type { RawUser, SafeUser } from "$lib/types";
+import type { SafeUser, User } from "$lib/types";
 
 /**
  * Removes unnecessary info from User objects returned from
@@ -7,12 +7,11 @@ import type { RawUser, SafeUser } from "$lib/types";
  * @param user the full {@link RawUser} object
  * @returns a {@link SafeUser} object with a minimum amount of info
  */
-export function makeUserSafe(user: RawUser): SafeUser {
+export function makeUserSafe(user: User): SafeUser {
 	return {
 		id: user.id,
 		username: user.username,
 		name: user.name,
-		hasAvatar: !!user.avatar,
 	};
 }
 
