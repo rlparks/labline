@@ -20,6 +20,7 @@ WORKDIR /app
 COPY --from=builder /app/build ./build
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/drizzle.config.ts ./
+COPY --from=builder /app/src/lib/db/schema.ts ./src/lib/db/schema.ts
 
 ENV NODE_ENV=production
 
