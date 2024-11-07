@@ -17,7 +17,11 @@ export const actions = {
 
 		if (idToken) {
 			const authInfo = await auth.getAuthProviderInfo();
-			return redirect(303, authInfo.endSessionEndpoint + "?id_token_hint=" + idToken);
+			const logoutUrl = new URL(authInfo.endSessionEndpoint);
+			logoutUrl.searchParams.set("id_token_hint", idToken);
+			logoutUrl.searchParams.set("post_logout_redirect_uri", `${event.url.origin}/`);
+
+			return redirect(303, logoutUrl.toString());
 		}
 
 		return redirect(303, "/");
