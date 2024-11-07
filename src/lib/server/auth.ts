@@ -49,9 +49,13 @@ export function generateSessionToken() {
 	return token;
 }
 
+function encodeTokenToId(token: string) {
+	return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+}
+
 export async function createSession(userId: string, idToken: string, ipAddress: string) {
 	const token = generateSessionToken();
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	const sessionId = encodeTokenToId(token);
 	const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
 	const session: table.Session = {
 		id: sessionId,
@@ -65,7 +69,7 @@ export async function createSession(userId: string, idToken: string, ipAddress: 
 }
 
 export async function validateSessionToken(token: string, event: RequestEvent) {
-	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
+	const sessionId = encodeTokenToId(token);
 	const result = await Session.getUserSessionBySessionId(sessionId);
 
 	if (!result) {
@@ -75,7 +79,7 @@ export async function validateSessionToken(token: string, event: RequestEvent) {
 
 	const sessionExpired = Date.now() >= session.expiresAt.getTime();
 	if (sessionExpired) {
-		await Session.deleteSession(sessionId);
+		await invalidateSession(sessionId);
 		return { session: null, user: null };
 	}
 
