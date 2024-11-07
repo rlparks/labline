@@ -49,7 +49,12 @@ export function generateSessionToken() {
 	return token;
 }
 
-export async function createSession(userId: string) {
+export async function createSession(
+	userId: string,
+	idToken: string,
+	ipAddress: string,
+	userAgent: string | null,
+) {
 	const token = generateSessionToken();
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
@@ -57,12 +62,15 @@ export async function createSession(userId: string) {
 		id: sessionId,
 		userId,
 		expiresAt,
+		idToken,
+		ipAddress,
+		userAgent,
 	};
 	Session.createSession(session);
 	return { token, expiresAt };
 }
 
-export async function validateSessionToken(token: string) {
+export async function validateSessionToken(token: string, event: RequestEvent) {
 	const sessionId = encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 	const result = await Session.getUserSessionBySessionId(sessionId);
 
@@ -76,6 +84,15 @@ export async function validateSessionToken(token: string) {
 		await Session.deleteSession(sessionId);
 		return { session: null, user: null };
 	}
+
+	// protect against session hijacking
+	const userAgent = event.request.headers.get("user-agent");
+	const ipAddress = event.getClientAddress();
+	if (session.userAgent !== userAgent || session.ipAddress !== ipAddress) {
+		return { session: null, user: null };
+	}
+
+	// session is valid
 
 	const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
 	if (renewSession) {

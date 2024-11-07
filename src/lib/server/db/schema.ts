@@ -12,6 +12,9 @@ export const sessions = pgTable("sessions", {
 		.notNull()
 		.references(() => users.id),
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
+	idToken: text("id_token").notNull(),
+	ipAddress: text("ip_address"),
+	userAgent: text("user_agent"),
 });
 
 export const roles = pgEnum("roles", ["admin"]);

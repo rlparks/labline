@@ -34,7 +34,7 @@ export const POST: RequestHandler = async (event) => {
 		return error(400, "Missing username");
 	}
 
-	await loginUser(username, event);
+	await loginUser(username, id_token, event);
 
 	return new Response("OK", { status: 200 });
 };
@@ -139,7 +139,7 @@ function userInfoResponseIsValid(userInfoJson: unknown): userInfoJson is UserInf
 	);
 }
 
-async function loginUser(username: string, event: RequestEvent) {
+async function loginUser(username: string, idToken: string, event: RequestEvent) {
 	const user = await User.getUserByUsername(username);
 	if (!user) {
 		console.log(
@@ -148,10 +148,17 @@ async function loginUser(username: string, event: RequestEvent) {
 		return error(400, "User does not exist");
 	}
 
-	const session = await auth.createSession(user.id);
-	console.log(
-		`${getCurrentFormattedDateTime()} · User "${username}" logged in, session expiring on ${session.expiresAt.toLocaleDateString()}.`,
-	);
+	const ipAddress = event.getClientAddress();
+	const userAgent = event.request.headers.get("user-agent");
 
-	auth.setSessionTokenCookie(event, session.token, session.expiresAt);
+	try {
+		const session = await auth.createSession(user.id, idToken, ipAddress, userAgent);
+		console.log(
+			`${getCurrentFormattedDateTime()} · User "${username}" logged in, session expiring on ${session.expiresAt.toLocaleDateString()}.`,
+		);
+
+		auth.setSessionTokenCookie(event, session.token, session.expiresAt);
+	} catch {
+		console.error("Error creating session: ", error);
+	}
 }
