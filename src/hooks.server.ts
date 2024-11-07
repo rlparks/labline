@@ -2,6 +2,7 @@ import { env } from "$env/dynamic/private";
 import { DEMO_USER } from "$lib";
 import Knowledger from "$lib/server/api/Knowledger";
 import * as auth from "$lib/server/auth.js";
+import { User } from "$lib/server/db/entity";
 import { json, redirect, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
@@ -21,6 +22,17 @@ for (const envVar of REQUIRED_ENV_VARIABLES) {
 	if (!env[envVar]) {
 		console.log(`${envVar} must be set`);
 		process.exit(1);
+	}
+}
+
+if (env.CREATE_ACCOUNT) {
+	try {
+		User.createUser(env.CREATE_ACCOUNT, "Initial User");
+		console.log(`Created user ${env.CREATE_ACCOUNT}`);
+	} catch (e) {
+		if (e instanceof Error) {
+			console.log(e.message);
+		}
 	}
 }
 

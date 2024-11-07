@@ -8,6 +8,11 @@ services:
     environment:
       DATABASE_URL: postgres://root:mysecretpassword@knowledger-db:5432/local
       ABSOLUTE_DIR_PATH: /opt/knowledger
+      OIDC_DISCOVERY_ENDPOINT: https://example.com/.well-known
+      OIDC_CLIENT_ID: example
+      OIDC_CLIENT_SECRET: example
+      OIDC_USERNAME_CLAIM: preferred_username
+      CREATE_ACCOUNT: exampleusername
     volumes:
       - ./labs:/opt/knowledger
     depends_on:
