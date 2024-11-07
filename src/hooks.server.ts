@@ -1,4 +1,5 @@
 import { env } from "$env/dynamic/private";
+import { DEMO_USER } from "$lib";
 import Knowledger from "$lib/server/api/Knowledger";
 import * as auth from "$lib/server/auth.js";
 import { json, redirect, type Handle } from "@sveltejs/kit";
@@ -24,6 +25,10 @@ for (const envVar of REQUIRED_ENV_VARIABLES) {
 }
 
 const originalHandle: Handle = async ({ event, resolve }) => {
+	if (BYPASS_ACCOUNT_REQUIREMENT && !event.locals.user) {
+		event.locals.user = DEMO_USER;
+	}
+
 	if (event.route.id && !event.locals.user) {
 		if (!event.route.id.startsWith("/api")) {
 			if (!UNSECURE_PAGE_ROUTES.includes(event.route.id)) {
