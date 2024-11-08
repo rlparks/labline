@@ -1,3 +1,4 @@
+import { ROLES } from "$lib/types";
 import { pgEnum, pgTable, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
@@ -16,7 +17,7 @@ export const sessions = pgTable("sessions", {
 	ipAddress: text("ip_address"),
 });
 
-export const roles = pgEnum("roles", ["admin"]);
+export const roles = pgEnum("roles", ROLES);
 
 export const userRoles = pgTable("user_roles", {
 	userId: text("user_id")

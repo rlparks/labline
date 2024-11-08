@@ -18,7 +18,12 @@ export async function getUserById(id: string): Promise<User | undefined> {
  */
 export async function getUserByUsername(username: string): Promise<UserWithRole | undefined> {
 	const users = await db
-		.select()
+		.select({
+			id: table.users.id,
+			username: table.users.username,
+			name: table.users.name,
+			role: table.userRoles.role,
+		})
 		.from(table.users)
 		.where(eq(table.users.username, username))
 		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
