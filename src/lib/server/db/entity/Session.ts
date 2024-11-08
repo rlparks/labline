@@ -1,6 +1,6 @@
 import { db } from "$lib/server/db";
-import type { Session, User } from "$lib/server/db/schema";
 import * as table from "$lib/server/db/schema";
+import type { UserWithRole, Session } from "$lib/types";
 import { eq } from "drizzle-orm";
 
 /**
@@ -12,15 +12,21 @@ import { eq } from "drizzle-orm";
  */
 export async function getUserSessionBySessionId(
 	sessionId: string,
-): Promise<{ user: User; session: Session } | undefined> {
+): Promise<{ user: UserWithRole; session: Session } | undefined> {
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
-			user: { id: table.users.id, username: table.users.username, name: table.users.name },
+			user: {
+				id: table.users.id,
+				username: table.users.username,
+				name: table.users.name,
+				role: table.userRoles.role,
+			},
 			session: table.sessions,
 		})
 		.from(table.sessions)
 		.innerJoin(table.users, eq(table.sessions.userId, table.users.id))
+		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId))
 		.where(eq(table.sessions.id, sessionId));
 
 	return result;
