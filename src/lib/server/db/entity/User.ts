@@ -36,8 +36,17 @@ export async function getUserByUsername(username: string): Promise<UserWithRole 
  *
  * @returns all users
  */
-export async function getUsers() {
-	const users = await db.select().from(table.users);
+export async function getUsers(): Promise<UserWithRole[]> {
+	const users = await db
+		.select({
+			id: table.users.id,
+			username: table.users.username,
+			name: table.users.name,
+			role: table.userRoles.role,
+		})
+		.from(table.users)
+		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
+
 	return users;
 }
 
