@@ -1,7 +1,9 @@
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
-export const load = (async ({ params, fetch }) => {
+export const load = (async ({ params, fetch, locals }) => {
+	locals.security.isAuthenticated();
+
 	const { buildingNumber } = params;
 
 	const labRes = await fetch(`/api/labs/${buildingNumber}`);

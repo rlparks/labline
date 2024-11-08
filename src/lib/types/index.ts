@@ -3,6 +3,7 @@ import type { User } from "$lib/server/db/schema";
 export type { Session, User } from "$lib/server/db/schema";
 
 export const ROLES = ["admin"] as const;
+export type Role = (typeof ROLES)[number];
 
 /**
  * `User`s with additional info removed.
@@ -14,7 +15,7 @@ export interface SafeUser {
 }
 
 export interface UserWithRole extends User {
-	role: (typeof ROLES)[number] | null;
+	role: Role | null;
 }
 
 /**

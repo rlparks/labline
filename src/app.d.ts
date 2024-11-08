@@ -11,6 +11,7 @@ declare global {
 			user: UserWithRole | null;
 			knowledger: Knowledger;
 			session: import("$lib/server/auth").SessionValidationResult["session"];
+			security: import("$lib/server/Security").Security;
 		}
 		// interface PageData {}
 		// interface PageState {}

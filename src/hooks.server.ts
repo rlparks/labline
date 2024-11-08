@@ -3,11 +3,9 @@ import { DEMO_USER } from "$lib";
 import Knowledger from "$lib/server/api/Knowledger";
 import * as auth from "$lib/server/auth.js";
 import { User } from "$lib/server/db/entity";
-import { json, redirect, type Handle } from "@sveltejs/kit";
+import { Security } from "$lib/server/Security";
+import { type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
-
-const UNSECURE_PAGE_ROUTES = ["/", "/login/callback"];
-const UNSECURE_API_ROUTES = ["/api/auth/login/oidc"];
 
 const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
 const REQUIRED_ENV_VARIABLES = [
@@ -41,21 +39,8 @@ const originalHandle: Handle = async ({ event, resolve }) => {
 		event.locals.user = DEMO_USER;
 	}
 
-	if (event.route.id && !event.locals.user) {
-		if (!event.route.id.startsWith("/api")) {
-			if (!UNSECURE_PAGE_ROUTES.includes(event.route.id)) {
-				// Redirect to home page (and get 401) if not allowed
-				return redirect(303, "/");
-			}
-		} else {
-			// API route
-			if (!UNSECURE_API_ROUTES.includes(event.route.id)) {
-				return json({ error: "Unauthorized" }, { status: 401 });
-			}
-		}
-	}
-
 	event.locals.knowledger = new Knowledger();
+	event.locals.security = new Security(event);
 
 	const result = await resolve(event);
 

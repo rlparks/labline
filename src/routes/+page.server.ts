@@ -3,9 +3,7 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async ({ fetch, locals }) => {
-	if (!locals.user) {
-		return error(401, "Unauthorized");
-	}
+	locals.security.isAuthenticated();
 	const buildingRes = await fetch("/api/buildings");
 
 	if (!buildingRes.ok) {
