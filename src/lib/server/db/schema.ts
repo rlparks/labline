@@ -20,6 +20,7 @@ export const sessions = pgTable("sessions", {
 export const roles = pgEnum("roles", ROLES);
 
 export const userRoles = pgTable("user_roles", {
+	id: text("id").primaryKey(),
 	userId: text("user_id")
 		.notNull()
 		.references(() => users.id),

@@ -1,11 +1,21 @@
 import { db } from "$lib/server/db";
+import * as helpers from "$lib/server/db/entity";
+import { UserRole } from "$lib/server/db/entity";
 import * as table from "$lib/server/db/schema";
-import type { User, UserWithRole } from "$lib/types";
-import { generateRandomString } from "@oslojs/crypto/random";
+import { type Role, type User, type UserWithRole } from "$lib/types";
 import { eq } from "drizzle-orm";
 
-export async function getUserById(id: string): Promise<User | undefined> {
-	const users = await db.select().from(table.users).where(eq(table.users.id, id));
+export async function getUserById(id: string): Promise<UserWithRole | undefined> {
+	const users = await db
+		.select({
+			id: table.users.id,
+			username: table.users.username,
+			name: table.users.name,
+			role: table.userRoles.role,
+		})
+		.from(table.users)
+		.where(eq(table.users.id, id))
+		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
 
 	return users?.[0];
 }
@@ -57,15 +67,21 @@ export async function getUsers(): Promise<UserWithRole[]> {
  * @param password
  * @throws if the username or password is invalid, or the username is already taken
  */
-export async function createUser(username: unknown, name: unknown): Promise<User> {
-	if (!usernameIsValid(username)) {
-		throw new Error(
-			`Invalid username. Must be a string between ${usernameLength[0]} and ${usernameLength[1]} characters.`,
-		);
+export async function createUser(
+	username: unknown,
+	name: unknown,
+	role?: Role,
+): Promise<UserWithRole> {
+	if (!helpers.usernameIsValid(username)) {
+		throw new Error(`Invalid username.`);
 	}
 
-	if (!nameIsValid(name)) {
+	if (!helpers.nameIsValid(name)) {
 		throw new Error(`Invalid name.`);
+	}
+
+	if (role && !helpers.roleIsValid(role)) {
+		throw new Error(`Invalid role.`);
 	}
 
 	if (await getUserByUsername(username)) {
@@ -73,9 +89,9 @@ export async function createUser(username: unknown, name: unknown): Promise<User
 	}
 
 	// ensure the user ID is unique
-	let userId = generateTextId();
+	let userId = helpers.generateTextId();
 	while (await getUserById(userId)) {
-		userId = generateTextId();
+		userId = helpers.generateTextId();
 	}
 
 	const user: User = {
@@ -85,29 +101,17 @@ export async function createUser(username: unknown, name: unknown): Promise<User
 	};
 
 	try {
-		const insertedUser = await db.insert(table.users).values(user).returning();
-		return insertedUser[0];
+		const [insertedUser] = await db.insert(table.users).values(user).returning();
+
+		if (role) {
+			await UserRole.createUserRole(role, userId);
+		}
+
+		return {
+			...insertedUser,
+			role: role ?? null,
+		};
 	} catch {
 		throw new Error("Error inserting user");
 	}
-}
-
-const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-const usernameLength = [1, 255] as const;
-
-function generateTextId(length = 21): string {
-	return generateRandomString({ read: (bytes) => crypto.getRandomValues(bytes) }, alphabet, length);
-}
-
-function usernameIsValid(username: unknown): username is string {
-	return (
-		typeof username === "string" &&
-		username.length >= usernameLength[0] &&
-		username.length <= usernameLength[1] &&
-		/^[a-z0-9_-]+$/.test(username)
-	);
-}
-
-function nameIsValid(name: unknown): name is string {
-	return typeof name === "string" && name.length <= 255;
 }
