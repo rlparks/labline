@@ -1,6 +1,6 @@
 import { db } from "$lib/server/db";
-import type { User } from "$lib/server/db/schema";
 import * as table from "$lib/server/db/schema";
+import type { User, UserWithRole } from "$lib/types";
 import { generateRandomString } from "@oslojs/crypto/random";
 import { eq } from "drizzle-orm";
 
@@ -16,8 +16,12 @@ export async function getUserById(id: string): Promise<User | undefined> {
  * @returns
  * @throws if the database is unavailable
  */
-export async function getUserByUsername(username: string): Promise<User | undefined> {
-	const users = await db.select().from(table.users).where(eq(table.users.username, username));
+export async function getUserByUsername(username: string): Promise<UserWithRole | undefined> {
+	const users = await db
+		.select()
+		.from(table.users)
+		.where(eq(table.users.username, username))
+		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
 
 	return users?.[0];
 }

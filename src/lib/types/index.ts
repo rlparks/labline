@@ -1,4 +1,6 @@
-export type { User, Session } from "$lib/server/db/schema";
+import type { UserRole, User } from "$lib/server/db/schema";
+
+export type { User, Session, UserRole } from "$lib/server/db/schema";
 
 /**
  * `User`s with additional info removed.
@@ -7,6 +9,11 @@ export interface SafeUser {
 	id: string;
 	username: string;
 	name: string;
+}
+
+export interface UserWithRole {
+	users: User;
+	user_roles: UserRole | null;
 }
 
 /**

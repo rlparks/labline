@@ -7,6 +7,7 @@ import Message from "./Message.svelte";
 import SearchInput from "./SearchInput.svelte";
 import Footer from "./Footer.svelte";
 import Attribution from "./Attribution.svelte";
+import UsersTable from "./UsersTable.svelte";
 
 export {
 	Header,
@@ -18,4 +19,5 @@ export {
 	SearchInput,
 	Footer,
 	Attribution,
+	UsersTable,
 };

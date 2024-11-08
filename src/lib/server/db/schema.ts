@@ -28,3 +28,7 @@ export const userRoles = pgTable("user_roles", {
 export type Session = typeof sessions.$inferSelect;
 
 export type User = typeof users.$inferSelect;
+
+export type Role = typeof roles.enumValues;
+
+export type UserRole = typeof userRoles.$inferSelect;
