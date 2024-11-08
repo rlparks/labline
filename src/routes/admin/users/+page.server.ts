@@ -3,8 +3,7 @@ import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
 export const load = (async (event) => {
-	event.locals.security.isAuthenticated();
-	event.locals.security.isAdmin();
+	event.locals.security.isAuthenticated().isAdmin();
 
 	const usersRes = await event.fetch("/api/users");
 
