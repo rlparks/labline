@@ -4,11 +4,12 @@ import { encodeBase32LowerCase, encodeHexLowerCase } from "@oslojs/encoding";
 import type { RequestEvent } from "@sveltejs/kit";
 import { Session } from "./db/entity";
 import { env } from "$env/dynamic/private";
+import type { AuthInfo } from "$lib/types";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 const SCOPES = ["openid", "profile"];
 
-export async function getAuthProviderInfo() {
+export async function getAuthProviderInfo(): Promise<AuthInfo> {
 	const oidcDiscoveryUrl = env.OIDC_DISCOVERY_ENDPOINT;
 	if (!oidcDiscoveryUrl) {
 		throw new Error("OIDC_DISCOVERY_ENDPOINT is not set");

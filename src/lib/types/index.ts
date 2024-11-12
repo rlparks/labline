@@ -57,3 +57,14 @@ export interface FileStats {
 		birthtimeMs: number;
 	};
 }
+
+/**
+ * OIDC info passed around the application.
+ */
+export interface AuthInfo {
+	authEndpoint: string;
+	tokenEndpoint: string;
+	userinfoEndpoint: string;
+	endSessionEndpoint: string;
+	state: string;
+}
