@@ -70,7 +70,7 @@ export async function getUsers(): Promise<UserWithRole[]> {
 export async function createUser(
 	username: unknown,
 	name: unknown,
-	role?: Role,
+	role: Role | null = null,
 ): Promise<UserWithRole> {
 	if (!helpers.usernameIsValid(username)) {
 		throw new Error(`Invalid username.`);
