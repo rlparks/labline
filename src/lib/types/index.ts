@@ -1,9 +1,8 @@
-import type { User } from "$lib/server/db/schema";
+import type { ROLES_LIST, User } from "$lib/server/db/schema";
 
 export type { Session, User, UserRole } from "$lib/server/db/schema";
 
-export const ROLES = ["admin"] as const;
-export type Role = (typeof ROLES)[number];
+export type Role = (typeof ROLES_LIST)[number];
 
 /**
  * `User`s with additional info removed.
