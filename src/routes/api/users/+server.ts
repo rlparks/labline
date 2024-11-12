@@ -23,7 +23,11 @@ export const POST: RequestHandler = async (event) => {
 		try {
 			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.role);
 			return json(user, { status: 201 });
-		} catch {
+		} catch (err) {
+			if (err instanceof Error) {
+				return error(400, err.message);
+			}
+
 			return error(500, "Error creating user");
 		}
 	} else {
