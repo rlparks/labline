@@ -9,6 +9,10 @@ export class Security {
 		this.user = event.locals.user;
 	}
 
+	/**
+	 *
+	 * @throws if the user is not authenticated
+	 */
 	isAuthenticated() {
 		if (!this.user) {
 			return error(401, "Unauthorized");
@@ -16,6 +20,11 @@ export class Security {
 		return this;
 	}
 
+	/**
+	 *
+	 * @param role the required role
+	 * @throws 403 if the user does not have the required role or 401 if not authenticated
+	 */
 	hasRole(role: Role) {
 		if (!this.user) {
 			return error(401, "Unauthorized");
@@ -28,15 +37,11 @@ export class Security {
 		return this;
 	}
 
+	/**
+	 *
+	 * @throws 403 if the user does not have the role "admin" or 401 if not authenticated
+	 */
 	isAdmin() {
-		if (!this.user) {
-			return error(401, "Unauthorized");
-		}
-
-		if (this.user.role !== "admin") {
-			return error(403, `Missing role: admin`);
-		}
-
-		return this;
+		return this.hasRole("admin");
 	}
 }
