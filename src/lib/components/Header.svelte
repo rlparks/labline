@@ -24,20 +24,14 @@ The header (navigation bar) of the application.
 	import { page } from "$app/stores";
 	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
-	import type { SafeUser } from "$lib/types";
+	import type { SafeUser, AuthInfo } from "$lib/types";
 
 	const NAV_BREAKPOINT = 1020;
 	const BUTTON_CIRCLE_BREAKPOINT = 600;
 
 	type Props = {
 		user: SafeUser | null;
-		authInfo: {
-			authEndpoint: string;
-			tokenEndpoint: string;
-			userinfoEndpoint: string;
-			endSessionEndpoint: string;
-			state: string;
-		};
+		authInfo: AuthInfo;
 	};
 
 	const { user, authInfo }: Props = $props();
@@ -58,7 +52,7 @@ The header (navigation bar) of the application.
 		}
 	}
 
-	let width = $state<number>();
+	let width = $state<number>(NAV_BREAKPOINT + 1);
 </script>
 
 <svelte:window bind:innerWidth={width} />
