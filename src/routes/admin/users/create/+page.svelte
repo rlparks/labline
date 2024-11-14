@@ -34,5 +34,5 @@
 		<label for="role">Role</label>
 	</div>
 
-	<button type="submit" data-umami-event="button-create-user">Create</button>
+	<button class="no-margin" type="submit" data-umami-event="button-create-user">Create</button>
 </form>
