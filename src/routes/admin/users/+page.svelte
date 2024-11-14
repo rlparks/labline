@@ -13,4 +13,9 @@
 
 <h3 class="center-align">{title}</h3>
 
+<div class="space"></div>
+<div class="center-align">
+	<a href="/admin/users/create" class="button square round extra"><i>add</i></a>
+</div>
+
 <UsersTable users={data.users} />

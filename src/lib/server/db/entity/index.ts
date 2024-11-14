@@ -2,7 +2,7 @@ export * as Session from "$lib/server/db/entity/Session";
 export * as User from "$lib/server/db/entity/User";
 export * as UserRole from "$lib/server/db/entity/UserRole";
 
-import { ROLES, type Role } from "$lib/types";
+import { ROLES_LIST, type Role } from "$lib/types";
 import { generateRandomString } from "@oslojs/crypto/random";
 
 const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -26,7 +26,7 @@ export function nameIsValid(name: unknown): name is string {
 }
 
 export function roleIsValid(role: unknown): role is Role {
-	return typeof role === "string" && ROLES.includes(role as Role);
+	return typeof role === "string" && ROLES_LIST.includes(role as Role);
 }
 
 export function idIsValid(id: unknown): id is string {

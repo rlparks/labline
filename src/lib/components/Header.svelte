@@ -105,7 +105,7 @@ The header (navigation bar) of the application.
 		href={url}
 		><i>{icon}</i>
 		{#if (width && width > BUTTON_CIRCLE_BREAKPOINT) || $page.url.pathname === url}
-			{text}{/if}</a
+			<span>{text}</span>{/if}</a
 	>
 {/snippet}
 
