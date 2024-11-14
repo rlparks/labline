@@ -55,7 +55,8 @@ export async function getUsers(): Promise<UserWithRole[]> {
 			role: table.userRoles.role,
 		})
 		.from(table.users)
-		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
+		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId))
+		.orderBy(table.users.username);
 
 	return users;
 }
