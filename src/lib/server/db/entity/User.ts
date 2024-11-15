@@ -116,3 +116,22 @@ export async function createUser(
 		throw new Error("Error inserting user");
 	}
 }
+
+/**
+ * Deletes a user from the database.
+ *
+ * @param id the id of the user to delete
+ * @returns the deleted user
+ * @throws if the user does not exist
+ */
+export async function deleteUserById(id: string): Promise<UserWithRole> {
+	const user = await getUserById(id);
+	if (!user) {
+		throw new Error(`User not found`);
+	}
+
+	// TODO: Delete roles
+
+	await db.delete(table.users).where(eq(table.users.id, id));
+	return user;
+}

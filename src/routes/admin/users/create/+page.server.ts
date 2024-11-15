@@ -2,15 +2,6 @@ import type { Actions, PageServerLoad } from "./$types";
 import { ROLES_LIST } from "$lib/types";
 import { error, redirect } from "@sveltejs/kit";
 
-export const load = (async () => {
-	return {
-		roles: [
-			{ name: "(none)", value: null },
-			...ROLES_LIST.map((role) => ({ name: role, value: role })),
-		],
-	};
-}) satisfies PageServerLoad;
-
 export const actions: Actions = {
 	default: async ({ request, fetch }) => {
 		const formData = await request.formData();
