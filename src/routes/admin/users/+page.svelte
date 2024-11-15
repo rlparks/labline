@@ -12,7 +12,7 @@
 </svelte:head>
 
 <div class="space"></div>
-<div class="center-align">
+<div class="absolute bottom right">
 	<a href="/admin/users/create" class="button square round extra"><i>add</i></a>
 </div>
 
