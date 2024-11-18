@@ -11,7 +11,6 @@
 	<meta name="description" content="User Management admin page for knowledger." />
 </svelte:head>
 
-<div class="space"></div>
 <div class="absolute bottom right">
 	<a href="/admin/users/create" class="button square round extra"><i>add</i></a>
 </div>

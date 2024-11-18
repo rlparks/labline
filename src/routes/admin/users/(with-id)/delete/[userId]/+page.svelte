@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Message from "$lib/components/Message.svelte";
+	import { Message } from "$lib/components";
 	import type { PageData } from "./$types";
 
 	const { data }: { data: PageData } = $props();
