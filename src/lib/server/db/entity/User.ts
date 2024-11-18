@@ -137,8 +137,16 @@ export async function updateUserById(
 		throw new Error(`Cannot update user with different ID`);
 	}
 
-	if (!getUserById(id)) {
+	const existingUser = await getUserById(id);
+	if (!existingUser) {
 		throw new Error(`User not found with ID ${id}`);
+	}
+
+	if (user.role === null && existingUser.role !== null) {
+		const allRoles = await UserRole.getRoles();
+		if (allRoles.length === 1 && allRoles[0].userId === id) {
+			throw new Error("Cannot delete last role");
+		}
 	}
 
 	const bareUser: User = {

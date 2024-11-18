@@ -4,6 +4,10 @@ import { eq } from "drizzle-orm";
 import type { UserRole } from "$lib/server/db/schema";
 import * as helpers from "$lib/server/db/entity";
 
+export async function getRoles(): Promise<UserRole[]> {
+	return await db.select().from(table.userRoles);
+}
+
 export async function getUserRoleById(id: string): Promise<UserRole | undefined> {
 	const roles = await db.select().from(table.userRoles).where(eq(table.userRoles.id, id));
 
