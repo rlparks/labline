@@ -51,6 +51,8 @@
 	<nav>
 		<button class="no-margin" type="submit">Save</button>
 		<div class="max"></div>
-		<button formaction="?/delete" class="border"><i>delete</i><span>Delete</span></button>
+		<a href={`/admin/users/delete/${data.editUser.id}`} class="button border"
+			><i>delete</i><span>Delete</span></a
+		>
 	</nav>
 </form>

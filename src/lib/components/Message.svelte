@@ -23,13 +23,16 @@ a Material Design icon displayed above the text.
 -->
 
 <script lang="ts">
+	import type { Snippet } from "svelte";
+
 	type Props = {
 		iconText: string;
 		headerText: string;
 		messageText: string;
+		actionButtons?: Snippet;
 	};
 
-	const { iconText, headerText, messageText }: Props = $props();
+	const { iconText, headerText, messageText, actionButtons }: Props = $props();
 </script>
 
 <div class="medium middle-align center-align">
@@ -37,6 +40,11 @@ a Material Design icon displayed above the text.
 		<i class="extra">{iconText}</i>
 		<h5 class="center-align">{headerText}</h5>
 		<p class="center-align">{messageText}</p>
+		{#if actionButtons}
+			<nav class="center-align">
+				{@render actionButtons()}
+			</nav>
+		{/if}
 	</div>
 </div>
 

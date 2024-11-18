@@ -1,5 +1,5 @@
 import { User } from "$lib/server/db/entity";
-import { error, json } from "@sveltejs/kit";
+import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async (event) => {
@@ -43,7 +43,10 @@ export const DELETE: RequestHandler = async (event) => {
 	try {
 		const user = await User.deleteUserById(event.params.userId);
 		return json(user);
-	} catch {
+	} catch (err) {
+		if (err instanceof Error) {
+			return error(400, err.message);
+		}
 		return error(404, "Error deleting user");
 	}
 };
