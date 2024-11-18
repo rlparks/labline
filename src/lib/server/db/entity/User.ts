@@ -124,16 +124,12 @@ export async function createUser(
  * @param user the new user data
  * @returns the updated user
  */
-export async function updateUserById(
-	id: string,
-	user: unknown,
-	allowUpdatingId: boolean = false,
-): Promise<UserWithRole> {
+export async function updateUserById(id: string, user: unknown): Promise<UserWithRole> {
 	if (!helpers.userWithRoleIsValid(user)) {
 		throw new Error(`Invalid user.`);
 	}
 
-	if (user.id !== id && !allowUpdatingId) {
+	if (user.id !== id) {
 		throw new Error(`Cannot update user with different ID`);
 	}
 
@@ -142,12 +138,7 @@ export async function updateUserById(
 		throw new Error(`User not found with ID ${id}`);
 	}
 
-	if (user.role === null && existingUser.role !== null) {
-		const allRoles = await UserRole.getRoles();
-		if (allRoles.length === 1 && allRoles[0].userId === id) {
-			throw new Error("Cannot delete last role");
-		}
-	}
+	await isNotFinalRole(user, existingUser);
 
 	const bareUser: User = {
 		id: user.id,
@@ -173,6 +164,15 @@ export async function updateUserById(
 	};
 }
 
+async function isNotFinalRole(newUserData: UserWithRole | null, existingUser: UserWithRole) {
+	if ((!newUserData || newUserData.role === null) && existingUser.role !== null) {
+		const allRoles = await UserRole.getRoles();
+		if (allRoles.length === 1 && allRoles[0].userId === existingUser.id) {
+			throw new Error("Cannot delete last role");
+		}
+	}
+}
+
 /**
  * Deletes a user from the database.
  *
@@ -186,7 +186,9 @@ export async function deleteUserById(id: string): Promise<UserWithRole> {
 		throw new Error(`User not found`);
 	}
 
-	// TODO: Delete roles
+	await isNotFinalRole(null, user);
+
+	await UserRole.deleteUserRolesByUserId(id);
 
 	await db.delete(table.users).where(eq(table.users.id, id));
 	return user;
