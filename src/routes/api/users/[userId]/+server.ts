@@ -14,13 +14,36 @@ export const GET: RequestHandler = async (event) => {
 };
 export const PUT: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
-	const reqJson = await event.request.json();
+	const reqJson = (await event.request.json()) as {
+		id: string;
+		username: string;
+		name: string;
+		role: string;
+	};
 
-	return error(500, "Not implemented");
+	try {
+		const user = await User.updateUserById(event.params.userId, {
+			id: reqJson.id,
+			username: reqJson.username,
+			name: reqJson.name,
+			role: reqJson.role || null,
+		});
+		return json(user);
+	} catch (err) {
+		if (err instanceof Error) {
+			return error(400, err.message);
+		}
+		return error(500, "Error updating user");
+	}
 };
 
 export const DELETE: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
-	const user = await User.deleteUserById(event.params.userId);
-	return json(user);
+
+	try {
+		const user = await User.deleteUserById(event.params.userId);
+		return json(user);
+	} catch {
+		return error(404, "Error deleting user");
+	}
 };
