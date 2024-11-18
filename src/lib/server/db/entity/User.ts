@@ -118,6 +118,54 @@ export async function createUser(
 }
 
 /**
+ * Updates a user in the database.
+ *
+ * @param id the id of the user to update
+ * @param user the new user data
+ * @returns the updated user
+ */
+export async function updateUserById(
+	id: string,
+	user: unknown,
+	allowUpdatingId: boolean = false,
+): Promise<UserWithRole> {
+	if (!helpers.userWithRoleIsValid(user)) {
+		throw new Error(`Invalid user.`);
+	}
+
+	if (user.id !== id && !allowUpdatingId) {
+		throw new Error(`Cannot update user with different ID`);
+	}
+
+	if (!getUserById(id)) {
+		throw new Error(`User not found with ID ${id}`);
+	}
+
+	const bareUser: User = {
+		id: user.id,
+		username: user.username,
+		name: user.name,
+	};
+
+	const [updatedUser] = await db
+		.update(table.users)
+		.set(bareUser)
+		.where(eq(table.users.id, id))
+		.returning();
+
+	// wipe roles
+	await UserRole.deleteUserRolesByUserId(id);
+	if (user.role) {
+		await UserRole.createUserRole(user.role, id);
+	}
+
+	return {
+		...updatedUser,
+		role: user.role,
+	};
+}
+
+/**
  * Deletes a user from the database.
  *
  * @param id the id of the user to delete

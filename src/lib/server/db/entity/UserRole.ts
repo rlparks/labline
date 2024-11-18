@@ -35,3 +35,16 @@ export async function createUserRole(role: unknown, userId: unknown): Promise<Us
 
 	return insertedUserRole[0];
 }
+
+/**
+ * Deletes all roles associated with a user.
+ *
+ * @param userId the user ID to delete associated roles of
+ */
+export async function deleteUserRolesByUserId(userId: unknown) {
+	if (!helpers.idIsValid(userId)) {
+		throw new Error(`Invalid user ID.`);
+	}
+
+	await db.delete(table.userRoles).where(eq(table.userRoles.userId, userId));
+}
