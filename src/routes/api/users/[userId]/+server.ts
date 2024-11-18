@@ -1,5 +1,5 @@
 import { User } from "$lib/server/db/entity";
-import { error, isHttpError, json } from "@sveltejs/kit";
+import { error, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async (event) => {

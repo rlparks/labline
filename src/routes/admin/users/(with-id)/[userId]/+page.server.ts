@@ -1,6 +1,5 @@
-import { error, isHttpError, redirect } from "@sveltejs/kit";
+import { error, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad, RequestEvent } from "./$types";
-import type { UserWithRole } from "$lib/types";
 
 export const load = (async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();

@@ -18,15 +18,13 @@
 <Message
 	messageText="Are you sure you want to delete this user?"
 	headerText=""
-	iconText="delete"
+	iconText="person_off"
 	actionButtons={confirmButtons}
 />
 
 {#snippet confirmButtons()}
 	<form method="POST" action={`/admin/users/${data.editUser.id}?/delete`} use:enhance>
-		<button type="submit" data-umami-event="button-delete"
-			><i>person_off</i><span>Delete</span></button
-		>
+		<button type="submit" data-umami-event="button-delete"><i>delete</i><span>Delete</span></button>
 	</form>
 	<a href={`/admin/users/${data.editUser.id}`} class="button border"
 		><i>cancel</i><span>Cancel</span></a
