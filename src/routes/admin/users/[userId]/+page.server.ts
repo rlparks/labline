@@ -1,5 +1,5 @@
-import { error, isHttpError } from "@sveltejs/kit";
-import type { Actions, PageServerLoad } from "./$types";
+import { error, isHttpError, redirect } from "@sveltejs/kit";
+import type { Actions, PageServerLoad, RequestEvent } from "./$types";
 import type { UserWithRole } from "$lib/types";
 
 export const load = (async (event) => {
@@ -26,10 +26,48 @@ export const load = (async (event) => {
 
 export const actions: Actions = {
 	edit: async (event) => {
-		const formData = await event.request.formData();
-		const username = formData.get("username");
-		const name = formData.get("name");
-		const role = formData.get("role");
+		return await passThroughRequest(
+			event,
+			`/api/users/${event.params.userId}`,
+			"PUT",
+			"Error updating user",
+		);
 	},
-	delete: async (event) => {},
+	delete: async (event) => {
+		return await passThroughRequest(
+			event,
+			`/api/users/${event.params.userId}`,
+			"DELETE",
+			"Error deleting user",
+		);
+	},
 };
+
+async function passThroughRequest(
+	event: RequestEvent,
+	path: string,
+	method: string,
+	errorMessage: string,
+) {
+	const formData = await event.request.formData();
+	const username = formData.get("username");
+	const name = formData.get("name");
+	const role = formData.get("role");
+
+	const user = { username, name, role };
+
+	const res = await event.fetch(path, {
+		method: method,
+		body: JSON.stringify(user),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (!res.ok) {
+		const resBody = await res.json();
+		return error(res.status, resBody.message || errorMessage);
+	}
+
+	return redirect(303, "/admin/users");
+}
