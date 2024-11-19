@@ -72,6 +72,7 @@ export async function createUser(
 	username: unknown,
 	name: unknown,
 	role: Role | null = null,
+	createRoleIfUserExists: boolean = false,
 ): Promise<UserWithRole> {
 	if (!helpers.usernameIsValid(username)) {
 		throw new Error(`Invalid username.`);
@@ -85,7 +86,13 @@ export async function createUser(
 		throw new Error(`Invalid role.`);
 	}
 
-	if (await getUserByUsername(username)) {
+	const existingUser = await getUserByUsername(username);
+	if (existingUser) {
+		// create role if it doesn't exist
+		if (existingUser.role === null && role !== null && createRoleIfUserExists) {
+			await UserRole.createUserRole(role, existingUser.id);
+		}
+
 		throw new Error(`Username "${username}" already taken`);
 	}
 
