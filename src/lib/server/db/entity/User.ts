@@ -175,7 +175,7 @@ async function isNotFinalRole(newUserData: UserWithRole | null, existingUser: Us
 	if ((!newUserData || newUserData.role === null) && existingUser.role !== null) {
 		const allRoles = await UserRole.getRoles();
 		if (allRoles.length === 1 && allRoles[0].userId === existingUser.id) {
-			throw new Error("Cannot delete user with final role");
+			throw new Error("Cannot remove final role");
 		}
 	}
 }
