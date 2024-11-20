@@ -2,16 +2,26 @@ import { db } from "$lib/server/db";
 import * as table from "$lib/server/db/schema";
 import type { UserWithRole, Session } from "$lib/types";
 import { eq } from "drizzle-orm";
+import { generateTextId } from ".";
+
+async function getSessionById(sessionId: string): Promise<Session | undefined> {
+	const [session] = await db.select().from(table.sessions).where(eq(table.sessions.id, sessionId));
+	return session;
+}
+
+export async function getSessionsGroupedByUserId(): Promise<Session[]> {
+	return await db.select().from(table.sessions).groupBy(table.sessions.userId);
+}
 
 /**
  * Retrieve a session and corresponding user
  * from the database.
  *
- * @param sessionId
+ * @param hashedToken
  * @returns the user and session
  */
-export async function getUserSessionBySessionId(
-	sessionId: string,
+export async function getUserSessionByHashedToken(
+	hashedToken: string,
 ): Promise<{ user: UserWithRole; session: Session } | undefined> {
 	const [result] = await db
 		.select({
@@ -27,17 +37,29 @@ export async function getUserSessionBySessionId(
 		.from(table.sessions)
 		.innerJoin(table.users, eq(table.sessions.userId, table.users.id))
 		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId))
-		.where(eq(table.sessions.id, sessionId));
+		.where(eq(table.sessions.hashedToken, hashedToken));
 
 	return result;
 }
 
 /**
  * Insert a Session into the database.
- * @param session
  * @returns the new Session
  */
-export async function createSession(session: Session) {
+export async function createSession(
+	userId: string,
+	hashedToken: string,
+	expiresAt: Date,
+	oidcIdToken: string,
+	ipAddress: string | null,
+) {
+	let sessionId = generateTextId();
+	while (await getSessionById(sessionId)) {
+		sessionId = generateTextId();
+	}
+
+	const session = { id: sessionId, userId, hashedToken, expiresAt, oidcIdToken, ipAddress };
+
 	return await db.insert(table.sessions).values(session).returning();
 }
 

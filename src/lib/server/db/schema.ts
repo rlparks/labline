@@ -8,11 +8,12 @@ export const users = pgTable("users", {
 
 export const sessions = pgTable("sessions", {
 	id: text("id").primaryKey(),
+	hashedToken: text("hashed_token").notNull(),
 	userId: text("user_id")
 		.notNull()
 		.references(() => users.id),
 	expiresAt: timestamp("expires_at", { withTimezone: true, mode: "date" }).notNull(),
-	idToken: text("id_token").notNull(),
+	oidcIdToken: text("id_token").notNull(),
 	ipAddress: text("ip_address"),
 });
 

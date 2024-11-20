@@ -50,28 +50,22 @@ export function generateSessionToken() {
 	return token;
 }
 
-function encodeTokenToId(token: string) {
+function hashToken(token: string) {
 	return encodeHexLowerCase(sha256(new TextEncoder().encode(token)));
 }
 
-export async function createSession(userId: string, idToken: string, ipAddress: string) {
+export async function createSession(userId: string, oidcIdToken: string, ipAddress: string) {
 	const token = generateSessionToken();
-	const sessionId = encodeTokenToId(token);
+	const hashedToken = hashToken(token);
 	const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
-	const session: table.Session = {
-		id: sessionId,
-		userId,
-		expiresAt,
-		idToken,
-		ipAddress,
-	};
-	Session.createSession(session);
+
+	Session.createSession(userId, hashedToken, expiresAt, oidcIdToken, ipAddress);
 	return { token, expiresAt };
 }
 
 export async function validateSessionToken(token: string, event: RequestEvent) {
-	const sessionId = encodeTokenToId(token);
-	const result = await Session.getUserSessionBySessionId(sessionId);
+	const hashedToken = hashToken(token);
+	const result = await Session.getUserSessionByHashedToken(hashedToken);
 
 	if (!result) {
 		return { session: null, user: null };
@@ -80,7 +74,7 @@ export async function validateSessionToken(token: string, event: RequestEvent) {
 
 	const sessionExpired = Date.now() >= session.expiresAt.getTime();
 	if (sessionExpired) {
-		await invalidateSession(sessionId);
+		await invalidateSession(hashedToken);
 		return { session: null, user: null };
 	}
 
@@ -95,7 +89,7 @@ export async function validateSessionToken(token: string, event: RequestEvent) {
 	const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
 	if (renewSession) {
 		session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
-		Session.updateSessionExpiresAt(sessionId, session.expiresAt);
+		Session.updateSessionExpiresAt(hashedToken, session.expiresAt);
 	}
 
 	return { session, user };

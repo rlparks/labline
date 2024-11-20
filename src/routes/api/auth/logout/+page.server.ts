@@ -7,10 +7,10 @@ export const actions = {
 		if (!event.locals.user || !event.locals.session) {
 			return redirect(303, "/");
 		}
-		await auth.deleteSessionTokenCookie(event);
+		auth.deleteSessionTokenCookie(event);
 		await auth.invalidateSession(event.locals.session.id);
 
-		const idToken = event.locals.session.idToken;
+		const idToken = event.locals.session.oidcIdToken;
 
 		event.locals.user = null;
 		event.locals.session = null;
