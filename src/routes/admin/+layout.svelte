@@ -9,11 +9,6 @@
 			href: "/admin/users",
 			icon: "person",
 		},
-		{
-			name: "Sessions",
-			href: "/admin/sessions",
-			icon: "lock",
-		},
 	];
 </script>
 

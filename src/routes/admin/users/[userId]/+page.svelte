@@ -51,7 +51,7 @@
 	<nav>
 		<button class="no-margin" type="submit">Save</button>
 		<div class="max"></div>
-		<a href={`/admin/users/delete/${data.editUser.id}`} class="button border"
+		<a href={`/admin/users/${data.editUser.id}/delete`} class="button border"
 			><i>delete</i><span>Delete</span></a
 		>
 	</nav>

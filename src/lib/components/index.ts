@@ -8,6 +8,7 @@ import SearchInput from "./SearchInput.svelte";
 import Footer from "./Footer.svelte";
 import Attribution from "./Attribution.svelte";
 import UsersTable from "./UsersTable.svelte";
+import SessionsTable from "./SessionsTable.svelte";
 
 export {
 	Header,
@@ -20,4 +21,5 @@ export {
 	Footer,
 	Attribution,
 	UsersTable,
+	SessionsTable,
 };
