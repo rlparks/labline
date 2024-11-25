@@ -5,8 +5,9 @@
 
 	type Props = {
 		sessions: SafeSession[];
+		currentUserSessionId: string;
 	};
-	const { sessions }: Props = $props();
+	const { sessions, currentUserSessionId }: Props = $props();
 </script>
 
 <table class="stripes center-align">
@@ -31,6 +32,13 @@
 						action={`/admin/users/${session.userId}/sessions?/delete`}
 						use:enhance
 					>
+						{#if session.id === currentUserSessionId}
+							<div class="chip">
+								<i>warning</i>
+								<div class="tooltip">Your Current Session</div>
+							</div>
+						{/if}
+
 						<input type="hidden" name="sessionId" value={session.id} />
 						<button
 							class="circle"

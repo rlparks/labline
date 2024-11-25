@@ -13,7 +13,11 @@ export const load = (async (event) => {
 
 	const userSessions = (await userSessionsRes.json()) as SafeSession[];
 
-	return { userSessions };
+	if (!event.locals.session) {
+		return error(401, "somehow here with no session");
+	}
+
+	return { userSessions, currentUserSessionId: event.locals.session.id };
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

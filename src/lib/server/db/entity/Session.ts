@@ -103,6 +103,6 @@ export async function updateSessionExpiresAt(
  * @param sessionId
  * @returns the deleted Session
  */
-export async function deleteSession(sessionId: string) {
+export async function deleteSessionById(sessionId: string) {
 	return await db.delete(table.sessions).where(eq(table.sessions.id, sessionId)).returning();
 }

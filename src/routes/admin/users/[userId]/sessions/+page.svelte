@@ -13,4 +13,4 @@
 
 <h3 class="center-align">{title}</h3>
 
-<SessionsTable sessions={data.userSessions} />
+<SessionsTable sessions={data.userSessions} currentUserSessionId={data.currentUserSessionId} />

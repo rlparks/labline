@@ -97,7 +97,7 @@ export async function validateSessionToken(token: string, event: RequestEvent) {
 export type SessionValidationResult = Awaited<ReturnType<typeof validateSessionToken>>;
 
 export async function invalidateSession(sessionId: string) {
-	await Session.deleteSession(sessionId);
+	await Session.deleteSessionById(sessionId);
 }
 
 export function setSessionTokenCookie(event: RequestEvent, token: string, expiresAt: Date) {
