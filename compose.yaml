@@ -13,6 +13,9 @@ services:
       OIDC_CLIENT_SECRET: example
       OIDC_USERNAME_CLAIM: preferred_username
       CREATE_ACCOUNT: exampleusername
+      # proxy settings
+      ADDRESS_HEADER: x-forwarded-for
+      XFF_DEPTH: 1
     volumes:
       - ./labs:/opt/knowledger
     depends_on:
