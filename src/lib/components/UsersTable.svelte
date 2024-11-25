@@ -3,8 +3,9 @@
 
 	type Props = {
 		users: UserWithRole[];
+		sessionCount: Map<string, number>;
 	};
-	const { users }: Props = $props();
+	const { users, sessionCount }: Props = $props();
 </script>
 
 <table class="stripes center-align">
@@ -19,7 +20,7 @@
 	</thead>
 	<tbody>
 		{#each users as user}
-			{@const numSessions = 0}
+			{@const numSessions = sessionCount.get(user.id) ?? 0}
 			<tr>
 				<td>{user.username}</td>
 				<td>{user.name}</td>

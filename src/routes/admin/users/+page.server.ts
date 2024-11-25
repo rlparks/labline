@@ -17,9 +17,31 @@ export const load = (async (event) => {
 		return error(sessionCountRes.status, "Error retrieving session count");
 	}
 
-	console.log(await sessionCountRes.json());
+	const sessionCountJson = (await sessionCountRes.json()) as {
+		userId: string;
+		sessionsCount: number;
+	}[];
+
+	const sessionCount = mapSessionCount(sessionCountJson);
 
 	const users = (await usersRes.json()) as UserWithRole[];
 
-	return { users };
+	return { users, sessionCount };
 }) satisfies PageServerLoad;
+
+/**
+ * Converts the session count of format
+ * [{ userId: string, sessionsCount: number }]
+ * to a Map that is faster to access while rendering.
+ *
+ * @param sessionCount
+ * @returns
+ */
+function mapSessionCount(sessionCount: { userId: string; sessionsCount: number }[]) {
+	const map = new Map();
+	for (const session of sessionCount) {
+		map.set(session.userId, session.sessionsCount);
+	}
+
+	return map;
+}

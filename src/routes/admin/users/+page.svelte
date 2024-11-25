@@ -15,4 +15,4 @@
 	<a href="/admin/users/create" class="button square round extra"><i>add</i></a>
 </div>
 
-<UsersTable users={data.users} />
+<UsersTable users={data.users} sessionCount={data.sessionCount} />
