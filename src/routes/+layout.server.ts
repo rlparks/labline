@@ -10,7 +10,7 @@ const USER_NAV_LINKS = [
 
 const ADMIN_NAV_LINKS = [
 	...USER_NAV_LINKS,
-	{ href: "/admin/users", text: "Users", icon: "admin_panel_settings" },
+	{ href: "/admin/users", text: "Admin", icon: "admin_panel_settings" },
 ];
 
 export const load = (async ({ fetch, locals }) => {
