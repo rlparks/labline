@@ -1,5 +1,6 @@
-import type { PageServerLoad } from "./[userId]/$types";
+import type { PageServerLoad } from "./$types";
 
-export const load = (async () => {
+export const load = (async (event) => {
+	event.locals.security.isAuthenticated().isAdmin();
 	return {};
 }) satisfies PageServerLoad;

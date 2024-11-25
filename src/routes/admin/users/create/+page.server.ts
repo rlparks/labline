@@ -1,5 +1,10 @@
 import { error, redirect } from "@sveltejs/kit";
-import type { Actions } from "./$types";
+import type { Actions, PageServerLoad } from "./$types";
+
+export const load: PageServerLoad = async (event) => {
+	event.locals.security.isAuthenticated().isAdmin();
+	return {};
+};
 
 export const actions: Actions = {
 	default: async ({ request, fetch }) => {

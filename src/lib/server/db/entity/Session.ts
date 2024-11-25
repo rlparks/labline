@@ -1,7 +1,7 @@
 import { db } from "$lib/server/db";
 import * as table from "$lib/server/db/schema";
 import type { UserWithRole, Session } from "$lib/types";
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
 import { generateTextId } from ".";
 
 async function getSessionById(sessionId: string): Promise<Session | undefined> {
@@ -9,8 +9,12 @@ async function getSessionById(sessionId: string): Promise<Session | undefined> {
 	return session;
 }
 
-export async function getSessionsGroupedByUserId(): Promise<Session[]> {
-	return await db.select().from(table.sessions).groupBy(table.sessions.userId);
+export async function getSessionCountPerUser() {
+	return await db
+		.select({ userId: table.sessions.userId, sessionsCount: count(table.sessions.id) })
+		.from(table.sessions)
+		.groupBy(table.sessions.userId)
+		.leftJoin(table.users, eq(table.sessions.userId, table.users.id));
 }
 
 /**

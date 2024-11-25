@@ -11,6 +11,14 @@ export const load = (async (event) => {
 		return error(usersRes.status, "Error retrieving users");
 	}
 
+	const sessionCountRes = await event.fetch("/api/sessions");
+
+	if (!sessionCountRes.ok) {
+		return error(sessionCountRes.status, "Error retrieving session count");
+	}
+
+	console.log(await sessionCountRes.json());
+
 	const users = (await usersRes.json()) as UserWithRole[];
 
 	return { users };
