@@ -35,7 +35,6 @@ The header (navigation bar) of the application.
 	const { user, authInfo, navLinks }: Props = $props();
 
 	const navBreakpoint = 287 * navLinks.length;
-	console.log(navBreakpoint);
 	const buttonCircleBreakpoint = 200 * navLinks.length;
 
 	const oidcRedirectUrl = $derived(
