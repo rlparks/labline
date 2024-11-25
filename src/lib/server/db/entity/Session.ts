@@ -1,12 +1,24 @@
 import { db } from "$lib/server/db";
 import * as table from "$lib/server/db/schema";
-import type { UserWithRole, Session } from "$lib/types";
+import type { UserWithRole, Session, SafeSession } from "$lib/types";
 import { count, eq } from "drizzle-orm";
 import { generateTextId } from ".";
 
 async function getSessionById(sessionId: string): Promise<Session | undefined> {
 	const [session] = await db.select().from(table.sessions).where(eq(table.sessions.id, sessionId));
 	return session;
+}
+
+export async function getSessionsByUserId(userId: string): Promise<SafeSession[]> {
+	return await db
+		.select({
+			id: table.sessions.id,
+			userId: table.sessions.userId,
+			expiresAt: table.sessions.expiresAt,
+			ipAddress: table.sessions.ipAddress,
+		})
+		.from(table.sessions)
+		.where(eq(table.sessions.userId, userId));
 }
 
 export async function getSessionCountPerUser() {

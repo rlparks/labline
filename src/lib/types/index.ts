@@ -6,6 +6,16 @@ export type Role = (typeof ROLES_LIST)[number];
 export { ROLES_LIST };
 
 /**
+ * Sessions without tokens.
+ */
+export interface SafeSession {
+	id: string;
+	userId: string;
+	expiresAt: Date;
+	ipAddress: string | null;
+}
+
+/**
  * `User`s with additional info removed.
  */
 export interface SafeUser {
