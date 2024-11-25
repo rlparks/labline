@@ -1,20 +1,13 @@
 <script lang="ts">
+	import { enhance } from "$app/forms";
+	import { getFormattedDateTime } from "$lib";
 	import type { SafeSession } from "$lib/types";
 
 	type Props = {
 		sessions: SafeSession[];
 	};
 	const { sessions }: Props = $props();
-
-	const title = "Sessions · username";
 </script>
-
-<svelte:head>
-	<title>knowledger · {title}</title>
-	<meta name="description" content="knowledger session management." />
-</svelte:head>
-
-<h3 class="center-align">{title}</h3>
 
 <table class="stripes center-align">
 	<thead>
@@ -29,12 +22,22 @@
 		{#each sessions as session}
 			<tr>
 				<td>{session.id}</td>
-				<td>{session.expiresAt}</td>
+				<!-- slightly cheating with types here -->
+				<td>{getFormattedDateTime(new Date(session.expiresAt))}</td>
 				<td>{session.ipAddress}</td>
 				<td>
-					<form method="POST" action={`/admin/users/${session.userId}/sessions?/delete`}>
+					<form
+						method="POST"
+						action={`/admin/users/${session.userId}/sessions?/delete`}
+						use:enhance
+					>
 						<input type="hidden" name="sessionId" value={session.id} />
-						<button class="circle" type="submit" data-umami-event="button-delete-session">
+						<button
+							class="circle"
+							type="submit"
+							data-umami-event="button-delete-session"
+							title="Instantly deletes session without confirmation!"
+						>
 							<i>delete</i>
 						</button>
 					</form>

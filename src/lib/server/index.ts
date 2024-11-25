@@ -1,3 +1,4 @@
+import { getFormattedDateTime } from "$lib";
 import type { SafeUser, User } from "$lib/types";
 
 /**
@@ -20,6 +21,5 @@ export function makeUserSafe(user: User): SafeUser {
  */
 export function getCurrentFormattedDateTime(): string {
 	const now = new Date();
-	const dateString = now.toISOString().split("T")[0];
-	return `${dateString} ${now.toLocaleTimeString()}`;
+	return getFormattedDateTime(now);
 }

@@ -21,3 +21,8 @@ export const DEMO_USER = {
 	name: "Demo User",
 	role: null,
 };
+
+export function getFormattedDateTime(date: Date): string {
+	const dateString = date.toISOString().split("T")[0];
+	return `${dateString} ${date.toLocaleTimeString()}`;
+}
