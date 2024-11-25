@@ -36,8 +36,6 @@ if (env.CREATE_ACCOUNT) {
 }
 
 const originalHandle: Handle = async ({ event, resolve }) => {
-	console.log(event.request.headers);
-	console.log("Request IP: " + event.getClientAddress());
 	if (BYPASS_ACCOUNT_REQUIREMENT && !event.locals.user) {
 		event.locals.user = DEMO_USER;
 	}
