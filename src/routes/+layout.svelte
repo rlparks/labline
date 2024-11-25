@@ -20,7 +20,7 @@
 		<div class="space"></div>
 	</noscript>
 
-	<Header user={data.user} authInfo={data.authInfo} />
+	<Header user={data.user} authInfo={data.authInfo} navLinks={data.navLinks} />
 
 	{@render esdLogo()}
 

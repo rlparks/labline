@@ -24,17 +24,19 @@ The header (navigation bar) of the application.
 	import { page } from "$app/stores";
 	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
-	import type { SafeUser, AuthInfo } from "$lib/types";
-
-	const NAV_BREAKPOINT = 1020;
-	const BUTTON_CIRCLE_BREAKPOINT = 600;
+	import type { AuthInfo, SafeUser } from "$lib/types";
 
 	type Props = {
 		user: SafeUser | null;
 		authInfo: AuthInfo;
+		navLinks: { href: string; text: string; icon: string }[];
 	};
 
-	const { user, authInfo }: Props = $props();
+	const { user, authInfo, navLinks }: Props = $props();
+
+	const navBreakpoint = 287 * navLinks.length;
+	console.log(navBreakpoint);
+	const buttonCircleBreakpoint = 200 * navLinks.length;
 
 	const oidcRedirectUrl = $derived(
 		browser ? `${window.location.origin}/login/callback` : undefined,
@@ -52,7 +54,7 @@ The header (navigation bar) of the application.
 		}
 	}
 
-	let width = $state<number>(NAV_BREAKPOINT + 1);
+	let width = $state<number>(navBreakpoint + 1);
 </script>
 
 <svelte:window bind:innerWidth={width} />
@@ -60,7 +62,7 @@ The header (navigation bar) of the application.
 <header>
 	<nav>
 		<Title />
-		{#if user && width && width > NAV_BREAKPOINT}
+		{#if user && width && width > navBreakpoint}
 			{@render navButtons()}
 		{/if}
 		<div class="max"></div>
@@ -69,7 +71,7 @@ The header (navigation bar) of the application.
 			<form action="/api/auth/logout" method="POST" use:enhance>
 				<button
 					type="submit"
-					class:circle={width && width <= BUTTON_CIRCLE_BREAKPOINT}
+					class:circle={width && width <= buttonCircleBreakpoint}
 					data-umami-event="button-logout"
 					data-umami-event-username={user.username}
 				>
@@ -84,7 +86,7 @@ The header (navigation bar) of the application.
 		{/if}
 	</nav>
 
-	{#if user && width && width <= NAV_BREAKPOINT}
+	{#if user && width && width <= navBreakpoint}
 		<div class="row center-align no-margin">
 			{@render navButtons()}
 		</div>
@@ -92,19 +94,19 @@ The header (navigation bar) of the application.
 </header>
 
 {#snippet navButtons()}
-	{@render navButton("/", "domain", "Search by Building")}
-	{@render navButton("/labs", "experiment", "Search All Labs")}
-	{@render navButton("/summary", "list", "Summary")}
+	{#each navLinks as link}
+		{@render navButton(link.href, link.icon, link.text)}
+	{/each}
 {/snippet}
 
 {#snippet navButton(url: string, icon: string, text: string)}
 	<a
 		class="button"
 		class:border={$page.url.pathname !== url}
-		class:circle={width && width <= BUTTON_CIRCLE_BREAKPOINT && $page.url.pathname !== url}
+		class:circle={width && width <= buttonCircleBreakpoint && $page.url.pathname !== url}
 		href={url}
 		><i>{icon}</i>
-		{#if (width && width > BUTTON_CIRCLE_BREAKPOINT) || $page.url.pathname === url}
+		{#if (width && width > buttonCircleBreakpoint) || $page.url.pathname === url}
 			<span>{text}</span>{/if}</a
 	>
 {/snippet}
