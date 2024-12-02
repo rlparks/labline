@@ -66,7 +66,7 @@ The header (navigation bar) of the application.
 		{/if}
 		<div class="max"></div>
 		{#if user}
-			<span>{user.username}</span>
+			<span>{user.name}</span>
 			<form action="/api/auth/logout" method="POST" use:enhance>
 				<button
 					type="submit"
