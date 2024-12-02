@@ -5,7 +5,7 @@
 </script>
 
 <svelte:head>
-	<title>knowledger · {$page.status}</title>
+	<title>labline · {$page.status}</title>
 </svelte:head>
 
 {#if $page.status === 401}

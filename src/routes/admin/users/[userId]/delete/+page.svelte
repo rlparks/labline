@@ -9,8 +9,8 @@
 </script>
 
 <svelte:head>
-	<title>knowledger · {title}</title>
-	<meta name="description" content="Delete knowledger user." />
+	<title>labline · {title}</title>
+	<meta name="description" content="Delete labline user." />
 </svelte:head>
 
 <h3 class="center-align">{title}</h3>

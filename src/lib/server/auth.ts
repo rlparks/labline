@@ -41,7 +41,7 @@ export async function getAuthProviderInfo(): Promise<AuthInfo> {
 	throw new Error("Error retrieving auth provider info");
 }
 
-export const sessionCookieName = "knowledger-auth-session";
+export const sessionCookieName = "labline-auth-session";
 
 export function generateSessionToken() {
 	const bytes = crypto.getRandomValues(new Uint8Array(20));

@@ -1,6 +1,6 @@
 import { env } from "$env/dynamic/private";
 import { DEMO_USER } from "$lib";
-import Knowledger from "$lib/server/api/Knowledger";
+import Labline from "$lib/server/api/Labline";
 import * as auth from "$lib/server/auth.js";
 import { User } from "$lib/server/db/entity";
 import { Security } from "$lib/server/Security";
@@ -40,7 +40,7 @@ const originalHandle: Handle = async ({ event, resolve }) => {
 		event.locals.user = DEMO_USER;
 	}
 
-	event.locals.knowledger = new Knowledger();
+	event.locals.labline = new Labline();
 	event.locals.security = new Security(event);
 
 	const result = await resolve(event);

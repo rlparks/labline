@@ -1,13 +1,13 @@
 services:
-  knowledger:
-    container_name: knowledger
-    image: ghcr.io/rlparks/knowledger:main
+  labline:
+    container_name: labline
+    image: ghcr.io/rlparks/labline:main
     ports:
       - 3000:3000
     restart: unless-stopped
     environment:
-      DATABASE_URL: postgres://root:mysecretpassword@knowledger-db:5432/local
-      ABSOLUTE_DIR_PATH: /opt/knowledger
+      DATABASE_URL: postgres://root:mysecretpassword@labline-db:5432/local
+      ABSOLUTE_DIR_PATH: /opt/labline
       OIDC_DISCOVERY_ENDPOINT: https://example.com/.well-known
       OIDC_CLIENT_ID: example
       OIDC_CLIENT_SECRET: example
@@ -17,10 +17,10 @@ services:
       ADDRESS_HEADER: x-forwarded-for
       XFF_DEPTH: 1
     volumes:
-      - ./labs:/opt/knowledger
+      - ./labs:/opt/labline
     depends_on:
-      - knowledger-db
-  knowledger-db:
+      - labline-db
+  labline-db:
     image: postgres
     restart: unless-stopped
     ports:

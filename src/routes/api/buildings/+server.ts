@@ -5,7 +5,7 @@ export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated();
 
 	try {
-		const buildings = await event.locals.knowledger.getBuildings();
+		const buildings = await event.locals.labline.getBuildings();
 		return json(buildings);
 	} catch {
 		return error(500, "Error: Error retrieving buildings");

@@ -5,12 +5,12 @@ The logo and title of the app.
 -->
 
 <script lang="ts">
-	import icon from "$lib/images/icon/knowledger-128.png";
+	import icon from "$lib/images/icon/labline-128.png";
 </script>
 
 <a href="/">
-	<img src={icon} height="40px" alt="knowledger logo" />
-	<h4 class="no-margin">knowledger</h4>
+	<img src={icon} height="40px" alt="labline logo" />
+	<h4 class="no-margin">labline</h4>
 </a>
 
 <style>

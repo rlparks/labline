@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-	<title>knowledger</title>
+	<title>labline</title>
 	<meta name="description" content="Access UGA Lab Emergency Contacts." />
 </svelte:head>
 

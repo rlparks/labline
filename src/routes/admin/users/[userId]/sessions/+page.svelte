@@ -7,8 +7,8 @@
 </script>
 
 <svelte:head>
-	<title>knowledger · {title}</title>
-	<meta name="description" content="knowledger session management." />
+	<title>labline · {title}</title>
+	<meta name="description" content="labline session management." />
 </svelte:head>
 
 <h3 class="center-align">{title}</h3>

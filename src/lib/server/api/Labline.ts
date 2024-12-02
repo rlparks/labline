@@ -3,9 +3,9 @@ import Papa from "papaparse";
 import { FileHelper } from "./FileHelper";
 
 /**
- * The Knowledger API
+ * The Labline API
  */
-export default class Knowledger {
+export default class Labline {
 	private fileHelper: FileHelper;
 
 	constructor() {

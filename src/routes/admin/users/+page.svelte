@@ -7,8 +7,8 @@
 </script>
 
 <svelte:head>
-	<title>knowledger · {title}</title>
-	<meta name="description" content="User Management admin page for knowledger." />
+	<title>labline · {title}</title>
+	<meta name="description" content="User Management admin page for labline." />
 </svelte:head>
 
 <div class="absolute bottom right">

@@ -8,8 +8,8 @@
 </script>
 
 <svelte:head>
-	<title>knowledger · {title}</title>
-	<meta name="description" content="Edit knowledger user." />
+	<title>labline · {title}</title>
+	<meta name="description" content="Edit labline user." />
 </svelte:head>
 
 <h3 class="center-align">{title}</h3>

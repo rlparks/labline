@@ -34,7 +34,7 @@
 </script>
 
 <svelte:head>
-	<title>knowledger · {title}</title>
+	<title>labline · {title}</title>
 	<meta name="description" content="UGA Lab Summary Stats." />
 </svelte:head>
 
