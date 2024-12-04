@@ -21,7 +21,10 @@ export const POST: RequestHandler = async (event) => {
 
 	if (postUserIsValid(reqJson)) {
 		try {
-			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.roles || null);
+			if (reqJson.roles.length !== 0) {
+				event.locals.security.isSuperadmin();
+			}
+			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.roles);
 			return json(user, { status: 201 });
 		} catch (err) {
 			if (err instanceof Error) {

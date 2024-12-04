@@ -6,6 +6,11 @@ export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 	const user = await User.getUserById(event.params.userId);
 
+	// require being superadmin to touch accounts with roles
+	if (user?.roles.length !== 0) {
+		event.locals.security.isSuperadmin();
+	}
+
 	if (!user) {
 		return error(404, "User not found");
 	}
@@ -22,6 +27,11 @@ export const PUT: RequestHandler = async (event) => {
 	};
 
 	try {
+		const existingUser = await User.getUserById(event.params.userId);
+		if (existingUser?.roles.length !== 0) {
+			event.locals.security.isSuperadmin();
+		}
+
 		const user = await User.updateUserById(event.params.userId, {
 			id: reqJson.id,
 			username: reqJson.username,
@@ -41,6 +51,11 @@ export const DELETE: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
 	try {
+		const existingUser = await User.getUserById(event.params.userId);
+		if (existingUser?.roles.length !== 0) {
+			event.locals.security.isSuperadmin();
+		}
+
 		const user = await User.deleteUserById(event.params.userId);
 		return json(user);
 	} catch (err) {
