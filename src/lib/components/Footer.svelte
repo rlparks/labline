@@ -21,13 +21,14 @@ the page and contains the "last updated" date and attribution.
 		return `${date.toLocaleDateString()} ${date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`;
 	}
 
-	const fileSizeKb = fileStats ? (fileStats.stats.sizeBytes / 1024).toFixed(2) : null;
-	const atimeDate = fileStats ? new Date(fileStats.stats.atimeMs) : null;
 	const mtimeDate = fileStats ? new Date(fileStats.stats.mtimeMs) : null;
-	const birthtimeDate = fileStats ? new Date(fileStats.stats.birthtimeMs) : null;
 	const lastModified = mtimeDate ? formatDate(mtimeDate) : null;
 
 	function printStats() {
+		const fileSizeKb = fileStats ? (fileStats.stats.sizeBytes / 1024).toFixed(2) : null;
+		const atimeDate = fileStats ? new Date(fileStats.stats.atimeMs) : null;
+		const birthtimeDate = fileStats ? new Date(fileStats.stats.birthtimeMs) : null;
+
 		if (fileStats && atimeDate && mtimeDate && birthtimeDate) {
 			console.log(`File name: ${fileStats.fileName}`);
 			console.log(`File size: ${fileSizeKb} KB`);
