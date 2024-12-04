@@ -39,20 +39,22 @@
 		<label for="name">Name</label>
 	</div>
 
-	<div class="field">
-		{#each data.roles as role}
-			<div>
-				<label class="checkbox">
-					<input
-						name={role.value}
-						type="checkbox"
-						checked={data.editUser.roles.includes(role.value)}
-					/>
-					<span>{role.name}</span>
-				</label>
-			</div>
-		{/each}
-	</div>
+	{#if data.showRoles}
+		<div class="field">
+			{#each data.roles as role}
+				<div>
+					<label class="checkbox">
+						<input
+							name={role.value}
+							type="checkbox"
+							checked={data.editUser.roles.includes(role.value)}
+						/>
+						<span>{role.name}</span>
+					</label>
+				</div>
+			{/each}
+		</div>
+	{/if}
 
 	<nav>
 		<button class="no-margin" type="submit">Save</button>

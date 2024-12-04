@@ -25,16 +25,18 @@
 		<label for="name">Name</label>
 	</div>
 
-	<div class="field">
-		{#each data.roles as role}
-			<div>
-				<label class="checkbox">
-					<input name={role.value} type="checkbox" />
-					<span>{role.name}</span>
-				</label>
-			</div>
-		{/each}
-	</div>
+	{#if data.showRoles}
+		<div class="field">
+			{#each data.roles as role}
+				<div>
+					<label class="checkbox">
+						<input name={role.value} type="checkbox" />
+						<span>{role.name}</span>
+					</label>
+				</div>
+			{/each}
+		</div>
+	{/if}
 
 	<button class="no-margin" type="submit" data-umami-event="button-create-user">Create</button>
 </form>
