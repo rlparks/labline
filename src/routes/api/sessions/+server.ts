@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 import { Session } from "$lib/server/db/entity";
 
 export const GET: RequestHandler = async (event) => {
-	event.locals.security.isAuthenticated().isAdmin();
+	event.locals.security.isAuthenticated().isSuperadmin();
 
 	const sessionCount = await Session.getSessionCountPerUser();
 

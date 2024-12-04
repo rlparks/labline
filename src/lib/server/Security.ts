@@ -61,4 +61,12 @@ export class Security {
 	isAdmin() {
 		return this.hasAnyRole(["admin", "superadmin"]);
 	}
+
+	/**
+	 *
+	 * @returns 403 if the user does not have the role "superadmin" or 401 if not authenticated
+	 */
+	isSuperadmin() {
+		return this.hasRole("superadmin");
+	}
 }

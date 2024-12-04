@@ -3,7 +3,7 @@ import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const DELETE: RequestHandler = async (event) => {
-	event.locals.security.isAuthenticated().isAdmin();
+	event.locals.security.isAuthenticated().isSuperadmin();
 
 	try {
 		await Session.deleteSessionById(event.params.sessionId);
