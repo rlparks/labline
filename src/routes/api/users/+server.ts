@@ -21,7 +21,7 @@ export const POST: RequestHandler = async (event) => {
 
 	if (postUserIsValid(reqJson)) {
 		try {
-			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.role || null);
+			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.roles || null);
 			return json(user, { status: 201 });
 		} catch (err) {
 			if (err instanceof Error) {
@@ -38,10 +38,22 @@ export const POST: RequestHandler = async (event) => {
 type PostUser = {
 	username: string;
 	name: string;
-	role: Role | "";
+	roles: Role[];
 };
 
 function postUserIsValid(user: unknown): user is PostUser {
+	let rolesAreValid = true;
+	try {
+		for (const role of (user as PostUser).roles) {
+			if (!ROLES_LIST.includes(role)) {
+				rolesAreValid = false;
+				break;
+			}
+		}
+	} catch {
+		return false;
+	}
+
 	return (
 		typeof user === "object" &&
 		user !== null &&
@@ -50,6 +62,6 @@ function postUserIsValid(user: unknown): user is PostUser {
 		"role" in user &&
 		typeof user.username === "string" &&
 		typeof user.name === "string" &&
-		(ROLES_LIST.includes(user.role as Role) || user.role === "")
+		rolesAreValid
 	);
 }

@@ -83,26 +83,30 @@ export async function getUsers(): Promise<UserWithRoles[]> {
 export async function createUser(
 	username: unknown,
 	name: unknown,
-	role: Role | null = null,
+	roles: Role[] = [],
 	createRoleIfUserExists: boolean = false,
 ): Promise<UserWithRoles> {
 	if (!helpers.usernameIsValid(username)) {
-		throw new Error(`Invalid username.`);
+		throw new Error(`Invalid username: ${username}`);
 	}
 
 	if (!helpers.nameIsValid(name)) {
-		throw new Error(`Invalid name.`);
+		throw new Error(`Invalid name: ${name}`);
 	}
 
-	if (role && !helpers.roleIsValid(role)) {
-		throw new Error(`Invalid role.`);
+	if (roles) {
+		for (const role of roles) {
+			if (!helpers.roleIsValid(role)) {
+				throw new Error(`Invalid role: ${role}`);
+			}
+		}
 	}
 
 	const existingUser = await getUserByUsername(username);
 	if (existingUser) {
 		// create role if it doesn't exist
-		if (existingUser.roles.length === 0 && role !== null && createRoleIfUserExists) {
-			await UserRole.createUserRole(role, existingUser.id);
+		if (existingUser.roles !== roles && createRoleIfUserExists) {
+			await refreshRoles(existingUser.id, roles, true);
 		}
 
 		throw new Error(`Username "${username}" already taken`);
@@ -123,16 +127,26 @@ export async function createUser(
 	try {
 		const [insertedUser] = await db.insert(table.users).values(user).returning();
 
-		if (role) {
-			await UserRole.createUserRole(role, userId);
+		if (roles.length > 0) {
+			await refreshRoles(userId, roles, false);
 		}
 
 		return {
 			...insertedUser,
-			roles: role ? [role] : [],
+			roles: roles,
 		};
 	} catch {
 		throw new Error("Error inserting user");
+	}
+}
+
+async function refreshRoles(userId: string, roles: Role[], deleteExistingRoles = true) {
+	if (deleteExistingRoles) {
+		await UserRole.deleteUserRolesByUserId(userId);
+	}
+
+	for (const role of roles) {
+		await UserRole.createUserRole(role, userId);
 	}
 }
 
@@ -172,12 +186,7 @@ export async function updateUserById(id: string, user: unknown): Promise<UserWit
 		.returning();
 
 	// wipe roles
-	await UserRole.deleteUserRolesByUserId(id);
-	if (user.roles) {
-		for (const role of user.roles) {
-			await UserRole.createUserRole(role, id);
-		}
-	}
+	await refreshRoles(id, user.roles, true);
 
 	return {
 		...updatedUser,

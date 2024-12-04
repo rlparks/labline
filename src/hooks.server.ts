@@ -23,11 +23,15 @@ for (const envVar of REQUIRED_ENV_VARIABLES) {
 	}
 }
 
-// go to /admin/users after setup and set as admin
 if (env.CREATE_ACCOUNT) {
 	try {
 		console.log("Creating user from CREATE_ACCOUNT...");
-		const newUser = await User.createUser(env.CREATE_ACCOUNT, "Initial User", "superadmin", true);
+		const newUser = await User.createUser(
+			env.CREATE_ACCOUNT,
+			"Initial User",
+			["admin", "superadmin"],
+			true,
+		);
 		console.log(`Created user ${newUser.username}`);
 	} catch (e) {
 		if (e instanceof Error) {
