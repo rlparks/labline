@@ -24,8 +24,12 @@ export interface SafeUser {
 	name: string;
 }
 
-export interface UserWithRole extends User {
+export interface UserWithSingleRole extends User {
 	role: Role | null;
+}
+
+export interface UserWithRoles extends User {
+	roles: Role[];
 }
 
 /**

@@ -18,7 +18,7 @@ export const PUT: RequestHandler = async (event) => {
 		id: string;
 		username: string;
 		name: string;
-		role: string;
+		roles: [string];
 	};
 
 	try {
@@ -26,7 +26,7 @@ export const PUT: RequestHandler = async (event) => {
 			id: reqJson.id,
 			username: reqJson.username,
 			name: reqJson.name,
-			role: reqJson.role || null,
+			roles: reqJson.roles,
 		});
 		return json(user);
 	} catch (err) {

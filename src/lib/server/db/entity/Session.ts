@@ -1,8 +1,8 @@
 import { db } from "$lib/server/db";
 import * as table from "$lib/server/db/schema";
-import type { UserWithRole, Session, SafeSession } from "$lib/types";
+import type { SafeSession, Session, UserWithRoles } from "$lib/types";
 import { count, eq } from "drizzle-orm";
-import { generateTextId } from ".";
+import { generateTextId, User } from ".";
 
 async function getSessionById(sessionId: string): Promise<Session | undefined> {
 	const [session] = await db.select().from(table.sessions).where(eq(table.sessions.id, sessionId));
@@ -38,24 +38,24 @@ export async function getSessionCountPerUser() {
  */
 export async function getUserSessionByHashedToken(
 	hashedToken: string,
-): Promise<{ user: UserWithRole; session: Session } | undefined> {
+): Promise<{ user: UserWithRoles; session: Session } | undefined> {
 	const [result] = await db
 		.select({
 			// Adjust user table here to tweak returned data
-			user: {
-				id: table.users.id,
-				username: table.users.username,
-				name: table.users.name,
-				role: table.userRoles.role,
-			},
+			userId: table.users.id,
 			session: table.sessions,
 		})
 		.from(table.sessions)
 		.innerJoin(table.users, eq(table.sessions.userId, table.users.id))
-		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId))
 		.where(eq(table.sessions.hashedToken, hashedToken));
 
-	return result;
+	const user = await User.getUserById(result.userId);
+
+	if (!user) {
+		throw new Error("User not found");
+	}
+
+	return { user, session: result.session };
 }
 
 /**

@@ -19,7 +19,7 @@ export const DEMO_USER = {
 	id: "demo",
 	username: "demo",
 	name: "Demo User",
-	role: null,
+	roles: [],
 };
 
 export function getFormattedDateTime(date: Date): string {

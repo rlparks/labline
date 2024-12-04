@@ -1,12 +1,12 @@
 import { db } from "$lib/server/db";
 import * as helpers from "$lib/server/db/entity";
-import { UserRole } from "$lib/server/db/entity";
+import { combineUsers, UserRole } from "$lib/server/db/entity";
 import * as table from "$lib/server/db/schema";
-import { type Role, type User, type UserWithRole } from "$lib/types";
+import { type Role, type User, type UserWithRoles } from "$lib/types";
 import { eq } from "drizzle-orm";
 
-export async function getUserById(id: string): Promise<UserWithRole | undefined> {
-	const users = await db
+export async function getUserById(id: string): Promise<UserWithRoles | undefined> {
+	const userRows = await db
 		.select({
 			id: table.users.id,
 			username: table.users.username,
@@ -17,7 +17,12 @@ export async function getUserById(id: string): Promise<UserWithRole | undefined>
 		.where(eq(table.users.id, id))
 		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
 
-	return users?.[0];
+	const flatUsers = combineUsers(userRows);
+	if (flatUsers.length > 1) {
+		throw new Error("Multiple users found with the same ID.");
+	}
+
+	return flatUsers[0];
 }
 
 /**
@@ -26,8 +31,8 @@ export async function getUserById(id: string): Promise<UserWithRole | undefined>
  * @returns
  * @throws if the database is unavailable
  */
-export async function getUserByUsername(username: string): Promise<UserWithRole | undefined> {
-	const users = await db
+export async function getUserByUsername(username: string): Promise<UserWithRoles | undefined> {
+	const userRows = await db
 		.select({
 			id: table.users.id,
 			username: table.users.username,
@@ -38,7 +43,12 @@ export async function getUserByUsername(username: string): Promise<UserWithRole 
 		.where(eq(table.users.username, username))
 		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId));
 
-	return users?.[0];
+	const flatUsers = combineUsers(userRows);
+	if (flatUsers.length > 1) {
+		throw new Error("Multiple users found with the same username.");
+	}
+
+	return flatUsers[0];
 }
 
 /**
@@ -46,8 +56,8 @@ export async function getUserByUsername(username: string): Promise<UserWithRole 
  *
  * @returns all users
  */
-export async function getUsers(): Promise<UserWithRole[]> {
-	const users = await db
+export async function getUsers(): Promise<UserWithRoles[]> {
+	const userRows = await db
 		.select({
 			id: table.users.id,
 			username: table.users.username,
@@ -58,7 +68,9 @@ export async function getUsers(): Promise<UserWithRole[]> {
 		.leftJoin(table.userRoles, eq(table.users.id, table.userRoles.userId))
 		.orderBy(table.users.username);
 
-	return users;
+	const flatUsers = combineUsers(userRows);
+
+	return flatUsers;
 }
 
 /**
@@ -73,7 +85,7 @@ export async function createUser(
 	name: unknown,
 	role: Role | null = null,
 	createRoleIfUserExists: boolean = false,
-): Promise<UserWithRole> {
+): Promise<UserWithRoles> {
 	if (!helpers.usernameIsValid(username)) {
 		throw new Error(`Invalid username.`);
 	}
@@ -89,7 +101,7 @@ export async function createUser(
 	const existingUser = await getUserByUsername(username);
 	if (existingUser) {
 		// create role if it doesn't exist
-		if (existingUser.role === null && role !== null && createRoleIfUserExists) {
+		if (existingUser.roles.length === 0 && role !== null && createRoleIfUserExists) {
 			await UserRole.createUserRole(role, existingUser.id);
 		}
 
@@ -117,7 +129,7 @@ export async function createUser(
 
 		return {
 			...insertedUser,
-			role: role ?? null,
+			roles: role ? [role] : [],
 		};
 	} catch {
 		throw new Error("Error inserting user");
@@ -131,8 +143,8 @@ export async function createUser(
  * @param user the new user data
  * @returns the updated user
  */
-export async function updateUserById(id: string, user: unknown): Promise<UserWithRole> {
-	if (!helpers.userWithRoleIsValid(user)) {
+export async function updateUserById(id: string, user: unknown): Promise<UserWithRoles> {
+	if (!helpers.userWithRolesIsValid(user)) {
 		throw new Error(`Invalid user.`);
 	}
 
@@ -161,18 +173,20 @@ export async function updateUserById(id: string, user: unknown): Promise<UserWit
 
 	// wipe roles
 	await UserRole.deleteUserRolesByUserId(id);
-	if (user.role) {
-		await UserRole.createUserRole(user.role, id);
+	if (user.roles) {
+		for (const role of user.roles) {
+			await UserRole.createUserRole(role, id);
+		}
 	}
 
 	return {
 		...updatedUser,
-		role: user.role,
+		roles: user.roles,
 	};
 }
 
-async function isNotFinalRole(newUserData: UserWithRole | null, existingUser: UserWithRole) {
-	if ((!newUserData || newUserData.role === null) && existingUser.role !== null) {
+async function isNotFinalRole(newUserData: UserWithRoles | null, existingUser: UserWithRoles) {
+	if ((!newUserData || newUserData.roles.length === 0) && existingUser.roles.length !== 0) {
 		const allRoles = await UserRole.getRoles();
 		if (allRoles.length === 1 && allRoles[0].userId === existingUser.id) {
 			throw new Error("Cannot remove final role");
@@ -187,7 +201,7 @@ async function isNotFinalRole(newUserData: UserWithRole | null, existingUser: Us
  * @returns the deleted user
  * @throws if the user does not exist
  */
-export async function deleteUserById(id: string): Promise<UserWithRole> {
+export async function deleteUserById(id: string): Promise<UserWithRoles> {
 	const user = await getUserById(id);
 	if (!user) {
 		throw new Error(`User not found`);

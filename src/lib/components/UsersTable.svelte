@@ -1,8 +1,8 @@
 <script lang="ts">
-	import type { UserWithRole } from "$lib/types";
+	import type { UserWithRoles } from "$lib/types";
 
 	type Props = {
-		users: UserWithRole[];
+		users: UserWithRoles[];
 		sessionCount: Map<string, number>;
 	};
 	const { users, sessionCount }: Props = $props();
@@ -13,7 +13,7 @@
 		<tr>
 			<th>Username</th>
 			<th>Name</th>
-			<th>Role</th>
+			<th>Roles</th>
 			<th>Sessions</th>
 			<th></th>
 		</tr>
@@ -24,7 +24,7 @@
 			<tr>
 				<td>{user.username}</td>
 				<td>{user.name}</td>
-				<td>{user?.role}</td>
+				<td>{user.roles.join(", ")}</td>
 				<td>
 					<a
 						class="button circle"

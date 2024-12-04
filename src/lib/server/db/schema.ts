@@ -17,7 +17,7 @@ export const sessions = pgTable("sessions", {
 	ipAddress: text("ip_address"),
 });
 
-export const ROLES_LIST = ["admin"] as const;
+export const ROLES_LIST = ["admin", "superadmin"] as const;
 export const roles = pgEnum("roles", ROLES_LIST);
 
 export const userRoles = pgTable("user_roles", {

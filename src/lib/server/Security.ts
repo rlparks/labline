@@ -1,9 +1,9 @@
-import type { Role, UserWithRole } from "$lib/types";
+import type { Role, UserWithRoles } from "$lib/types";
 import { error, type RequestEvent } from "@sveltejs/kit";
 
 // https://www.captaincodeman.com/securing-your-sveltekit-app
 export class Security {
-	private user: UserWithRole | null;
+	private user: UserWithRoles | null;
 
 	constructor(event: RequestEvent) {
 		this.user = event.locals.user;
@@ -30,8 +30,25 @@ export class Security {
 			return error(401, "Unauthorized");
 		}
 
-		if (this.user.role !== role) {
+		if (!this.user.roles.includes(role)) {
 			return error(403, `Missing role: ${role}`);
+		}
+
+		return this;
+	}
+
+	/**
+	 *
+	 * @param roles the possible allowed roles
+	 * @returns 403 if the user does not have any of the roles or 401 if not authenticated
+	 */
+	hasAnyRole(roles: Role[]) {
+		if (!this.user) {
+			return error(401, "Unauthorized");
+		}
+
+		if (!roles.some((role) => this.user?.roles.includes(role))) {
+			return error(403, `Missing all roles: ${roles.join(", ")}`);
 		}
 
 		return this;
@@ -42,6 +59,6 @@ export class Security {
 	 * @throws 403 if the user does not have the role "admin" or 401 if not authenticated
 	 */
 	isAdmin() {
-		return this.hasRole("admin");
+		return this.hasAnyRole(["admin", "superadmin"]);
 	}
 }

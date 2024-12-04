@@ -1,4 +1,4 @@
-import type { UserWithRole } from "$lib/types";
+import type { UserWithRoles } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
@@ -24,7 +24,7 @@ export const load = (async (event) => {
 
 	const sessionCount = mapSessionCount(sessionCountJson);
 
-	const users = (await usersRes.json()) as UserWithRole[];
+	const users = (await usersRes.json()) as UserWithRoles[];
 
 	return { users, sessionCount };
 }) satisfies PageServerLoad;

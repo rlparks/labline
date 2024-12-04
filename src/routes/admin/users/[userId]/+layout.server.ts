@@ -1,6 +1,6 @@
 import { error, isHttpError } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
-import type { UserWithRole } from "$lib/types";
+import type { UserWithRoles } from "$lib/types";
 
 export const load = (async (event) => {
 	try {
@@ -11,7 +11,7 @@ export const load = (async (event) => {
 			return error(userRes.status, user.message || "Error retrieving user");
 		}
 
-		return { editUser: user as UserWithRole };
+		return { editUser: user as UserWithRoles };
 	} catch (err) {
 		if (isHttpError(err) && err.body.message) {
 			{

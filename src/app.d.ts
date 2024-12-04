@@ -1,14 +1,14 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import Labline from "$lib/server/api/Labline";
-import type { UserWithRole } from "$lib/types";
+import type { UserWithRoles } from "$lib/types";
 
 // for information about these interfaces
 declare global {
 	namespace App {
 		// interface Error {}
 		interface Locals {
-			user: UserWithRole | null;
+			user: UserWithRoles | null;
 			labline: Labline;
 			session: import("$lib/server/auth").SessionValidationResult["session"];
 			security: import("$lib/server/Security").Security;
