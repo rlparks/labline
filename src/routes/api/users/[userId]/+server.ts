@@ -1,5 +1,5 @@
 import { User } from "$lib/server/db/entity";
-import { error, json } from "@sveltejs/kit";
+import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async (event) => {
@@ -23,12 +23,12 @@ export const PUT: RequestHandler = async (event) => {
 		id: string;
 		username: string;
 		name: string;
-		roles: [string];
+		roles: string[];
 	};
 
 	try {
 		const existingUser = await User.getUserById(event.params.userId);
-		if (existingUser?.roles.length !== 0) {
+		if (existingUser?.roles.length !== 0 || reqJson.roles.length !== 0) {
 			event.locals.security.isSuperadmin();
 		}
 
@@ -43,6 +43,11 @@ export const PUT: RequestHandler = async (event) => {
 		if (err instanceof Error) {
 			return error(400, err.message);
 		}
+
+		if (isHttpError(err)) {
+			return error(err.status, err.body.message);
+		}
+
 		return error(500, "Error updating user");
 	}
 };

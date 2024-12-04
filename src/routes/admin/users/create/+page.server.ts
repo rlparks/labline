@@ -11,12 +11,14 @@ export const actions: Actions = {
 		const formData = await request.formData();
 		const username = formData.get("username") as string;
 		const name = formData.get("name") as string;
-		const role = formData.get("role") as string;
+
+		const admin = formData.get("admin") ? ["admin"] : [];
+		const superadmin = formData.get("superadmin") ? ["superadmin"] : [];
 
 		const user = {
 			username,
 			name,
-			role,
+			roles: [...admin, ...superadmin],
 		};
 
 		const res = await fetch("/api/users", {

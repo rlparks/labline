@@ -1,5 +1,5 @@
 import { User } from "$lib/server/db/entity";
-import { error, json } from "@sveltejs/kit";
+import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 import { ROLES_LIST, type Role } from "$lib/types";
 
@@ -29,6 +29,10 @@ export const POST: RequestHandler = async (event) => {
 		} catch (err) {
 			if (err instanceof Error) {
 				return error(400, err.message);
+			}
+
+			if (isHttpError(err)) {
+				return error(err.status, err.body.message);
 			}
 
 			return error(500, "Error creating user");
@@ -62,7 +66,7 @@ function postUserIsValid(user: unknown): user is PostUser {
 		user !== null &&
 		"username" in user &&
 		"name" in user &&
-		"role" in user &&
+		"roles" in user &&
 		typeof user.username === "string" &&
 		typeof user.name === "string" &&
 		rolesAreValid
