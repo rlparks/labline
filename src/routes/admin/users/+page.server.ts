@@ -11,22 +11,26 @@ export const load = (async (event) => {
 		return error(usersRes.status, "Error retrieving users");
 	}
 
-	const sessionCountRes = await event.fetch("/api/sessions");
-
-	if (!sessionCountRes.ok) {
-		return error(sessionCountRes.status, "Error retrieving session count");
-	}
-
-	const sessionCountJson = (await sessionCountRes.json()) as {
-		userId: string;
-		sessionsCount: number;
-	}[];
-
-	const sessionCount = mapSessionCount(sessionCountJson);
-
 	const users = (await usersRes.json()) as UserWithRoles[];
 
-	return { users, sessionCount };
+	if (event.locals.user?.roles.includes("superadmin")) {
+		const sessionCountRes = await event.fetch("/api/sessions");
+
+		if (!sessionCountRes.ok) {
+			return error(sessionCountRes.status, "Error retrieving session count");
+		}
+
+		const sessionCountJson = (await sessionCountRes.json()) as {
+			userId: string;
+			sessionsCount: number;
+		}[];
+
+		const sessionCount = mapSessionCount(sessionCountJson);
+
+		return { users, sessionCount };
+	} else {
+		return { users };
+	}
 }) satisfies PageServerLoad;
 
 /**
@@ -38,7 +42,7 @@ export const load = (async (event) => {
  * @returns
  */
 function mapSessionCount(sessionCount: { userId: string; sessionsCount: number }[]) {
-	const map = new Map();
+	const map = new Map<string, number>();
 	for (const session of sessionCount) {
 		map.set(session.userId, session.sessionsCount);
 	}

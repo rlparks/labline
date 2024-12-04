@@ -3,7 +3,7 @@ import type { PageServerLoad } from "./$types";
 import type { SafeSession } from "$lib/types";
 
 export const load = (async (event) => {
-	event.locals.security.isAuthenticated().isAdmin();
+	event.locals.security.isAuthenticated().isSuperadmin();
 
 	const userSessionsRes = await event.fetch(`/api/users/${event.params.userId}/sessions`);
 
