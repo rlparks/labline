@@ -35,9 +35,12 @@ async function passThroughRequest(
 	const formData = await event.request.formData();
 	const username = formData.get("username");
 	const name = formData.get("name");
-	const role = formData.get("role");
 
-	const user = { id: event.params.userId, username, name, role };
+	// HARDCODED ROLES :(
+	const admin = formData.get("admin") ? ["admin"] : [];
+	const superadmin = formData.get("superadmin") ? ["superadmin"] : [];
+
+	const user = { id: event.params.userId, username, name, roles: [...admin, ...superadmin] };
 
 	const res = await event.fetch(path, {
 		method: method,

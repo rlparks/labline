@@ -157,7 +157,7 @@ export async function updateUserById(id: string, user: unknown): Promise<UserWit
 		throw new Error(`User not found with ID ${id}`);
 	}
 
-	await isNotFinalRole(user, existingUser);
+	await isNotFinalSuperadmin(user, existingUser);
 
 	const bareUser: User = {
 		id: user.id,
@@ -185,11 +185,17 @@ export async function updateUserById(id: string, user: unknown): Promise<UserWit
 	};
 }
 
-async function isNotFinalRole(newUserData: UserWithRoles | null, existingUser: UserWithRoles) {
-	if ((!newUserData || newUserData.roles.length === 0) && existingUser.roles.length !== 0) {
-		const allRoles = await UserRole.getRoles();
-		if (allRoles.length === 1 && allRoles[0].userId === existingUser.id) {
-			throw new Error("Cannot remove final role");
+async function isNotFinalSuperadmin(
+	newUserData: UserWithRoles | null,
+	existingUser: UserWithRoles,
+) {
+	if (
+		(!newUserData || !newUserData.roles.includes("superadmin")) &&
+		existingUser.roles.length !== 0
+	) {
+		const allSuperadmins = await UserRole.getUserRolesByRole("superadmin");
+		if (allSuperadmins.length === 1 && allSuperadmins[0].userId === existingUser.id) {
+			throw new Error("Cannot remove final superadmin");
 		}
 	}
 }
@@ -207,7 +213,7 @@ export async function deleteUserById(id: string): Promise<UserWithRoles> {
 		throw new Error(`User not found`);
 	}
 
-	await isNotFinalRole(null, user);
+	await isNotFinalSuperadmin(null, user);
 
 	await UserRole.deleteUserRolesByUserId(id);
 

@@ -2,7 +2,7 @@
 	import { enhance } from "$app/forms";
 	import type { PageData } from "./$types";
 
-	let { data }: { data: PageData } = $props();
+	const { data }: { data: PageData } = $props();
 
 	const title = `Edit User · ${data.editUser.username}`;
 </script>
@@ -39,13 +39,19 @@
 		<label for="name">Name</label>
 	</div>
 
-	<div class="field label border">
-		<select id="role" name="role">
-			{#each data.roles as role}
-				<option value={role.value} selected={role.value === data.editUser.role}>{role.name}</option>
-			{/each}
-		</select>
-		<label for="role">Role</label>
+	<div class="field">
+		{#each data.roles as role}
+			<div>
+				<label class="checkbox">
+					<input
+						name={role.value}
+						type="checkbox"
+						checked={data.editUser.roles.includes(role.value)}
+					/>
+					<span>{role.name}</span>
+				</label>
+			</div>
+		{/each}
 	</div>
 
 	<nav>

@@ -23,6 +23,9 @@ export const load = (async ({ fetch, locals }) => {
 		user: locals.user,
 		authInfo,
 		fileStats,
-		navLinks: locals.user?.roles.includes("admin") ? ADMIN_NAV_LINKS : USER_NAV_LINKS,
+		navLinks:
+			locals.user?.roles.includes("admin") || locals.user?.roles.includes("superadmin")
+				? ADMIN_NAV_LINKS
+				: USER_NAV_LINKS,
 	};
 }) satisfies LayoutServerLoad;
