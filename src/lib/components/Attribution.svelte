@@ -1,1 +1,1 @@
-Made with ❤️ by <a class="link" href="https://rlparks.net">Rebecca Parks</a>
+Created by Rebecca Parks at <a class="link" href="https://esd.uga.edu">ESD</a>
