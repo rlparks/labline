@@ -16,6 +16,8 @@ services:
       # proxy settings
       ADDRESS_HEADER: x-forwarded-for
       XFF_DEPTH: 1
+      # optional Umami analytics
+      PUBLIC_UMAMI_ID: e
     volumes:
       - ./labs:/opt/labline
     depends_on:

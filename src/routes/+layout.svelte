@@ -5,9 +5,20 @@
 	import "./fonts.css";
 	import "./theme.css";
 	import { navigating } from "$app/stores";
+	import { env } from "$env/dynamic/public";
 
 	const { children, data } = $props();
 </script>
+
+<svelte:head>
+	{#if env.PUBLIC_UMAMI_ID}
+		<script
+			defer
+			src="https://analytics.esd.uga.edu/script.js"
+			data-website-id={env.PUBLIC_UMAMI_ID}
+		></script>
+	{/if}
+</svelte:head>
 
 <div class="content">
 	<noscript>
