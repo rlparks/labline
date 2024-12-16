@@ -17,11 +17,15 @@ const REQUIRED_ENV_VARIABLES = [
 	"ABSOLUTE_DIR_PATH",
 ];
 
+const missingVars = [];
 for (const envVar of REQUIRED_ENV_VARIABLES) {
 	if (!env[envVar]) {
-		console.log(`${envVar} must be set`);
-		process.exit(1);
+		missingVars.push(envVar);
 	}
+}
+if (missingVars.length !== 0) {
+	console.log(`${missingVars.join(", ")} must be set`);
+	process.exit(1);
 }
 
 if (env.CREATE_ACCOUNT) {
