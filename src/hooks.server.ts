@@ -1,10 +1,11 @@
 import { env } from "$env/dynamic/private";
 import { DEMO_USER } from "$lib";
+import { getCurrentFormattedDateTime } from "$lib/server";
 import Labline from "$lib/server/api/Labline";
-import * as auth from "$lib/server/auth.js";
+import * as auth from "$lib/server/auth";
 import { User } from "$lib/server/db/entity";
 import { Security } from "$lib/server/Security";
-import { type Handle } from "@sveltejs/kit";
+import { error, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
@@ -35,7 +36,7 @@ if (env.CREATE_ACCOUNT) {
 		console.log(`Created user ${newUser.username}`);
 	} catch (e) {
 		if (e instanceof Error) {
-			console.log(e.message);
+			console.log("Error creating initial account: ", e.message);
 		}
 	}
 }
@@ -67,18 +68,26 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		event.locals.session = null;
 		return resolve(event);
 	}
-	const { session, user } = await auth.validateSessionToken(sessionToken, event);
+	try {
+		const { session, user } = await auth.validateSessionToken(sessionToken, event);
 
-	if (session) {
-		auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-	} else {
-		auth.deleteSessionTokenCookie(event);
+		if (session) {
+			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+		} else {
+			auth.deleteSessionTokenCookie(event);
+		}
+
+		event.locals.user = user;
+		event.locals.session = session;
+
+		return resolve(event);
+	} catch (err) {
+		if (err instanceof AggregateError) {
+			const currentTime = getCurrentFormattedDateTime();
+			console.error(`${currentTime} · ${event.getClientAddress()} · ${err.errors.join(", ")}`);
+		}
+		return error(500, "Error connecting to database");
 	}
-
-	event.locals.user = user;
-	event.locals.session = session;
-
-	return resolve(event);
 };
 
 export const handle = sequence(handleAuth, originalHandle);
