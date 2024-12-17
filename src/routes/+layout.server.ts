@@ -3,7 +3,7 @@ import type { FileStats } from "$lib/types";
 import { getAuthProviderInfo } from "$lib/server/auth";
 
 const USER_NAV_LINKS = [
-	{ href: "/", text: "Search by Building", icon: "domain" },
+	{ href: "/buildings", text: "Search by Building", icon: "domain" },
 	{ href: "/labs", text: "Search All Labs", icon: "experiment" },
 	{ href: "/summary", text: "Summary", icon: "list" },
 ];
