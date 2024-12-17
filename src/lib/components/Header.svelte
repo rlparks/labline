@@ -80,8 +80,8 @@ The header (navigation bar) of the application.
 			</form>
 		{:else}
 			<button onclick={performRedirect} data-umami-event="button-login">
-				<i>login</i><span>Login</span></button
-			>
+				<i>login</i><span>Login</span>
+			</button>
 		{/if}
 	</nav>
 

@@ -13,7 +13,7 @@
 
 <svelte:head>
 	<title>labline · Search by Building</title>
-	<meta name="description" content="Access UGA Lab Emergency Contacts." />
+	<meta name="description" content="Search emergency contacts by building." />
 </svelte:head>
 
 <h3 class="center-align">Emergency Contacts</h3>
