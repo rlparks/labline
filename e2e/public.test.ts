@@ -2,10 +2,17 @@ import { test, expect } from "@playwright/test";
 
 test("public header has expected look", async ({ page }) => {
 	await page.goto("/");
-	await expect(page.getByRole("link", { name: "labline logo labline" })).toBeVisible();
+
+	await expect(page.getByRole("link", { name: "labline" })).toBeVisible();
 	await expect(page.locator("h4")).toContainText("labline");
 	await expect(page.getByAltText("labline logo")).toBeVisible();
-	await expect(page.getByRole("button", { name: "login Login" })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Login" })).toBeVisible();
+
+	// user buttons shouldn't exist
+	await expect(page.getByRole("link", { name: "Search by Building" })).not.toBeVisible();
+	await expect(page.getByRole("link", { name: "Search All Labs" })).not.toBeVisible();
+	await expect(page.getByRole("link", { name: "Summary" })).not.toBeVisible();
+	await expect(page.getByRole("link", { name: "Admin" })).not.toBeVisible();
 
 	await expect(page.getByRole("banner")).toMatchAriaSnapshot(`
       - banner:

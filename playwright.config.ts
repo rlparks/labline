@@ -7,6 +7,7 @@ const config: PlaywrightTestConfig = {
 	},
 	testDir: "e2e",
 	testMatch: /(.+\.)?(test|spec)\.[jt]s/,
+	fullyParallel: true,
 };
 
 export default config;
