@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 
 	const { children } = $props();
 
@@ -14,7 +14,7 @@
 
 <nav class="tabbed">
 	{#each pages as pageLink}
-		<a class:active={$page.url.pathname === pageLink.href} href={pageLink.href}>
+		<a class:active={page.url.pathname === pageLink.href} href={pageLink.href}>
 			<i>{pageLink.icon}</i>
 			<span>{pageLink.name}</span>
 		</a>

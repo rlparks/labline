@@ -21,7 +21,7 @@ The header (navigation bar) of the application.
 <script lang="ts">
 	import { browser } from "$app/environment";
 	import { enhance } from "$app/forms";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
 	import type { AuthInfo, SafeUser } from "$lib/types";
@@ -101,11 +101,11 @@ The header (navigation bar) of the application.
 {#snippet navButton(url: string, icon: string, text: string)}
 	<a
 		class="button"
-		class:border={$page.url.pathname !== url}
-		class:circle={width && width <= buttonCircleBreakpoint && $page.url.pathname !== url}
+		class:border={page.url.pathname !== url}
+		class:circle={width && width <= buttonCircleBreakpoint && page.url.pathname !== url}
 		href={url}
 		><i>{icon}</i>
-		{#if (width && width > buttonCircleBreakpoint) || $page.url.pathname === url}
+		{#if (width && width > buttonCircleBreakpoint) || page.url.pathname === url}
 			<span>{text}</span>{/if}</a
 	>
 {/snippet}

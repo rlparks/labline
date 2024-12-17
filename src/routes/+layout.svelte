@@ -4,7 +4,7 @@
 	import "beercss";
 	import "./fonts.css";
 	import "./theme.css";
-	import { navigating } from "$app/stores";
+	import { navigating } from "$app/state";
 	import { env } from "$env/dynamic/public";
 
 	const { children, data } = $props();
@@ -36,7 +36,7 @@
 	{@render esdLogo()}
 
 	<main class="responsive">
-		{#if !$navigating}
+		{#if !navigating.to}
 			{@render children()}
 		{:else}
 			<div class="space"></div>
