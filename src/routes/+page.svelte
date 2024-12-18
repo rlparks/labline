@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { Title } from "$lib/components";
+
 	const { data } = $props();
 </script>
 
@@ -7,9 +9,11 @@
 	<meta name="description" content="Access UGA Lab Emergency Contacts." />
 </svelte:head>
 
-<h3 class="center-align">labline: Lab Emergency Contacts</h3>
+<div class="center-align"><Title scale={1.5} /></div>
+
+<h3 class="center-align">UGA Lab Emergency Contacts</h3>
 
 <p class="center-align">
-	Labline allows first responders to quickly access the emergency contacts of labs across UGA's
-	campus.
+	Labline provides first responders with instant access to critical lab contact information when
+	every second matters.
 </p>
