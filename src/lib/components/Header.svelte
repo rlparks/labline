@@ -25,6 +25,7 @@ The header (navigation bar) of the application.
 	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
 	import type { AuthInfo, SafeUser } from "$lib/types";
+	import { innerWidth } from "svelte/reactivity/window";
 
 	type Props = {
 		user: SafeUser | null;
@@ -53,15 +54,13 @@ The header (navigation bar) of the application.
 		}
 	}
 
-	let width = $state<number>(navBreakpoint + 1);
+	let width = $derived(innerWidth.current ? innerWidth.current : navBreakpoint + 1);
 </script>
-
-<svelte:window bind:innerWidth={width} />
 
 <header>
 	<nav>
 		<Title />
-		{#if user && width && width > navBreakpoint}
+		{#if user && width > navBreakpoint}
 			{@render navButtons()}
 		{/if}
 		<div class="max"></div>
@@ -70,7 +69,7 @@ The header (navigation bar) of the application.
 			<form action="/api/auth/logout" method="POST" use:enhance>
 				<button
 					type="submit"
-					class:circle={width && width <= buttonCircleBreakpoint}
+					class:circle={width <= buttonCircleBreakpoint}
 					data-umami-event="button-logout"
 					data-umami-event-username={user.username}
 				>
@@ -85,7 +84,7 @@ The header (navigation bar) of the application.
 		{/if}
 	</nav>
 
-	{#if user && width && width <= navBreakpoint}
+	{#if user && width <= navBreakpoint}
 		<div class="row center-align no-margin">
 			{@render navButtons()}
 		</div>
@@ -102,10 +101,10 @@ The header (navigation bar) of the application.
 	<a
 		class="button"
 		class:border={page.url.pathname !== url}
-		class:circle={width && width <= buttonCircleBreakpoint && page.url.pathname !== url}
+		class:circle={width <= buttonCircleBreakpoint && page.url.pathname !== url}
 		href={url}
 		><i>{icon}</i>
-		{#if (width && width > buttonCircleBreakpoint) || page.url.pathname === url}
+		{#if width > buttonCircleBreakpoint || page.url.pathname === url}
 			<span>{text}</span>{/if}</a
 	>
 {/snippet}
