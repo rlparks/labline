@@ -86,10 +86,13 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 
 		return resolve(event);
 	} catch (err) {
+		const currentTime = getCurrentFormattedDateTime();
 		if (err instanceof AggregateError) {
-			const currentTime = getCurrentFormattedDateTime();
 			console.error(`${currentTime} · ${event.getClientAddress()} · ${err.errors.join(", ")}`);
 		}
+
+		console.error(`${currentTime} · ${event.getClientAddress()} · ${err}`);
+
 		return error(500, "Error connecting to database");
 	}
 };
