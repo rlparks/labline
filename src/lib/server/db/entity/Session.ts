@@ -49,6 +49,10 @@ export async function getUserSessionByHashedToken(
 		.innerJoin(table.users, eq(table.sessions.userId, table.users.id))
 		.where(eq(table.sessions.hashedToken, hashedToken));
 
+	if (!result?.userId) {
+		return undefined;
+	}
+
 	const user = await User.getUserById(result.userId);
 
 	if (!user) {
