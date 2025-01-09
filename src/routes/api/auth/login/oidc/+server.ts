@@ -124,6 +124,17 @@ async function getUserInfo(accessToken: string, userInfoEndpoint: string) {
 	//     ]
 	// }
 
+	// UGA SSO openid
+	// {
+	//     dn: 'CN=ltest020,OU=MyID,DC=devmsmyid,DC=uga,DC=edu',
+	//     cn: 'ltest020',
+	//     sub: 'ltest020',
+	//     service: 'https://lablinedev.ugaesdit.com/login/callback',
+	//     auth_time: 1736448428,
+	//     id: 'ltest020',
+	//     client_id: 'app2labline'
+	// }
+
 	if (!userInfoResponseIsValid(userInfoJson)) {
 		return error(500, "Failure getting user info");
 	}
