@@ -136,6 +136,7 @@ async function getUserInfo(accessToken: string, userInfoEndpoint: string) {
 	// }
 
 	if (!userInfoResponseIsValid(userInfoJson)) {
+		console.error("Invalid user info response. Try checking your username claim?");
 		return error(500, "Failure getting user info");
 	}
 
