@@ -73,11 +73,11 @@
 
 	/* https://reddit.com/r/sveltejs/comments/16904vm/place_footer_at_end_of_page/jz0ho59/ */
 	.content {
-		min-height: 100vh;
+		min-height: 100dvh;
 	}
 
 	footer {
 		position: sticky;
-		top: 100vh;
+		top: 100dvh;
 	}
 </style>
