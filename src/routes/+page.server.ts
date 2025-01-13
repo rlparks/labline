@@ -8,5 +8,13 @@ export const load = (async (event) => {
 		return redirect(303, "/buildings");
 	}
 
+	// UGA SSO redirects with a query parameter on logout
+	// https://labline.uga.edu/?client_id=e
+	// this removes query params from the root route
+	// for a nicer look
+	if (event.url.searchParams.size !== 0) {
+		return redirect(303, "/");
+	}
+
 	return {};
 }) satisfies PageServerLoad;

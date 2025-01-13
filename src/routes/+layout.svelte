@@ -1,11 +1,11 @@
 <script lang="ts">
+	import { navigating } from "$app/state";
+	import { env } from "$env/dynamic/public";
 	import { Footer, Header, Message } from "$lib/components";
 	import ESD from "$lib/images/ESD.png";
 	import "beercss";
 	import "./fonts.css";
 	import "./theme.css";
-	import { navigating } from "$app/state";
-	import { env } from "$env/dynamic/public";
 
 	const { children, data } = $props();
 </script>
