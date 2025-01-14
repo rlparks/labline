@@ -58,7 +58,7 @@ export async function createSession(userId: string, oidcIdToken: string, ipAddre
 	const hashedToken = hashToken(token);
 	const expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
 
-	Session.createSession(userId, hashedToken, expiresAt, oidcIdToken, ipAddress);
+	await Session.createSession(userId, hashedToken, expiresAt, oidcIdToken, ipAddress);
 	return { token, expiresAt };
 }
 
