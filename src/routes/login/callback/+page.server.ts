@@ -1,7 +1,15 @@
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
-export const load = (async () => {
+export const load = (async (event) => {
+	const params = event.url.searchParams;
+	const codeParam = params.get("code");
+	const stateParam = params.get("state");
+
+	if (!codeParam || !stateParam) {
+		return error(500, "Invalid data returned by SSO provider");
+	}
+
 	return {};
 }) satisfies PageServerLoad;
 
