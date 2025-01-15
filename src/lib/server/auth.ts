@@ -10,8 +10,9 @@ const SCOPES = ["openid", "profile"];
 
 export async function getAuthProviderInfo(): Promise<AuthInfo> {
 	const oidcDiscoveryUrl = env.OIDC_DISCOVERY_ENDPOINT;
-	if (!oidcDiscoveryUrl) {
-		throw new Error("OIDC_DISCOVERY_ENDPOINT is not set");
+	const clientId = env.OIDC_CLIENT_ID;
+	if (!oidcDiscoveryUrl || !clientId) {
+		throw new Error("OIDC_DISCOVERY_ENDPOINT or OIDC_CLIENT_ID is not set");
 	}
 
 	const result = await fetch(oidcDiscoveryUrl);
@@ -23,7 +24,7 @@ export async function getAuthProviderInfo(): Promise<AuthInfo> {
 		const authEndpoint = new URL(json.authorization_endpoint);
 		authEndpoint.searchParams.set("response_type", "code");
 		authEndpoint.searchParams.set("scope", SCOPES.join(" "));
-		authEndpoint.searchParams.set("client_id", env.OIDC_CLIENT_ID);
+		authEndpoint.searchParams.set("client_id", clientId);
 		authEndpoint.searchParams.set("state", state);
 
 		const tokenEndpoint = String(json.token_endpoint);
@@ -73,13 +74,15 @@ export async function validateSessionToken(token: string, event: RequestEvent) {
 
 	const sessionExpired = Date.now() >= session.expiresAt.getTime();
 	if (sessionExpired) {
-		await invalidateSession(hashedToken);
+		await invalidateSession(session.id);
 		return { session: null, user: null };
 	}
 
 	// protect against session hijacking
 	const ipAddress = event.getClientAddress();
 	if (session.ipAddress !== ipAddress) {
+		// session is toast anyway
+		await invalidateSession(session.id);
 		return { session: null, user: null };
 	}
 
