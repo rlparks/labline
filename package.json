@@ -36,7 +36,7 @@
 		"typescript": "^5.0.0",
 		"typescript-eslint": "^8.0.0-alpha.20",
 		"vite": "^5.0.3",
-		"vitest": "^2.0.0"
+		"vitest": "^2.1.0"
 	},
 	"type": "module",
 	"dependencies": {
@@ -44,8 +44,6 @@
 		"@oslojs/encoding": "^1.1.0",
 		"@sveltejs/adapter-node": "^5.2.0",
 		"beercss": "^3.6.8",
-		"drizzle-kit": "^0.27.0",
-		"drizzle-orm": "^0.36.0",
 		"fuse.js": "^7.0.0",
 		"papaparse": "^5.4.1",
 		"postgres": "^3.4.4"
