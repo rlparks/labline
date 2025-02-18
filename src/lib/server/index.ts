@@ -1,14 +1,14 @@
 import { getFormattedDateTime } from "$lib";
-import type { SafeUser, User } from "$lib/types";
+import type { User, User } from "$lib/types";
 
 /**
  * Removes unnecessary info from User objects returned from
  * PocketBase, like email.
  *
  * @param user the full {@link RawUser} object
- * @returns a {@link SafeUser} object with a minimum amount of info
+ * @returns a {@link User} object with a minimum amount of info
  */
-export function makeUserSafe(user: User): SafeUser {
+export function makeUserSafe(user: User): User {
 	return {
 		id: user.id,
 		username: user.username,

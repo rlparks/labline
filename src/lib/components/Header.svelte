@@ -24,11 +24,11 @@ The header (navigation bar) of the application.
 	import { page } from "$app/state";
 	import { OIDC_STATE_KEY } from "$lib";
 	import { Title } from "$lib/components";
-	import type { AuthInfo, SafeUser } from "$lib/types";
+	import type { AuthInfo, User } from "$lib/types";
 	import { innerWidth } from "svelte/reactivity/window";
 
 	type Props = {
-		user: SafeUser | null;
+		user: User | null;
 		authInfo: AuthInfo;
 		navLinks: { href: string; text: string; icon: string }[];
 	};
