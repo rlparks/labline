@@ -1,7 +1,3 @@
-export * as Session from "$lib/server/db/repository/Session";
-export * as User from "$lib/server/db/repository/User";
-export * as UserRole from "$lib/server/db/repository/UserRole";
-
 import { ROLES_LIST, type Role, type UserWithRoles } from "$lib/types";
 import { generateRandomString } from "@oslojs/crypto/random";
 
