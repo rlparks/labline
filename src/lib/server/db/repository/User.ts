@@ -1,6 +1,6 @@
 import { db } from "$lib/server/db";
-import * as helpers from "$lib/server/db/entity";
-import { combineUsers, UserRole } from "$lib/server/db/entity";
+import * as helpers from "$lib/server/db/repository";
+import { combineUsers, UserRole } from "$lib/server/db/repository";
 import * as table from "$lib/server/db/schema";
 import { type Role, type User, type UserWithRoles } from "$lib/types";
 import { eq } from "drizzle-orm";

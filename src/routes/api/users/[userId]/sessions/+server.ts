@@ -1,4 +1,4 @@
-import { Session } from "$lib/server/db/entity";
+import { Session } from "$lib/server/db/repository";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 

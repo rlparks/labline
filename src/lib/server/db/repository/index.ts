@@ -1,8 +1,8 @@
-export * as Session from "$lib/server/db/entity/Session";
-export * as User from "$lib/server/db/entity/User";
-export * as UserRole from "$lib/server/db/entity/UserRole";
+export * as Session from "$lib/server/db/repository/Session";
+export * as User from "$lib/server/db/repository/User";
+export * as UserRole from "$lib/server/db/repository/UserRole";
 
-import { ROLES_LIST, type Role, type UserWithRoles, type UserWithSingleRole } from "$lib/types";
+import { ROLES_LIST, type Role, type UserWithRoles } from "$lib/types";
 import { generateRandomString } from "@oslojs/crypto/random";
 
 const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -50,32 +50,4 @@ export function userWithRolesIsValid(user: unknown): user is UserWithRoles {
 		typeof tempUser.name === "string" &&
 		rolesAreValid
 	);
-}
-
-/**
- * Flattens the rows returned from the database into a
- * more usable object.
- */
-export function combineUsers(users: UserWithSingleRole[]): UserWithRoles[] {
-	const uniqueUsers = new Map<string, UserWithRoles>();
-
-	for (const user of users) {
-		const existingUser = uniqueUsers.get(user.id);
-
-		if (existingUser) {
-			if (user.role) {
-				existingUser.roles.push(user.role);
-				uniqueUsers.set(user.id, existingUser);
-			}
-		} else {
-			uniqueUsers.set(user.id, {
-				id: user.id,
-				username: user.username,
-				name: user.name,
-				roles: user.role ? [user.role] : [],
-			});
-		}
-	}
-
-	return Array.from(uniqueUsers.values());
 }

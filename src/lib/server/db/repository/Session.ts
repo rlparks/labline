@@ -1,11 +1,10 @@
-import { db } from "$lib/server/db";
-import * as table from "$lib/server/db/schema";
+import { sql } from "$lib/server/db";
 import type { SafeSession, Session, UserWithRoles } from "$lib/types";
-import { count, eq } from "drizzle-orm";
 import { generateTextId, User } from ".";
 
 async function getSessionById(sessionId: string): Promise<Session | undefined> {
-	const [session] = await db.select().from(table.sessions).where(eq(table.sessions.id, sessionId));
+	const [session] =
+		await sql`SELECT id, hashed_token, user_id, expires_at, id_token, ip_address FROM sessions WHERE sessions.id = ${sessionId};`;
 	return session;
 }
 

@@ -3,7 +3,7 @@ import type { AuthInfo } from "$lib/types";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeBase32LowerCase, encodeHexLowerCase } from "@oslojs/encoding";
 import type { RequestEvent } from "@sveltejs/kit";
-import { Session } from "./db/entity";
+import { Session } from "./db/repository";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
 const SCOPES = ["openid", "profile"];

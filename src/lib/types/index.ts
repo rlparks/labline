@@ -1,4 +1,5 @@
-export type Role = "admin" | "superadmin";
+export const ROLES_LIST = ["admin", "superadmin"] as const;
+export type Role = (typeof ROLES_LIST)[number];
 
 /**
  * Sessions without tokens.

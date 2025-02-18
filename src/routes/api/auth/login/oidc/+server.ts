@@ -2,7 +2,7 @@ import * as auth from "$lib/server/auth";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent, RequestHandler } from "./$types";
 import { env } from "$env/dynamic/private";
-import { User } from "$lib/server/db/entity";
+import { User } from "$lib/server/db/repository";
 import { getCurrentFormattedDateTime } from "$lib/server";
 
 const { OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_USERNAME_CLAIM } = env;

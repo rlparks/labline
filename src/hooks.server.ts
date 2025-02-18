@@ -3,7 +3,7 @@ import { DEMO_USER } from "$lib";
 import { getCurrentFormattedDateTime } from "$lib/server";
 import Labline from "$lib/server/api/Labline";
 import * as auth from "$lib/server/auth";
-import { User } from "$lib/server/db/entity";
+import { User } from "$lib/server/db/repository";
 import { Security } from "$lib/server/Security";
 import { error, type Handle } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";

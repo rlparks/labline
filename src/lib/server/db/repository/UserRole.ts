@@ -2,7 +2,7 @@ import * as table from "$lib/server/db/schema";
 import { db } from "$lib/server/db";
 import { eq } from "drizzle-orm";
 import type { UserRole } from "$lib/server/db/schema";
-import * as helpers from "$lib/server/db/entity";
+import * as helpers from "$lib/server/db/repository";
 import type { Role } from "$lib/types";
 
 export async function getUserRoles(): Promise<UserRole[]> {
