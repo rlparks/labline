@@ -3,6 +3,8 @@ import { DEMO_USER } from "$lib";
 import { getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
 import * as auth from "$lib/server/auth";
+import { RealUserRepository } from "$lib/server/db/repository/real/RealUserRepository";
+import { RealUserService } from "$lib/server/db/service/real/RealUserService";
 import { onServerStart } from "$lib/server/init";
 import { Security } from "$lib/server/Security";
 import { error, type Handle, type ServerInit } from "@sveltejs/kit";
@@ -10,6 +12,10 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 export const init: ServerInit = async () => {
 	await onServerStart();
+
+	const users = new RealUserService(new RealUserRepository());
+
+	console.log(await users.getUsers());
 };
 
 const originalHandle: Handle = async ({ event, resolve }) => {

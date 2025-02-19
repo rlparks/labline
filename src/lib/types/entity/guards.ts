@@ -26,6 +26,16 @@ export function userWithRolesIsValid(user: unknown): user is UserWithRoles {
 	return postUserWithRolesIsValid(user) && "id" in user && idIsValid(user.id);
 }
 
+export function isUserWithRolesArray(array: unknown[]): array is UserWithRoles[] {
+	for (const potentialUser of array as UserWithRoles[]) {
+		if (!userWithRolesIsValid(potentialUser)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 export function postUserWithRolesIsValid(user: unknown): user is {
 	username: string;
 	name: string;
@@ -38,11 +48,15 @@ export function postUserWithRolesIsValid(user: unknown): user is {
 	};
 
 	let rolesAreValid = true;
-	for (const role of tempUser.roles) {
-		if (!roleIsValid(role)) {
-			rolesAreValid = false;
-			break;
+	try {
+		for (const role of tempUser.roles) {
+			if (!roleIsValid(role)) {
+				rolesAreValid = false;
+				break;
+			}
 		}
+	} catch {
+		return false;
 	}
 
 	return nameIsValid(tempUser.name) && usernameIsValid(tempUser.username) && rolesAreValid;
