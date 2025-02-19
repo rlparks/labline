@@ -3,7 +3,7 @@ import { error } from "@sveltejs/kit";
 import type { RequestEvent, RequestHandler } from "./$types";
 import { env } from "$env/dynamic/private";
 import { User } from "$lib/server/db/repository";
-import { getCurrentFormattedDateTime } from "$lib/server";
+import { getCurrentFormattedDateTime } from "$lib";
 
 const { OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_USERNAME_CLAIM } = env;
 
