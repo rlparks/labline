@@ -1,5 +1,5 @@
 import type { UserRoleRepository } from "$lib/server/db/repository/interface/UserRoleRepository";
-import type { Role, UserRole } from "$lib/types";
+import type { Role, UserRole } from "$lib/types/entity";
 
 export class RealUserRoleRepository implements UserRoleRepository {
 	getUserRoleById(userRoleId: string): Promise<UserRole | undefined> {

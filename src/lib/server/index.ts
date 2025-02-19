@@ -1,5 +1,5 @@
 import { getFormattedDateTime } from "$lib";
-import type { User, User } from "$lib/types";
+import type { User } from "$lib/types/entity";
 
 /**
  * Removes unnecessary info from User objects returned from

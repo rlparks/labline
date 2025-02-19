@@ -1,4 +1,4 @@
-import type { SafeSession, Session, UserWithRoles } from "$lib/types";
+import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
 
 /**
  * Contract for `Session` database transfer.

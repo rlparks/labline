@@ -1,7 +1,7 @@
 // See https://kit.svelte.dev/docs/types#app
 
 import Labline from "$lib/server/api/Labline";
-import type { UserWithRoles } from "$lib/types";
+import type { UserWithRoles } from "$lib/types/entity";
 
 // for information about these interfaces
 declare global {

@@ -1,4 +1,4 @@
-import { ROLES_LIST } from "$lib/types";
+import { ROLES_LIST } from "$lib/types/entity";
 import type { LayoutServerLoad } from "./$types";
 
 export const load = (async (event) => {

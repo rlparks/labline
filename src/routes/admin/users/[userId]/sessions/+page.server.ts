@@ -1,6 +1,6 @@
 import { error, redirect, type Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import type { SafeSession } from "$lib/types";
+import type { SafeSession } from "$lib/types/entity";
 
 export const load = (async (event) => {
 	event.locals.security.isAuthenticated().isSuperadmin();

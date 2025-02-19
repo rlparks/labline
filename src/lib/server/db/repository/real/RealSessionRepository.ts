@@ -1,5 +1,5 @@
 import type { SessionRepository } from "$lib/server/db/repository/interface/SessionRepository";
-import type { Session, SafeSession, UserWithRoles } from "$lib/types";
+import type { Session, SafeSession, UserWithRoles } from "$lib/types/entity";
 
 export class RealSessionRepository implements SessionRepository {
 	getSessionById(sessionId: string): Promise<Session | undefined> {

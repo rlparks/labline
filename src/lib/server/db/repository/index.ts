@@ -1,4 +1,4 @@
-import { ROLES_LIST, type Role, type UserWithRoles } from "$lib/types";
+import { ROLES_LIST, type Role, type UserWithRoles } from "$lib/types/entity";
 import { generateRandomString } from "@oslojs/crypto/random";
 
 const alphabet = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

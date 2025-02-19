@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { getFormattedDateTime } from "$lib";
-	import type { SafeSession } from "$lib/types";
+	import type { SafeSession } from "$lib/types/entity";
 
 	type Props = {
 		sessions: SafeSession[];

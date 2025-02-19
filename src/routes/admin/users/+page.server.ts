@@ -1,4 +1,4 @@
-import type { UserWithRoles } from "$lib/types";
+import type { UserWithRoles } from "$lib/types/entity";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 

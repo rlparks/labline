@@ -1,7 +1,7 @@
 import { User } from "$lib/server/db/repository";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { ROLES_LIST, type Role } from "$lib/types";
+import { ROLES_LIST, type Role } from "$lib/types/entity";
 
 export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();

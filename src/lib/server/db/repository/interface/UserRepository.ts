@@ -1,4 +1,4 @@
-import type { Role, UserWithRoles } from "$lib/types";
+import type { Role, UserWithRoles } from "$lib/types/entity";
 
 /**
  * Contract for `User` database transfer.
