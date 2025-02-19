@@ -1,7 +1,7 @@
 import { User } from "$lib/server/db/repository";
+import { postUserWithRolesIsValid } from "$lib/types/entity/guards";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { ROLES_LIST, type Role } from "$lib/types/entity";
 
 export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
@@ -19,7 +19,7 @@ export const POST: RequestHandler = async (event) => {
 
 	const reqJson = await event.request.json();
 
-	if (postUserIsValid(reqJson)) {
+	if (postUserWithRolesIsValid(reqJson)) {
 		try {
 			if (reqJson.roles.length !== 0) {
 				event.locals.security.isSuperadmin();
@@ -41,34 +41,3 @@ export const POST: RequestHandler = async (event) => {
 		return error(400, "Invalid request");
 	}
 };
-
-type PostUser = {
-	username: string;
-	name: string;
-	roles: Role[];
-};
-
-function postUserIsValid(user: unknown): user is PostUser {
-	let rolesAreValid = true;
-	try {
-		for (const role of (user as PostUser).roles) {
-			if (!ROLES_LIST.includes(role)) {
-				rolesAreValid = false;
-				break;
-			}
-		}
-	} catch {
-		return false;
-	}
-
-	return (
-		typeof user === "object" &&
-		user !== null &&
-		"username" in user &&
-		"name" in user &&
-		"roles" in user &&
-		typeof user.username === "string" &&
-		typeof user.name === "string" &&
-		rolesAreValid
-	);
-}
