@@ -1,4 +1,4 @@
-import type { Role, UserWithRoles } from "$lib/types/entity";
+import type { Role, User, UserWithRoles } from "$lib/types/entity";
 
 /**
  * Contract for `User` database transfer.
@@ -45,9 +45,11 @@ export interface UserRepository {
 	 *
 	 * @param newUser the new User to insert
 	 * @returns the inserted user
+	 * @throws on attempt to insert a duplicate username
+	 * @throws on the chance a random 21 digit ID already exists :)
 	 * @throws on DB connection error
 	 */
-	createUser(newUser: { username: string; name: string }): Promise<UserWithRoles>;
+	createUser(newUser: { username: string; name: string }): Promise<User>;
 
 	/**
 	 * Update a `User` in the database.
@@ -55,6 +57,7 @@ export interface UserRepository {
 	 * @param userId the ID of the `User` to update
 	 * @param newUser the contents to replace it with
 	 * @returns the updated `User`, or undefined if it didn't exist
+	 * @throws on attempt to change to a duplicate username
 	 * @throws on DB connection error
 	 */
 	updateUserById(

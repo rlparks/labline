@@ -18,7 +18,9 @@ export const init: ServerInit = async () => {
 	// console.log(await users.getUsersByRole("admin"));
 	// console.log(await users.getUsers());
 	// console.log(await users.getUserByUsername("rlparks"));
-	console.log(await users.getUserById("7zWi5CkMxlvePcuIJmfEO"));
+	// console.log(await users.getUserById("7zWi5CkMxlvePcuIJmfEO"));
+	// console.log(await users.createUser({ username: "rlparks", name: "becc", roles: [] }));
+	console.log(await users.createUser({ username: "sdgsaadfadasf", name: "temst", roles: [] }));
 };
 
 const originalHandle: Handle = async ({ event, resolve }) => {

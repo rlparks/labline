@@ -1,4 +1,4 @@
-import { ROLES_LIST, type Role, type UserWithRoles } from "$lib/types/entity";
+import { ROLES_LIST, type Role, type User, type UserWithRoles } from "$lib/types/entity";
 
 const usernameLength = [1, 255] as const;
 export function usernameIsValid(username: unknown): username is string {
@@ -60,4 +60,9 @@ export function postUserWithRolesIsValid(user: unknown): user is {
 	}
 
 	return nameIsValid(tempUser.name) && usernameIsValid(tempUser.username) && rolesAreValid;
+}
+
+export function userIsValid(user: unknown): user is User {
+	const tempUser = user as User;
+	return idIsValid(tempUser.id) && nameIsValid(tempUser.name) && usernameIsValid(tempUser.username);
 }

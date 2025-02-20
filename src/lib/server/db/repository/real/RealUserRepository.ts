@@ -1,7 +1,9 @@
 import { sql } from "$lib/server/db";
+import { generateTextId } from "$lib/server/db/repository";
 import type { UserRepository } from "$lib/server/db/repository/interface/UserRepository";
-import type { Role, UserWithRoles } from "$lib/types/entity";
-import { isUserWithRolesArray, userWithRolesIsValid } from "$lib/types/entity/guards";
+import type { Role, User, UserWithRoles } from "$lib/types/entity";
+import { isUserWithRolesArray, userIsValid, userWithRolesIsValid } from "$lib/types/entity/guards";
+import postgres from "postgres";
 
 const ROLES_ARRAY = sql`COALESCE(ARRAY_AGG(user_roles.role ORDER BY user_roles.role)
                                     FILTER (WHERE user_roles.role IS NOT NULL), '{}')`;
@@ -72,8 +74,31 @@ export class RealUserRepository implements UserRepository {
 		throw new Error("User data malformed!");
 	}
 
-	async createUser(newUser: { username: string; name: string }): Promise<UserWithRoles> {
-		throw new Error("Method not implemented.");
+	async createUser(newUser: { username: string; name: string }): Promise<User> {
+		try {
+			// on the off chance Bern is the one submitting the form
+			// and the ID is a duplicate, the insert will throw an error
+			// please just resubmit :)
+			const id = generateTextId();
+			const [user] = await sql`INSERT INTO users (id, username, name)
+                                    VALUES (${id}, ${newUser.username}, ${newUser.name})
+                                    RETURNING id, username, name;`;
+
+			if (userIsValid(user)) {
+				return user;
+			}
+		} catch (err) {
+			if (err instanceof Error) {
+				if (err.message.includes("duplicate")) {
+					throw new Error("Attempted to insert duplicate value!");
+				}
+			}
+			console.error("RealUserRepository createUser: ", err);
+			throw new Error("Error connecting to database");
+		}
+
+		// successful query but didn't return out of try
+		throw new Error("User data malformed!");
 	}
 
 	async updateUserById(

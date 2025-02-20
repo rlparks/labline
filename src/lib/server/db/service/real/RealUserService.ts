@@ -25,8 +25,12 @@ export class RealUserService implements UserService {
 		return await this.userRepository.getUsers();
 	}
 
-	async createUser(newUser: { username: string; name: string }): Promise<UserWithRoles> {
-		return await this.userRepository.createUser(newUser);
+	async createUser(newUser: {
+		username: string;
+		name: string;
+		roles: Role[];
+	}): Promise<UserWithRoles> {
+		const createdPlainUser = await this.userRepository.createUser(newUser);
 	}
 
 	async updateUserById(

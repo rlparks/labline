@@ -47,7 +47,7 @@ export interface UserService {
 	 * @returns the inserted user
 	 * @throws on DB connection error
 	 */
-	createUser(newUser: { username: string; name: string }): Promise<UserWithRoles>;
+	createUser(newUser: { username: string; name: string; roles: Role[] }): Promise<UserWithRoles>;
 
 	/**
 	 * Update a `User` in the database.
