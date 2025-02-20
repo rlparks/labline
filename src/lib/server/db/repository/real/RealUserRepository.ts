@@ -1,7 +1,7 @@
 import { sql } from "$lib/server/db";
 import type { UserRepository } from "$lib/server/db/repository/interface/UserRepository";
 import type { Role, UserWithRoles } from "$lib/types/entity";
-import { isUserWithRolesArray } from "$lib/types/entity/guards";
+import { isUserWithRolesArray, userWithRolesIsValid } from "$lib/types/entity/guards";
 
 const ROLES_ARRAY = sql`COALESCE(ARRAY_AGG(user_roles.role ORDER BY user_roles.role)
                                     FILTER (WHERE user_roles.role IS NOT NULL), '{}')`;
@@ -18,7 +18,17 @@ export class RealUserRepository implements UserRepository {
 	}
 
 	async getUserByUsername(username: string): Promise<UserWithRoles | undefined> {
-		throw new Error("Method not implemented.");
+		try {
+			const [user] = await sql`${SELECT_USERS_QUERY} HAVING users.username = ${username};`;
+			if (userWithRolesIsValid(user) || user === undefined) {
+				return user;
+			}
+		} catch (err) {
+			console.error("RealUserRepository getUserByUsername: ", err);
+			throw new Error("Error connecting to database");
+		}
+
+		throw new Error("User data malformed!");
 	}
 
 	async getUsersByRole(role: Role): Promise<UserWithRoles[]> {

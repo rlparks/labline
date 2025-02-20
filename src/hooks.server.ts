@@ -15,8 +15,9 @@ export const init: ServerInit = async () => {
 
 	const users = new RealUserService(new RealUserRepository());
 
-	console.log(await users.getUsersByRole("admin"));
+	// console.log(await users.getUsersByRole("admin"));
 	// console.log(await users.getUsers());
+	console.log(await users.getUserByUsername("rlparks"));
 };
 
 const originalHandle: Handle = async ({ event, resolve }) => {
