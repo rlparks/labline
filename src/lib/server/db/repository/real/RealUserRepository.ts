@@ -14,7 +14,17 @@ const SELECT_USERS_QUERY = sql`SELECT users.id, users.username, users.name,
 
 export class RealUserRepository implements UserRepository {
 	async getUserById(userId: string): Promise<UserWithRoles | undefined> {
-		throw new Error("Method not implemented.");
+		try {
+			const [user] = await sql`${SELECT_USERS_QUERY} HAVING users.id = ${userId};`;
+			if (userWithRolesIsValid(user) || user === undefined) {
+				return user;
+			}
+		} catch (err) {
+			console.error("RealUserRepository getUserById: ", err);
+			throw new Error("Error connecting to database");
+		}
+
+		throw new Error("User data malformed!");
 	}
 
 	async getUserByUsername(username: string): Promise<UserWithRoles | undefined> {
