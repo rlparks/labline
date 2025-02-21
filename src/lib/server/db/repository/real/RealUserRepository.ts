@@ -3,7 +3,6 @@ import { generateTextId } from "$lib/server/db/repository";
 import type { UserRepository } from "$lib/server/db/repository/interface/UserRepository";
 import type { Role, User, UserWithRoles } from "$lib/types/entity";
 import { isUserWithRolesArray, userIsValid, userWithRolesIsValid } from "$lib/types/entity/guards";
-import postgres from "postgres";
 
 const ROLES_ARRAY = sql`COALESCE(ARRAY_AGG(user_roles.role ORDER BY user_roles.role)
                                     FILTER (WHERE user_roles.role IS NOT NULL), '{}')`;
@@ -22,8 +21,7 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			console.error("RealUserRepository getUserById: ", err);
-			throw new Error("Error connecting to database");
+			hideError(err, `RealUserRepository getUserById (${userId}): `);
 		}
 
 		throw new Error("User data malformed!");
@@ -36,8 +34,7 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			console.error("RealUserRepository getUserByUsername: ", err);
-			throw new Error("Error connecting to database");
+			hideError(err, `RealUserRepository getUserByUsername (${username}): `);
 		}
 
 		throw new Error("User data malformed!");
@@ -52,8 +49,7 @@ export class RealUserRepository implements UserRepository {
 				return users;
 			}
 		} catch (err) {
-			console.error("RealUserRepository getUsersByRole: ", err);
-			throw new Error("Error connecting to database");
+			hideError(err, "RealUserRepository getUsersByRole: ");
 		}
 
 		throw new Error("User data malformed!");
@@ -66,8 +62,7 @@ export class RealUserRepository implements UserRepository {
 				return users;
 			}
 		} catch (err) {
-			console.error("RealUserRepository getUsers: ", err);
-			throw new Error("Error connecting to database");
+			hideError(err, "RealUserRepository getUsers: ");
 		}
 
 		// successful query but didn't return out of try
@@ -88,16 +83,9 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			if (err instanceof Error) {
-				if (err.message.includes("duplicate")) {
-					throw new Error("Attempted to insert duplicate value!");
-				}
-			}
-			console.error("RealUserRepository createUser: ", err);
-			throw new Error("Error connecting to database");
+			hideError(err, "RealUserRepository createUser: ", newUser);
 		}
 
-		// successful query but didn't return out of try
 		throw new Error("User data malformed!");
 	}
 
@@ -111,4 +99,22 @@ export class RealUserRepository implements UserRepository {
 	async deleteUserById(userId: string): Promise<UserWithRoles | undefined> {
 		throw new Error("Method not implemented.");
 	}
+}
+
+function hideError(
+	err: unknown,
+	consoleText: string,
+	newUser?: { username: string; name: string },
+) {
+	if (err instanceof Error) {
+		if (err.message.includes("duplicate")) {
+			if (newUser) {
+				console.error(`Duplicate: ${newUser.username}`);
+			}
+
+			throw new Error("Attempted to insert duplicate value!");
+		}
+	}
+	console.error(consoleText, err);
+	throw new Error("Error connecting to database");
 }
