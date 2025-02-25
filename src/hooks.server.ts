@@ -20,7 +20,13 @@ export const init: ServerInit = async () => {
 	// console.log(await users.getUserByUsername("rlparks"));
 	// console.log(await users.getUserById("7zWi5CkMxlvePcuIJmfEO"));
 	// console.log(await users.createUser({ username: "rlparks", name: "becc", roles: [] }));
-	console.log(await users.createUser({ username: "sdgsaadfadasf", name: "temst", roles: [] }));
+	// console.log(await users.createUser({ username: "sdgsaadfadasf", name: "temst", roles: [] }));
+	// console.log(
+	// 	await users.updateUserById("7zWi5CkMxlvePcuIJmfEO", {
+	// 		username: "rlparks",
+	// 		name: "becc",
+	// 	}),
+	// );
 };
 
 const originalHandle: Handle = async ({ event, resolve }) => {

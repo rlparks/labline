@@ -63,7 +63,7 @@ export interface UserRepository {
 	updateUserById(
 		userId: string,
 		newUser: { username: string; name: string },
-	): Promise<UserWithRoles | undefined>;
+	): Promise<User | undefined>;
 
 	/**
 	 * Delete a `User` from the database.

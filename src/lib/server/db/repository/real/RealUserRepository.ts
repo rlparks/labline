@@ -89,11 +89,21 @@ export class RealUserRepository implements UserRepository {
 		throw new Error("User data malformed!");
 	}
 
-	async updateUserById(
-		userId: string,
-		newUser: { username: string; name: string },
-	): Promise<UserWithRoles> {
-		throw new Error("Method not implemented.");
+	async updateUserById(userId: string, newUser: { username: string; name: string }): Promise<User> {
+		try {
+			const [user] = await sql`UPDATE users SET ${sql(newUser, "username", "name")}
+                                    WHERE users.id = ${userId}
+                                    RETURNING id, username, name;`;
+
+			if (userIsValid(user)) {
+				return user;
+			}
+		} catch (err) {
+			console.log(err);
+			hideError(err, "RealUserRepository updateUserById: ", newUser);
+		}
+
+		throw new Error("User data malformed!");
 	}
 
 	async deleteUserById(userId: string): Promise<UserWithRoles | undefined> {
