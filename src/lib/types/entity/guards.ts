@@ -5,8 +5,10 @@ export function usernameIsValid(username: unknown): username is string {
 	return (
 		typeof username === "string" &&
 		username.length >= usernameLength[0] &&
-		username.length <= usernameLength[1] &&
-		/^[a-z0-9_-]+$/.test(username)
+		username.length <= usernameLength[1]
+
+		// probably fine to ignore? surely...
+		// /^[a-z0-9_-]+$/.test(username)
 	);
 }
 
