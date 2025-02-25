@@ -1,4 +1,4 @@
-import type { UserWithRoles, Role } from "$lib/types/entity";
+import type { Role, UserWithRoles } from "$lib/types/entity";
 
 /**
  * Contract for exposing `User` data to application.

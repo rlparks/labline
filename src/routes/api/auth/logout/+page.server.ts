@@ -1,6 +1,6 @@
+import * as auth from "$lib/server/auth";
 import { redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-import * as auth from "$lib/server/auth";
 
 export const actions = {
 	default: async (event) => {

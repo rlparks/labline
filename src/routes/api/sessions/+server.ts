@@ -1,6 +1,6 @@
+import { Session } from "$lib/server/db/repository";
 import { json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { Session } from "$lib/server/db/repository";
 
 export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isSuperadmin();

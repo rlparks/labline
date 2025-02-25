@@ -1,6 +1,6 @@
-import type { LayoutServerLoad } from "./$types";
-import type { FileStats } from "$lib/types";
 import { getAuthProviderInfo } from "$lib/server/auth";
+import type { FileStats } from "$lib/types";
+import type { LayoutServerLoad } from "./$types";
 
 const USER_NAV_LINKS = [
 	{ href: "/buildings", text: "Search by Building", icon: "domain" },

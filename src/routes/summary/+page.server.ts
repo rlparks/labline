@@ -1,6 +1,6 @@
+import type { Building, Lab } from "$lib/types";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import type { Building, Lab } from "$lib/types";
 
 export const load = (async ({ fetch, locals }) => {
 	locals.security.isAuthenticated();

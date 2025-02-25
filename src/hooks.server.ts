@@ -1,6 +1,5 @@
 import { env } from "$env/dynamic/private";
-import { DEMO_USER } from "$lib";
-import { getCurrentFormattedDateTime } from "$lib";
+import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
 import * as auth from "$lib/server/auth";
 import { RealUserRepository } from "$lib/server/db/repository/real/RealUserRepository";
