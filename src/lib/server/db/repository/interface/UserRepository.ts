@@ -72,5 +72,5 @@ export interface UserRepository {
 	 * @returns the deleted `User`, or undefined if it didn't exist
 	 * @throws on DB connection error
 	 */
-	deleteUserById(userId: string): Promise<UserWithRoles | undefined>;
+	deleteUserById(userId: string): Promise<User | undefined>;
 }

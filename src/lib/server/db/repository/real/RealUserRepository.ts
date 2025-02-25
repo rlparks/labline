@@ -106,8 +106,21 @@ export class RealUserRepository implements UserRepository {
 		throw new Error("User data malformed!");
 	}
 
-	async deleteUserById(userId: string): Promise<UserWithRoles | undefined> {
-		throw new Error("Method not implemented.");
+	async deleteUserById(userId: string): Promise<User | undefined> {
+		try {
+			const [user] = await sql`DELETE FROM users
+                                    WHERE users.id = ${userId}
+                                    RETURNING id, username, name;`;
+
+			if (userIsValid(user)) {
+				return user;
+			}
+		} catch (err) {
+			console.log(err);
+			hideError(err, "RealUserRepository deleteUserById: ");
+		}
+
+		throw new Error("User data malformed!");
 	}
 }
 
