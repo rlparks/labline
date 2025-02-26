@@ -1,5 +1,5 @@
 import { sql } from "$lib/server/db";
-import { generateTextId } from "$lib/server/db/repository";
+import { generateTextId, hideError } from "$lib/server/db/repository";
 import type { UserRepository } from "$lib/server/db/repository/interface/UserRepository";
 import type { Role, User, UserWithRoles } from "$lib/types/entity";
 import { isUserWithRolesArray, userIsValid, userWithRolesIsValid } from "$lib/types/entity/guards";
@@ -83,7 +83,7 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			hideError(err, "RealUserRepository createUser: ", newUser);
+			hideError(err, "RealUserRepository createUser: ", newUser.username);
 		}
 
 		throw new Error("User data malformed!");
@@ -100,7 +100,7 @@ export class RealUserRepository implements UserRepository {
 			}
 		} catch (err) {
 			console.log(err);
-			hideError(err, "RealUserRepository updateUserById: ", newUser);
+			hideError(err, "RealUserRepository updateUserById: ", newUser.username);
 		}
 
 		throw new Error("User data malformed!");
@@ -122,22 +122,4 @@ export class RealUserRepository implements UserRepository {
 
 		throw new Error("User data malformed!");
 	}
-}
-
-function hideError(
-	err: unknown,
-	consoleText: string,
-	newUser?: { username: string; name: string },
-) {
-	if (err instanceof Error) {
-		if (err.message.includes("duplicate")) {
-			if (newUser) {
-				console.error(`Duplicate: ${newUser.username}`);
-			}
-
-			throw new Error("Attempted to insert duplicate value!");
-		}
-	}
-	console.error(consoleText, err);
-	throw new Error("Error connecting to database");
 }

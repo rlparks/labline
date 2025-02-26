@@ -1,4 +1,10 @@
-import { ROLES_LIST, type Role, type User, type UserWithRoles } from "$lib/types/entity";
+import {
+	ROLES_LIST,
+	type Role,
+	type User,
+	type UserRole,
+	type UserWithRoles,
+} from "$lib/types/entity";
 
 const usernameLength = [1, 255] as const;
 export function usernameIsValid(username: unknown): username is string {
@@ -20,8 +26,16 @@ function nameIsValid(name: unknown): name is string {
 	return typeof name === "string" && name.length <= 255;
 }
 
-function roleIsValid(role: unknown): role is Role {
+export function roleIsValid(role: unknown): role is Role {
 	return typeof role === "string" && ROLES_LIST.includes(role as Role);
+}
+
+export function userRoleIsValid(userRole: unknown): userRole is UserRole {
+	const tempUserRole = userRole as UserRole;
+
+	return (
+		idIsValid(tempUserRole.id) && idIsValid(tempUserRole.userId) && roleIsValid(tempUserRole.role)
+	);
 }
 
 export function userWithRolesIsValid(user: unknown): user is UserWithRoles {
