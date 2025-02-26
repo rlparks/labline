@@ -1,6 +1,6 @@
-import { sql } from "$lib/server/db";
-import { generateTextId, hideError } from "$lib/server/db/repository";
-import type { UserRepository } from "$lib/server/db/repository/interface/UserRepository";
+import { sql } from "$db";
+import { generateTextId, hideError } from "$db/repository";
+import type { UserRepository } from "$db/repository/interface/UserRepository";
 import type { Role, User, UserWithRoles } from "$lib/types/entity";
 import { isUserWithRolesArray, userIsValid, userWithRolesIsValid } from "$lib/types/entity/guards";
 

@@ -1,6 +1,6 @@
-import { sql } from "$lib/server/db";
-import { hideError } from "$lib/server/db/repository";
-import type { UserRoleRepository } from "$lib/server/db/repository/interface/UserRoleRepository";
+import { sql } from "$db";
+import { hideError } from "$db/repository";
+import type { UserRoleRepository } from "$db/repository/interface/UserRoleRepository";
 import type { Role, UserRole } from "$lib/types/entity";
 import { userRoleIsValid } from "$lib/types/entity/guards";
 

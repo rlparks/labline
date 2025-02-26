@@ -28,6 +28,9 @@ const config = {
 				"upgrade-insecure-requests": true,
 			},
 		},
+		alias: {
+			$db: "src/lib/server/db",
+		},
 	},
 };
 

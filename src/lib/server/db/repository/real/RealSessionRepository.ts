@@ -1,4 +1,4 @@
-import type { SessionRepository } from "$lib/server/db/repository/interface/SessionRepository";
+import type { SessionRepository } from "$db/repository/interface/SessionRepository";
 import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
 
 export class RealSessionRepository implements SessionRepository {

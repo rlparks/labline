@@ -1,4 +1,4 @@
-import { Session } from "$lib/server/db/repository";
+import { Session } from "$db/repository";
 import { error } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 

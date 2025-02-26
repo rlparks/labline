@@ -1,7 +1,7 @@
+import { User } from "$db/repository";
 import { env } from "$env/dynamic/private";
 import { getCurrentFormattedDateTime } from "$lib";
 import * as auth from "$lib/server/auth";
-import { User } from "$lib/server/db/repository";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent, RequestHandler } from "./$types";
 

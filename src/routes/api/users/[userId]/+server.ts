@@ -1,4 +1,4 @@
-import { User } from "$lib/server/db/repository";
+import { User } from "$db/repository";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 

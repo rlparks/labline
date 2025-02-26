@@ -1,9 +1,9 @@
+import { RealUserRepository } from "$db/repository/real/RealUserRepository";
+import { RealUserService } from "$db/service/real/RealUserService";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
 import * as auth from "$lib/server/auth";
-import { RealUserRepository } from "$lib/server/db/repository/real/RealUserRepository";
-import { RealUserService } from "$lib/server/db/service/real/RealUserService";
 import { onServerStart } from "$lib/server/init";
 import { Security } from "$lib/server/Security";
 import { error, type Handle, type ServerInit } from "@sveltejs/kit";

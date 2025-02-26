@@ -1,5 +1,5 @@
-import type { UserRepository } from "$lib/server/db/repository/interface/UserRepository";
-import type { UserService } from "$lib/server/db/service/interface/UserService";
+import type { UserRepository } from "$db/repository/interface/UserRepository";
+import type { UserService } from "$db/service/interface/UserService";
 import type { Role, UserWithRoles } from "$lib/types/entity";
 
 export class RealUserService implements UserService {
