@@ -83,7 +83,7 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			hideError(err, "RealUserRepository createUser: ", newUser.username);
+			hideError(err, "RealUserRepository createUser: ");
 		}
 
 		throw new Error("User data malformed!");
@@ -100,7 +100,7 @@ export class RealUserRepository implements UserRepository {
 			}
 		} catch (err) {
 			console.log(err);
-			hideError(err, "RealUserRepository updateUserById: ", newUser.username);
+			hideError(err, "RealUserRepository updateUserById: ");
 		}
 
 		throw new Error("User data malformed!");

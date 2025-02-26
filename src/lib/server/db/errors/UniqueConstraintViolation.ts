@@ -3,10 +3,16 @@
  * insert a value that violates a UNIQUE constraint.
  */
 export class UniqueConstraintViolation extends Error {
-	public constraintViolated: string;
+	public readonly constraintViolated: string;
+	public readonly contents?: string;
 
-	constructor(constraintViolated: string) {
-		super();
+	constructor(constraintViolated: string, contents?: string) {
+		if (contents) {
+			super(`Duplicate ${constraintViolated}: ${contents}`);
+		} else {
+			super(`Duplicate ${constraintViolated}`);
+		}
 		this.constraintViolated = constraintViolated;
+		this.contents = contents;
 	}
 }

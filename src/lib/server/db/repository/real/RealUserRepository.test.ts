@@ -34,7 +34,9 @@ test("throws on invalid inserts", async () => {
 
 	expect(insertedUser).toBeDefined();
 
-	await expect(repo.createUser(newUser)).rejects.toThrowError("duplicate");
+	await expect(repo.createUser(newUser)).rejects.toThrowError(
+		`Duplicate username: ${newUser.username}`,
+	);
 
 	await repo.deleteUserById(insertedUser.id);
 });

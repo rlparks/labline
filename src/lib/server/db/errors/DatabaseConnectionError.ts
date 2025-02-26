@@ -4,6 +4,6 @@
  */
 export class DatabaseConnectionError extends Error {
 	constructor() {
-		super();
+		super("Error connecting to database");
 	}
 }
