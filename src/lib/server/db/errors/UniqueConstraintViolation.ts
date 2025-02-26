@@ -2,7 +2,7 @@
  * Represents the Error that occurs on attempt to
  * insert a value that violates a UNIQUE constraint.
  */
-export class UniqueConstraintViolation extends Error {
+export default class UniqueConstraintViolation extends Error {
 	public readonly constraintViolated: string;
 	public readonly contents?: string;
 

@@ -18,6 +18,7 @@ export interface UserRoleRepository {
 	 *
 	 * @param newUserRole the new `UserRole` to insert
 	 * @returns the created `UserRole`
+	 * @throws on invalid Role
 	 * @throws on DB connection error
 	 */
 	createUserRole(newUserRole: { userId: string; role: Role }): Promise<UserRole>;

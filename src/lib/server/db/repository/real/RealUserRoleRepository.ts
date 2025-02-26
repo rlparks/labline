@@ -1,8 +1,8 @@
 import { sql } from "$db";
-import { hideError } from "$db/repository";
+import { generateTextId, hideError } from "$db/repository";
 import type { UserRoleRepository } from "$db/repository/interface/UserRoleRepository";
 import type { Role, UserRole } from "$lib/types/entity";
-import { userRoleIsValid } from "$lib/types/entity/guards";
+import { roleIsValid, userRoleIsValid } from "$lib/types/entity/guards";
 
 export class RealUserRoleRepository implements UserRoleRepository {
 	async getUserRoleById(userRoleId: string): Promise<UserRole | undefined> {
@@ -23,7 +23,25 @@ export class RealUserRoleRepository implements UserRoleRepository {
 	}
 
 	async createUserRole(newUserRole: { userId: string; role: Role }): Promise<UserRole> {
-		throw new Error("Method not implemented.");
+		if (!roleIsValid(newUserRole.role)) {
+			throw new Error(`Invalid role: ${newUserRole.role}`);
+		}
+
+		try {
+			// good luck
+			const id = generateTextId();
+			const [userRole] = await sql`INSERT INTO user_roles (id, user_id, role)
+                                        VALUES (${id}, ${newUserRole.userId}, ${newUserRole.role})
+                                        RETURNING id, user_roles.user_id, user_roles.role`;
+
+			if (userRoleIsValid(userRole)) {
+				return userRole;
+			}
+		} catch (err) {
+			hideError(err, "RealUserRoleRepository createUserRole: ");
+		}
+
+		throw new Error("UserRole malformed!");
 	}
 
 	async deleteUserRolesByUserId(userId: string): Promise<void> {

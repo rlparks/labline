@@ -1,4 +1,5 @@
 import { RealUserRepository } from "$db/repository/real/RealUserRepository";
+import { RealUserRoleRepository } from "$db/repository/real/RealUserRoleRepository";
 import { RealUserService } from "$db/service/real/RealUserService";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
@@ -26,6 +27,9 @@ export const init: ServerInit = async () => {
 	// 		name: "becc",
 	// 	}),
 	// );
+
+	const roleRepo = new RealUserRoleRepository();
+	console.log(await roleRepo.createUserRole({ userId: "e", role: "admin" }));
 };
 
 const originalHandle: Handle = async ({ event, resolve }) => {
