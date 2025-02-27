@@ -1,6 +1,8 @@
 import {
 	ROLES_LIST,
 	type Role,
+	type SafeSession,
+	type Session,
 	type User,
 	type UserRole,
 	type UserWithRoles,
@@ -94,5 +96,30 @@ export function userIsValid(user: unknown): user is User {
 	const tempUser = user as User;
 	return (
 		idIsValid(tempUser?.id) && nameIsValid(tempUser?.name) && usernameIsValid(tempUser?.username)
+	);
+}
+
+export function safeSessionIsValid(session: unknown): session is SafeSession {
+	if (!session) return false;
+
+	const tempSession = session as SafeSession;
+
+	return (
+		idIsValid(tempSession?.id) &&
+		idIsValid(tempSession?.userId) &&
+		tempSession?.expiresAt instanceof Date &&
+		(typeof tempSession?.ipAddress === "string" || tempSession?.ipAddress === null)
+	);
+}
+
+export function sessionIsValid(session: unknown): session is Session {
+	if (!session) return false;
+
+	const tempSession = session as Session;
+
+	return (
+		safeSessionIsValid(session) &&
+		typeof tempSession?.hashedToken === "string" &&
+		typeof tempSession?.oidcIdToken === "string"
 	);
 }

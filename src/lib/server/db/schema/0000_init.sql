@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS sessions (
   hashed_token TEXT NOT NULL UNIQUE,
   user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
   expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
-  id_token TEXT NOT NULL,
+  oidc_id_token TEXT NOT NULL,
   ip_address TEXT
 );
 
