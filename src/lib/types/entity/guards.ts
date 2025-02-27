@@ -123,3 +123,13 @@ export function sessionIsValid(session: unknown): session is Session {
 		typeof tempSession?.oidcIdToken === "string"
 	);
 }
+
+export function safeSessionArrayIsValid(array: unknown): array is SafeSession[] {
+	if (!array) return false;
+
+	for (const potentialSession of array as SafeSession[]) {
+		if (!safeSessionIsValid(potentialSession)) return false;
+	}
+
+	return true;
+}

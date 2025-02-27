@@ -2,7 +2,7 @@ import { sql } from "$db";
 import { hideError } from "$db/repository";
 import type { SessionRepository } from "$db/repository/interface/SessionRepository";
 import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
-import { sessionIsValid } from "$lib/types/entity/guards";
+import { safeSessionArrayIsValid, sessionIsValid } from "$lib/types/entity/guards";
 
 export class RealSessionRepository implements SessionRepository {
 	async getSessionById(sessionId: string): Promise<Session | undefined> {
@@ -23,8 +23,20 @@ export class RealSessionRepository implements SessionRepository {
 		throw new Error("Session malformed!");
 	}
 
-	getSafeSessionsByUserId(userId: string): Promise<SafeSession[]> {
-		throw new Error("Method not implemented.");
+	async getSafeSessionsByUserId(userId: string): Promise<SafeSession[]> {
+		try {
+			const userSessions = await sql`SELECT id, user_id, expires_at, ip_address
+                                            FROM sessions
+                                            WHERE user_id = ${userId};`;
+
+			if (safeSessionArrayIsValid(userSessions)) {
+				return userSessions;
+			}
+		} catch (err) {
+			hideError(err, "RealSessionRepository getSafeSessionsByUserId: ");
+		}
+
+		throw new Error("Session malformed!");
 	}
 
 	getSessionCountPerUser(): { userId: string; sessionsCount: number }[] {
