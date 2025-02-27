@@ -92,7 +92,7 @@ export class RealUserService implements UserService {
 		return userWithRoles;
 	}
 
-	async deleteUserById(userId: string): Promise<UserWithRoles | undefined> {
+	async deleteUserById(userId: string): Promise<User | undefined> {
 		// first, check if deleting final superadmin
 		await this.throwErrorIfFinalSuperadmin(userId, "Cannot delete final superuser!");
 

@@ -87,5 +87,5 @@ export interface UserService {
 	 * @throws if attempted deletion of final superadmin account
 	 * @throws on DB connection error
 	 */
-	deleteUserById(userId: string): Promise<UserWithRoles | undefined>;
+	deleteUserById(userId: string): Promise<User | undefined>;
 }

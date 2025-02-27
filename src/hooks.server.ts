@@ -18,9 +18,9 @@ export const init: ServerInit = async () => {
 	console.log(await users.getUsers());
 
 	console.log(
-		await users.updateUserWithRolesById("7sZ2It4MZIS8ywr08S0DV", {
-			username: "becctemst",
-			name: "bec",
+		await users.updateUserWithRolesById("7sZ2It4MZIS8ywr08S0D", {
+			username: "becctemstt",
+			name: "beccccc",
 			roles: ["superadmin", "admin"],
 		}),
 	);
