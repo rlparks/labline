@@ -1,18 +1,9 @@
 import type { Role, UserRole } from "$lib/types/entity";
 
 /**
- * Contract for `UserRole` database transfer.
+ * Contract for exposing `UserRole` data to application.
  */
-export interface UserRoleRepository {
-	/**
-	 * Find a `UserRole` by ID.
-	 *
-	 * @param userRoleId the ID of the `UserRole` to search for
-	 * @returns the `UserRole` or undefined if no match
-	 * @throws on DB connection error
-	 */
-	getUserRoleById(userRoleId: string): Promise<UserRole | undefined>;
-
+export interface UserRoleService {
 	/**
 	 * Insert a `UserRole` into the database.
 	 *
@@ -30,6 +21,7 @@ export interface UserRoleRepository {
 	 *
 	 * @param userId the ID of the `User` to delete `UserRole`s for
 	 * @returns the deleted `UserRole`s
+	 * @throws if user does not exist
 	 * @throws on DB connection error
 	 */
 	deleteUserRolesByUserId(userId: string): Promise<UserRole[]>;

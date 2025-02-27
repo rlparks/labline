@@ -54,7 +54,7 @@ export class RealUserRoleRepository implements UserRoleRepository {
 				return deletedRoles;
 			}
 		} catch (err) {
-			hideError(err, "RealUserRoleRepository createUserRole: ");
+			hideError(err, "RealUserRoleRepository deleteUserRolesByUserId: ");
 		}
 
 		throw new Error("UserRole malformed!");
