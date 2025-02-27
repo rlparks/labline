@@ -1,4 +1,4 @@
-import type { Role, UserWithRoles } from "$lib/types/entity";
+import type { Role, User, UserWithRoles } from "$lib/types/entity";
 
 /**
  * Contract for exposing `User` data to application.
@@ -45,6 +45,8 @@ export interface UserService {
 	 *
 	 * @param newUser the new User to insert
 	 * @returns the inserted user
+	 * @throws if username already exists
+	 * @throws on invalid Role
 	 * @throws on DB connection error
 	 */
 	createUser(newUser: { username: string; name: string; roles: Role[] }): Promise<UserWithRoles>;
@@ -59,10 +61,7 @@ export interface UserService {
 	 * @throws if no Users are found with the provided `userId`
 	 * @throws on DB connection error
 	 */
-	updateUserById(
-		userId: string,
-		newUser: { username: string; name: string },
-	): Promise<UserWithRoles>;
+	updateUserById(userId: string, newUser: { username: string; name: string }): Promise<User>;
 
 	/**
 	 * Update a `User`, including a new set of `Role`s.

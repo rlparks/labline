@@ -89,13 +89,16 @@ export class RealUserRepository implements UserRepository {
 		throw new Error("User data malformed!");
 	}
 
-	async updateUserById(userId: string, newUser: { username: string; name: string }): Promise<User> {
+	async updateUserById(
+		userId: string,
+		newUser: { username: string; name: string },
+	): Promise<User | undefined> {
 		try {
 			const [user] = await sql`UPDATE users SET ${sql(newUser, "username", "name")}
                                     WHERE users.id = ${userId}
                                     RETURNING id, username, name;`;
 
-			if (userIsValid(user)) {
+			if (userIsValid(user) || user === undefined) {
 				return user;
 			}
 		} catch (err) {

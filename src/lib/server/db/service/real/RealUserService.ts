@@ -1,12 +1,15 @@
 import type { UserRepository } from "$db/repository/interface/UserRepository";
+import type { UserRoleRepository } from "$db/repository/interface/UserRoleRepository";
 import type { UserService } from "$db/service/interface/UserService";
-import type { Role, UserWithRoles } from "$lib/types/entity";
+import type { Role, User, UserWithRoles } from "$lib/types/entity";
 
 export class RealUserService implements UserService {
 	private readonly userRepository: UserRepository;
+	private readonly userRoleRepository: UserRoleRepository;
 
-	constructor(userRepository: UserRepository) {
+	constructor(userRepository: UserRepository, userRoleRepository: UserRoleRepository) {
 		this.userRepository = userRepository;
+		this.userRoleRepository = userRoleRepository;
 	}
 
 	async getUserById(userId: string): Promise<UserWithRoles | undefined> {
@@ -31,12 +34,20 @@ export class RealUserService implements UserService {
 		roles: Role[];
 	}): Promise<UserWithRoles> {
 		const createdPlainUser = await this.userRepository.createUser(newUser);
+
+		for (const role of newUser.roles) {
+			await this.userRoleRepository.createUserRole({ userId: createdPlainUser.id, role });
+		}
+
+		const userWithRoles = await this.getUserById(createdPlainUser.id);
+		if (!userWithRoles) {
+			throw new Error("Error with user creation/get");
+		}
+
+		return userWithRoles;
 	}
 
-	async updateUserById(
-		userId: string,
-		newUser: { username: string; name: string },
-	): Promise<UserWithRoles> {
+	async updateUserById(userId: string, newUser: { username: string; name: string }): Promise<User> {
 		const updatedUser = await this.userRepository.updateUserById(userId, newUser);
 		// will be undefined if user didn't exist
 		if (!updatedUser) {
@@ -64,8 +75,21 @@ export class RealUserService implements UserService {
 		}
 
 		// in the clear, safe to work on user
+		const updatedPlainUser = await this.updateUserById(userId, newUser);
+		// clear out all old roles
+		await this.userRoleRepository.deleteUserRolesByUserId(updatedPlainUser.id);
+		// create new roles
+		for (const role of newUser.roles) {
+			await this.userRoleRepository.createUserRole({ userId: updatedPlainUser.id, role });
+		}
 
-		throw new Error("Method not implemented.");
+		const userWithRoles = await this.getUserById(updatedPlainUser.id);
+
+		if (!userWithRoles) {
+			throw new Error("Error with user update/get");
+		}
+
+		return userWithRoles;
 	}
 
 	async deleteUserById(userId: string): Promise<UserWithRoles | undefined> {

@@ -34,7 +34,9 @@ export function userRoleIsValid(userRole: unknown): userRole is UserRole {
 	const tempUserRole = userRole as UserRole;
 
 	return (
-		idIsValid(tempUserRole.id) && idIsValid(tempUserRole.userId) && roleIsValid(tempUserRole.role)
+		idIsValid(tempUserRole?.id) &&
+		idIsValid(tempUserRole?.userId) &&
+		roleIsValid(tempUserRole?.role)
 	);
 }
 
@@ -85,10 +87,12 @@ export function postUserWithRolesIsValid(user: unknown): user is {
 		return false;
 	}
 
-	return nameIsValid(tempUser.name) && usernameIsValid(tempUser.username) && rolesAreValid;
+	return nameIsValid(tempUser?.name) && usernameIsValid(tempUser?.username) && rolesAreValid;
 }
 
 export function userIsValid(user: unknown): user is User {
 	const tempUser = user as User;
-	return idIsValid(tempUser.id) && nameIsValid(tempUser.name) && usernameIsValid(tempUser.username);
+	return (
+		idIsValid(tempUser?.id) && nameIsValid(tempUser?.name) && usernameIsValid(tempUser?.username)
+	);
 }

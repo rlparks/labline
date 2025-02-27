@@ -13,25 +13,18 @@ import { sequence } from "@sveltejs/kit/hooks";
 export const init: ServerInit = async () => {
 	await onServerStart();
 
-	const users = new RealUserService(new RealUserRepository());
+	const users = new RealUserService(new RealUserRepository(), new RealUserRoleRepository());
 
-	// console.log(await users.getUsersByRole("admin"));
-	// console.log(await users.getUsers());
-	console.log(await users.getUserByUsername("rlparks"));
-	// console.log(await users.getUserById("7zWi5CkMxlvePcuIJmfEO"));
-	// console.log(await users.createUser({ username: "rlparks", name: "becc", roles: [] }));
-	// console.log(await users.createUser({ username: "sdgsaadfadasf", name: "temst", roles: [] }));
-	// console.log(
-	// 	await users.updateUserById("7zWi5CkMxlvePcuIJmfEO", {
-	// 		username: "rlparks",
-	// 		name: "becc",
-	// 	}),
-	// );
+	console.log(await users.getUsers());
 
-	const roleRepo = new RealUserRoleRepository();
-	console.log(await roleRepo.createUserRole({ userId: "7zWi5CkMxlvePcuIJmfEO", role: "admin" }));
-	console.log(await roleRepo.deleteUserRolesByUserId("7zWi5CkMxlvePcuIJmfEO"));
-	console.log(await users.getUserByUsername("rlparks"));
+	console.log(
+		await users.updateUserWithRolesById("7sZ2It4MZIS8ywr08S0DV", {
+			username: "becctemst",
+			name: "bec",
+			roles: ["superadmin", "admin"],
+		}),
+	);
+	console.log(await users.getUsers());
 };
 
 const originalHandle: Handle = async ({ event, resolve }) => {
