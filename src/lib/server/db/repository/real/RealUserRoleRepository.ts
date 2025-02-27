@@ -2,7 +2,7 @@ import { sql } from "$db";
 import { generateTextId, hideError } from "$db/repository";
 import type { UserRoleRepository } from "$db/repository/interface/UserRoleRepository";
 import type { Role, UserRole } from "$lib/types/entity";
-import { roleIsValid, userRoleIsValid } from "$lib/types/entity/guards";
+import { roleIsValid, userRoleArrayIsValid, userRoleIsValid } from "$lib/types/entity/guards";
 
 export class RealUserRoleRepository implements UserRoleRepository {
 	async getUserRoleById(userRoleId: string): Promise<UserRole | undefined> {
@@ -44,7 +44,19 @@ export class RealUserRoleRepository implements UserRoleRepository {
 		throw new Error("UserRole malformed!");
 	}
 
-	async deleteUserRolesByUserId(userId: string): Promise<void> {
-		throw new Error("Method not implemented.");
+	async deleteUserRolesByUserId(userId: string): Promise<UserRole[]> {
+		try {
+			const deletedRoles = await sql`DELETE FROM user_roles
+                                            WHERE user_id = ${userId}
+                                            RETURNING id, user_id, role`;
+
+			if (userRoleArrayIsValid(deletedRoles)) {
+				return deletedRoles;
+			}
+		} catch (err) {
+			hideError(err, "RealUserRoleRepository createUserRole: ");
+		}
+
+		throw new Error("UserRole malformed!");
 	}
 }

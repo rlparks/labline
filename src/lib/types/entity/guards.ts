@@ -38,6 +38,16 @@ export function userRoleIsValid(userRole: unknown): userRole is UserRole {
 	);
 }
 
+export function userRoleArrayIsValid(array: unknown[]): array is UserRole[] {
+	for (const potentialUserRole of array as UserRole[]) {
+		if (!userRoleIsValid(potentialUserRole)) {
+			return false;
+		}
+	}
+
+	return true;
+}
+
 export function userWithRolesIsValid(user: unknown): user is UserWithRoles {
 	return postUserWithRolesIsValid(user) && "id" in user && idIsValid(user.id);
 }

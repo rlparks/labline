@@ -45,7 +45,6 @@ function parseUniqueViolation(err: unknown) {
 			typeof err.detail === "string" &&
 			err.detail.includes("already exists")
 		) {
-			// detail: 'Key (username)=(f749e608-76e5-4394-9d88-24c7a9aa9575) already exists.',
 			return parseColumnViolatedAndContents(err.detail);
 		} else {
 			return {
@@ -79,6 +78,7 @@ function parseForeignKeyViolation(err: unknown) {
 }
 
 function parseColumnViolatedAndContents(detail: string) {
+	// detail: 'Key (username)=(f749e608-76e5-4394-9d88-24c7a9aa9575) already exists.',
 	const firstOpenParenIndex = detail.indexOf("(");
 	const firstCloseParenIndex = detail.indexOf(")");
 
