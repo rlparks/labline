@@ -20,7 +20,7 @@ export interface SessionRepository {
 	 * @returns all `Session`s for a given userId (can be empty)
 	 * @throws on DB connection error
 	 */
-	getSessionsByUserId(userId: string): Promise<SafeSession[]>;
+	getSafeSessionsByUserId(userId: string): Promise<SafeSession[]>;
 
 	/**
 	 * @returns the number of sessions each `userId` has

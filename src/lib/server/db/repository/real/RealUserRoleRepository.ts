@@ -9,7 +9,7 @@ export class RealUserRoleRepository implements UserRoleRepository {
 		try {
 			const [userRole] = await sql`SELECT id, user_id, role
                                         FROM user_roles
-                                        WHERE user_roles.id = ${userRoleId}`;
+                                        WHERE user_roles.id = ${userRoleId};`;
 
 			if (userRoleIsValid(userRole) || userRole === undefined) {
 				return userRole;
@@ -32,7 +32,7 @@ export class RealUserRoleRepository implements UserRoleRepository {
 			const id = generateTextId();
 			const [userRole] = await sql`INSERT INTO user_roles (id, user_id, role)
                                         VALUES (${id}, ${newUserRole.userId}, ${newUserRole.role})
-                                        RETURNING id, user_roles.user_id, user_roles.role`;
+                                        RETURNING id, user_roles.user_id, user_roles.role;`;
 
 			if (userRoleIsValid(userRole)) {
 				return userRole;
@@ -48,7 +48,7 @@ export class RealUserRoleRepository implements UserRoleRepository {
 		try {
 			const deletedRoles = await sql`DELETE FROM user_roles
                                             WHERE user_id = ${userId}
-                                            RETURNING id, user_id, role`;
+                                            RETURNING id, user_id, role;`;
 
 			if (userRoleArrayIsValid(deletedRoles)) {
 				return deletedRoles;
