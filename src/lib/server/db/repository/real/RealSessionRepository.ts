@@ -95,6 +95,18 @@ export class RealSessionRepository implements SessionRepository {
 	}
 
 	async deleteSessionById(sessionId: string): Promise<Session | undefined> {
-		throw new Error("Method not implemented.");
+		try {
+			const [deletedSession] = await sql`DELETE FROM sessions
+                                                WHERE id = ${sessionId}
+                                                RETURNING id, user_id, hashed_token, expires_at, oidc_id_token, ip_address;`;
+
+			if (sessionIsValid(deletedSession) || deletedSession === undefined) {
+				return deletedSession;
+			}
+		} catch (err) {
+			hideError(err, "RealSessionRepository deleteSessionById: ");
+		}
+
+		throw new Error("Session malformed!");
 	}
 }
