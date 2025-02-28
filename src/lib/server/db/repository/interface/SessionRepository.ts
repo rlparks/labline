@@ -59,7 +59,6 @@ export interface SessionRepository {
 	 * @param sessionId the ID of the `Session` to update
 	 * @param newSession the contents to replace it with
 	 * @returns the updated `Session`
-	 * @throws if no sessions are found with the provided `sessionId`
 	 * @throws on DB connection error
 	 */
 	updateSessionById(
@@ -71,7 +70,7 @@ export interface SessionRepository {
 			oidcIdToken: string;
 			ipAddress: string | null;
 		},
-	): Promise<Session>;
+	): Promise<Session | undefined>;
 
 	/**
 	 * Delete a `Session` from the database.

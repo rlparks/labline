@@ -101,8 +101,21 @@ export class RealSessionRepository implements SessionRepository {
 			oidcIdToken: string;
 			ipAddress: string | null;
 		},
-	): Promise<Session> {
-		throw new Error("Method not implemented.");
+	): Promise<Session | undefined> {
+		try {
+			const [updatedSession] =
+				await sql`UPDATE sessions SET ${sql(newSession, "userId", "hashedToken", "expiresAt", "oidcIdToken", "ipAddress")}
+                            WHERE id = ${sessionId}
+                            RETURNING id, user_id, hashed_token, expires_at, oidc_id_token, ip_address;`;
+
+			if (sessionIsValid(updatedSession) || updatedSession === undefined) {
+				return updatedSession;
+			}
+		} catch (err) {
+			hideError(err, "RealSessionRepository updateSessionbyId: ");
+		}
+
+		throw new Error("Session malformed!");
 	}
 
 	async deleteSessionById(sessionId: string): Promise<Session | undefined> {

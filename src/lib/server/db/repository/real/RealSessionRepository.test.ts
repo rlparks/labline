@@ -3,7 +3,7 @@ import { expect, test } from "vitest";
 import { RealSessionRepository } from "./RealSessionRepository";
 import { RealUserRepository } from "./RealUserRepository";
 
-test("can insert, get, and delete a session", async () => {
+test("can insert, get, update, and delete a session", async () => {
 	const repo = new RealSessionRepository();
 	const userRepo = new RealUserRepository();
 
@@ -26,6 +26,14 @@ test("can insert, get, and delete a session", async () => {
 
 	expect(sessionFromDb).toBeDefined();
 	expect(insertedSession).toStrictEqual(sessionFromDb);
+
+	const updatedSession = { ...newSession, expiresAt: new Date(Date.now()), ipAddress: "1.2.3.4" };
+
+	const updatedSessionFromDb = await repo.updateSessionById(insertedSession.id, updatedSession);
+
+	expect(newSession.userId).toStrictEqual(updatedSessionFromDb?.userId);
+	expect(sessionFromDb?.expiresAt).not.toStrictEqual(updatedSessionFromDb?.expiresAt);
+	expect(updatedSessionFromDb?.ipAddress).toStrictEqual("1.2.3.4");
 
 	await userRepo.deleteUserById(insertedUser.id);
 });
