@@ -10,17 +10,17 @@ test("can insert and get the same User", async () => {
 	const insertedUser = await repo.createUser(newUser);
 
 	expect(insertedUser).toBeDefined();
-	expect(insertedUser.username).toEqual(newUser.username);
-	expect(insertedUser.name).toEqual(newUser.name);
+	expect(insertedUser.username).toStrictEqual(newUser.username);
+	expect(insertedUser.name).toStrictEqual(newUser.name);
 
 	const newUserInDb = await repo.getUserById(insertedUser.id);
 
 	expect(newUserInDb).toBeDefined();
 
 	if (newUserInDb) {
-		expect(newUserInDb.id).toEqual(insertedUser.id);
-		expect(newUserInDb.username).toEqual(insertedUser.username);
-		expect(newUserInDb.name).toEqual(insertedUser.name);
+		expect(newUserInDb.id).toStrictEqual(insertedUser.id);
+		expect(newUserInDb.username).toStrictEqual(insertedUser.username);
+		expect(newUserInDb.name).toStrictEqual(insertedUser.name);
 	}
 
 	await repo.deleteUserById(insertedUser.id);
@@ -51,8 +51,8 @@ test("persists updates to users", async () => {
 	const updatedUser = await repo.updateUserById(insertedUser.id, newUserInfo);
 
 	expect(updatedUser).toBeDefined();
-	expect(updatedUser.username).toEqual(newUserInfo.username);
-	expect(updatedUser.name).toEqual(newUserInfo.name);
+	expect(updatedUser.username).toStrictEqual(newUserInfo.username);
+	expect(updatedUser.name).toStrictEqual(newUserInfo.name);
 
 	await repo.deleteUserById(insertedUser.id);
 });
