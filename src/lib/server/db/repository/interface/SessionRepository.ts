@@ -25,7 +25,7 @@ export interface SessionRepository {
 	/**
 	 * @returns the number of sessions each `userId` has
 	 */
-	getSessionCountPerUser(): { userId: string; sessionsCount: number }[];
+	getSessionCountPerUser(): Promise<{ userId: string; sessionsCount: number }[]>;
 
 	/**
 	 *

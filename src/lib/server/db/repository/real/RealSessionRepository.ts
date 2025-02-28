@@ -1,5 +1,5 @@
 import { sql } from "$db";
-import { hideError } from "$db/repository";
+import { generateTextId, hideError } from "$db/repository";
 import type { SessionRepository } from "$db/repository/interface/SessionRepository";
 import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
 import { safeSessionArrayIsValid, sessionIsValid } from "$lib/types/entity/guards";
@@ -39,27 +39,49 @@ export class RealSessionRepository implements SessionRepository {
 		throw new Error("Session malformed!");
 	}
 
-	getSessionCountPerUser(): { userId: string; sessionsCount: number }[] {
-		throw new Error("Method not implemented.");
+	async getSessionCountPerUser(): Promise<{ userId: string; sessionsCount: number }[]> {
+		try {
+			const counts = await sql`SELECT user_id, count()
+                                    FROM sessions
+                                    GROUP BY user_id;`;
+		} catch (err) {
+			hideError(err, "RealSessionRepository getSessionCountPerUser: ");
+		}
 	}
 
-	getUserSessionByHashedToken(
+	async getUserSessionByHashedToken(
 		hashedToken: string,
 	): Promise<{ user: UserWithRoles; session: Session }> {
 		throw new Error("Method not implemented.");
 	}
 
-	createSession(newSession: {
+	async createSession(newSession: {
 		userId: string;
 		hashedToken: string;
 		expiresAt: Date;
 		oidcIdToken: string;
 		ipAddress: string | null;
 	}): Promise<Session> {
-		throw new Error("Method not implemented.");
+		try {
+			// :)
+			const id = generateTextId();
+			const [session] =
+				await sql`INSERT INTO sessions (id, user_id, hashed_token, expires_at, oidc_id_token, ip_address)
+                            VALUES (${id}, ${newSession.userId}, ${newSession.hashedToken}, ${newSession.expiresAt},
+                                ${newSession.oidcIdToken}, ${newSession.ipAddress})
+                            RETURNING id, user_id, hashed_token, expires_at, oidc_id_token, ip_address;`;
+
+			if (sessionIsValid(session)) {
+				return session;
+			}
+		} catch (err) {
+			hideError(err, "RealSessionRepository createSession: ");
+		}
+
+		throw new Error("Session malformed!");
 	}
 
-	updateSessionById(
+	async updateSessionById(
 		sessionId: string,
 		newSession: {
 			userId: string;
@@ -72,7 +94,7 @@ export class RealSessionRepository implements SessionRepository {
 		throw new Error("Method not implemented.");
 	}
 
-	deleteSessionById(sessionId: string): Promise<Session | undefined> {
+	async deleteSessionById(sessionId: string): Promise<Session | undefined> {
 		throw new Error("Method not implemented.");
 	}
 }
