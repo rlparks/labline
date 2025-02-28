@@ -1,8 +1,13 @@
 import { sql } from "$db";
 import { generateTextId, hideError } from "$db/repository";
 import type { SessionRepository } from "$db/repository/interface/SessionRepository";
+import type { SessionCount } from "$lib/types";
 import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
-import { safeSessionArrayIsValid, sessionIsValid } from "$lib/types/entity/guards";
+import {
+	safeSessionArrayIsValid,
+	sessionCountArrayIsValid,
+	sessionIsValid,
+} from "$lib/types/entity/guards";
 
 export class RealSessionRepository implements SessionRepository {
 	async getSessionById(sessionId: string): Promise<Session | undefined> {
@@ -39,14 +44,20 @@ export class RealSessionRepository implements SessionRepository {
 		throw new Error("Session malformed!");
 	}
 
-	async getSessionCountPerUser(): Promise<{ userId: string; sessionsCount: number }[]> {
+	async getSessionCountPerUser(): Promise<SessionCount[]> {
 		try {
-			const counts = await sql`SELECT user_id, count()
+			const counts = await sql`SELECT user_id, count(id)::int AS sessions_count
                                     FROM sessions
                                     GROUP BY user_id;`;
+
+			if (sessionCountArrayIsValid(counts)) {
+				return counts;
+			}
 		} catch (err) {
 			hideError(err, "RealSessionRepository getSessionCountPerUser: ");
 		}
+
+		throw new Error("Session count malformed!");
 	}
 
 	async getUserSessionByHashedToken(

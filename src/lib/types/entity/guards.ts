@@ -1,3 +1,4 @@
+import type { SessionCount } from "$lib/types";
 import {
 	ROLES_LIST,
 	type Role,
@@ -129,6 +130,26 @@ export function safeSessionArrayIsValid(array: unknown): array is SafeSession[] 
 
 	for (const potentialSession of array as SafeSession[]) {
 		if (!safeSessionIsValid(potentialSession)) return false;
+	}
+
+	return true;
+}
+
+export function sessionCountIsValid(sessionCount: unknown): sessionCount is SessionCount {
+	if (!sessionCount) return false;
+
+	const tempSessionCount = sessionCount as SessionCount;
+
+	return (
+		idIsValid(tempSessionCount?.userId) &&
+		typeof tempSessionCount?.sessionsCount === "number" &&
+		tempSessionCount.sessionsCount >= 0
+	);
+}
+
+export function sessionCountArrayIsValid(array: unknown): array is SessionCount[] {
+	for (const potentialSessionCount of array as SessionCount[]) {
+		if (!sessionCountIsValid(potentialSessionCount)) return false;
 	}
 
 	return true;

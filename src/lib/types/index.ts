@@ -48,3 +48,11 @@ export interface AuthInfo {
 	endSessionEndpoint: string;
 	state: string;
 }
+
+/**
+ * Number of sessions per user.
+ */
+export interface SessionCount {
+	userId: string;
+	sessionsCount: number;
+}

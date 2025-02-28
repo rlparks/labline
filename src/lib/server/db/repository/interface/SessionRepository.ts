@@ -1,3 +1,4 @@
+import type { SessionCount } from "$lib/types";
 import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
 
 /**
@@ -25,7 +26,7 @@ export interface SessionRepository {
 	/**
 	 * @returns the number of sessions each `userId` has
 	 */
-	getSessionCountPerUser(): Promise<{ userId: string; sessionsCount: number }[]>;
+	getSessionCountPerUser(): Promise<SessionCount[]>;
 
 	/**
 	 *
