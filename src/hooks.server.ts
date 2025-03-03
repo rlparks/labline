@@ -9,7 +9,7 @@ import { error, type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
 export const init: ServerInit = async () => {
-	await onServerStart();
+	await onServerStart(new ServiceAggregator());
 };
 
 const handleAuth: Handle = async ({ event, resolve }) => {

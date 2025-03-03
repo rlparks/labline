@@ -1,6 +1,8 @@
+import type ServiceAggregator from "$db/service/ServiceAggregator";
 import { env } from "$env/dynamic/private";
+import type { Role } from "$lib/types/entity";
 
-export async function onServerStart() {
+export async function onServerStart(db: ServiceAggregator) {
 	const REQUIRED_ENV_VARIABLES = [
 		"DATABASE_URL",
 		"OIDC_DISCOVERY_ENDPOINT",
@@ -22,16 +24,27 @@ export async function onServerStart() {
 
 	if (env.CREATE_ACCOUNT) {
 		try {
-			console.log(`CREATE_ACCOUNT is set. Creating user "${env.CREATE_ACCOUNT}"...`);
+			const roles: Role[] = ["superadmin"];
 
-			// TODO
-			// const newUser = await User.createUser(
-			// 	env.CREATE_ACCOUNT,
-			// 	"Initial User",
-			// 	["admin", "superadmin"],
-			// 	true,
-			// );
-			// console.log(`Created user ${newUser.username}`);
+			const userWithCreateAccountUsername = await db.users.getUserByUsername(env.CREATE_ACCOUNT);
+
+			if (!userWithCreateAccountUsername) {
+				const newUser = await db.users.createUser({
+					username: env.CREATE_ACCOUNT,
+					name: "Initial User",
+					roles,
+				});
+
+				console.log(`Created user ${newUser.username}`);
+			} else {
+				await db.users.updateUserWithRolesById(userWithCreateAccountUsername.id, {
+					...userWithCreateAccountUsername,
+					roles,
+				});
+				console.log(
+					`User ${userWithCreateAccountUsername.username} already existed. Updated role to superadmin.`,
+				);
+			}
 		} catch (e) {
 			if (e instanceof Error) {
 				console.log("Error creating initial account: ", e.message);
