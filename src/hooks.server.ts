@@ -2,7 +2,7 @@ import ServiceAggregator from "$db/service/ServiceAggregator";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
-import * as auth from "$lib/server/auth";
+import Auth from "$lib/server/auth";
 import { onServerStart } from "$lib/server/init";
 import { Security } from "$lib/server/Security";
 import { error, type Handle, type ServerInit } from "@sveltejs/kit";
@@ -13,19 +13,23 @@ export const init: ServerInit = async () => {
 };
 
 const handleAuth: Handle = async ({ event, resolve }) => {
-	const sessionToken = event.cookies.get(auth.sessionCookieName);
+	event.locals.db = new ServiceAggregator();
+	event.locals.auth = new Auth(event);
+
+	const sessionToken = event.cookies.get(event.locals.auth.sessionCookieName);
 	if (!sessionToken) {
 		event.locals.user = null;
 		event.locals.session = null;
 		return resolve(event);
 	}
+
 	try {
-		const { session, user } = await auth.validateSessionToken(sessionToken, event);
+		const { session, user } = await event.locals.auth.validateSessionToken(sessionToken);
 
 		if (session) {
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
+			event.locals.auth.setSessionTokenCookie(sessionToken, session.expiresAt);
 		} else {
-			auth.deleteSessionTokenCookie(event);
+			event.locals.auth.deleteSessionTokenCookie();
 		}
 
 		event.locals.user = user;
@@ -52,7 +56,6 @@ const setLocals: Handle = async ({ event, resolve }) => {
 
 	event.locals.labline = new Labline();
 	event.locals.security = new Security(event);
-	event.locals.db = new ServiceAggregator();
 
 	const result = await resolve(event);
 
