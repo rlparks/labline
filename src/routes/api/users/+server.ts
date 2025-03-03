@@ -1,4 +1,3 @@
-import { User } from "$db/repository";
 import { postUserWithRolesIsValid } from "$lib/types/entity/guards";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
@@ -7,7 +6,7 @@ export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
 	try {
-		const users = await User.getUsers();
+		const users = await event.locals.db.users.getUsers();
 		return json(users);
 	} catch {
 		return error(500, "Error retrieving users");
@@ -24,7 +23,11 @@ export const POST: RequestHandler = async (event) => {
 			if (reqJson.roles.length !== 0) {
 				event.locals.security.isSuperadmin();
 			}
-			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.roles);
+			const user = await event.locals.db.users.createUser({
+				username: reqJson.username,
+				name: reqJson.name,
+				roles: reqJson.roles,
+			});
 			return json(user, { status: 201 });
 		} catch (err) {
 			if (err instanceof Error) {

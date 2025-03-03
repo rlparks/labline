@@ -35,14 +35,14 @@ export async function onServerStart(db: ServiceAggregator) {
 					roles,
 				});
 
-				console.log(`Created user ${newUser.username}`);
+				console.log(`Created user "${newUser.username}"`);
 			} else {
 				await db.users.updateUserWithRolesById(userWithCreateAccountUsername.id, {
 					...userWithCreateAccountUsername,
 					roles,
 				});
 				console.log(
-					`User ${userWithCreateAccountUsername.username} already existed. Updated role to superadmin.`,
+					`User "${userWithCreateAccountUsername.username}" already existed. Updated role to superadmin.`,
 				);
 			}
 		} catch (e) {
