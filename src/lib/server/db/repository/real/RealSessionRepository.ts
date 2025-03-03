@@ -2,7 +2,7 @@ import { sql } from "$db";
 import { generateTextId, hideError } from "$db/repository";
 import type { SessionRepository } from "$db/repository/interface/SessionRepository";
 import type { SessionCount } from "$lib/types";
-import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
+import type { SafeSession, Session } from "$lib/types/entity";
 import {
 	safeSessionArrayIsValid,
 	sessionCountArrayIsValid,
@@ -60,10 +60,22 @@ export class RealSessionRepository implements SessionRepository {
 		throw new Error("Session count malformed!");
 	}
 
-	async getUserSessionByHashedToken(
-		hashedToken: string,
-	): Promise<{ user: UserWithRoles; session: Session }> {
-		throw new Error("Method not implemented.");
+	// avoiding getting User and Session in a single query for now
+	async getSessionByHashedToken(hashedToken: string): Promise<Session | undefined> {
+		try {
+			const [session] =
+				await sql`SELECT id, user_id, hashed_token, expires_at, oidc_id_token, ip_address
+                            FROM sessions
+                            WHERE hashed_token = ${hashedToken};`;
+
+			if (sessionIsValid(session) || session === undefined) {
+				return session;
+			}
+		} catch (err) {
+			hideError(err, "RealSessionRepository getSessionByHashedToken: ");
+		}
+
+		throw new Error("Session malformed!");
 	}
 
 	async createSession(newSession: {

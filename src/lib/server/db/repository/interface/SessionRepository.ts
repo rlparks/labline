@@ -1,5 +1,5 @@
 import type { SessionCount } from "$lib/types";
-import type { SafeSession, Session, UserWithRoles } from "$lib/types/entity";
+import type { SafeSession, Session } from "$lib/types/entity";
 
 /**
  * Contract for `Session` database transfer.
@@ -29,14 +29,13 @@ export interface SessionRepository {
 	getSessionCountPerUser(): Promise<SessionCount[]>;
 
 	/**
+	 * Find a `Session` by hashed token.
 	 *
 	 * @param hashedToken the token to search for
-	 * @returns the `User` and `Session` that match the hashed token
+	 * @returns the `Session` that matches or undefined if no match
 	 * @throws on DB connection error
 	 */
-	getUserSessionByHashedToken(
-		hashedToken: string,
-	): Promise<{ user: UserWithRoles; session: Session }>;
+	getSessionByHashedToken(hashedToken: string): Promise<Session | undefined>;
 
 	/**
 	 * Insert a `Session` into the database.
