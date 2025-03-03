@@ -1,5 +1,6 @@
 // See https://kit.svelte.dev/docs/types#app
 
+import type ServiceAggregator from "$db/service/ServiceAggregator";
 import Labline from "$lib/server/api/Labline";
 import type { UserWithRoles } from "$lib/types/entity";
 
@@ -12,6 +13,7 @@ declare global {
 			labline: Labline;
 			session: import("$lib/server/auth").SessionValidationResult["session"];
 			security: import("$lib/server/Security").Security;
+			db: ServiceAggregator;
 		}
 		// interface PageData {}
 		// interface PageState {}

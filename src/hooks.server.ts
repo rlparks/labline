@@ -1,6 +1,4 @@
-import { RealUserRepository } from "$db/repository/real/RealUserRepository";
-import { RealUserRoleRepository } from "$db/repository/real/RealUserRoleRepository";
-import { RealUserService } from "$db/service/real/RealUserService";
+import ServiceAggregator from "$db/service/ServiceAggregator";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
@@ -12,40 +10,6 @@ import { sequence } from "@sveltejs/kit/hooks";
 
 export const init: ServerInit = async () => {
 	await onServerStart();
-
-	const users = new RealUserService(new RealUserRepository(), new RealUserRoleRepository());
-
-	console.log(await users.getUsers());
-
-	console.log(
-		await users.updateUserWithRolesById("7sZ2It4MZIS8ywr08S0D", {
-			username: "becctemstt",
-			name: "beccccc",
-			roles: ["superadmin", "admin"],
-		}),
-	);
-	console.log(await users.getUsers());
-};
-
-const originalHandle: Handle = async ({ event, resolve }) => {
-	const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
-	if (BYPASS_ACCOUNT_REQUIREMENT && !event.locals.user) {
-		event.locals.user = DEMO_USER;
-	}
-
-	event.locals.labline = new Labline();
-	event.locals.security = new Security(event);
-
-	const result = await resolve(event);
-
-	// https://developer.mozilla.org/en-US/observatory suggestions
-	result.headers.set("referrer-policy", "strict-origin-when-cross-origin");
-	result.headers.set("x-content-type-options", "nosniff");
-	result.headers.set("x-frame-options", "DENY");
-	result.headers.set("cross-origin-resource-policy", "same-origin");
-	result.headers.set("strict-transport-security", "max-age=63072000; includeSubDomains; preload");
-
-	return result;
 };
 
 const handleAuth: Handle = async ({ event, resolve }) => {
@@ -72,12 +36,34 @@ const handleAuth: Handle = async ({ event, resolve }) => {
 		const currentTime = getCurrentFormattedDateTime();
 		if (err instanceof AggregateError) {
 			console.error(`${currentTime} · ${event.getClientAddress()} · ${err.errors.join(", ")}`);
+		} else {
+			console.error(`${currentTime} · ${event.getClientAddress()} · ${err}`);
 		}
-
-		console.error(`${currentTime} · ${event.getClientAddress()} · ${err}`);
 
 		return error(500, "Error connecting to database");
 	}
 };
 
-export const handle = sequence(handleAuth, originalHandle);
+const setLocals: Handle = async ({ event, resolve }) => {
+	const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
+	if (BYPASS_ACCOUNT_REQUIREMENT && !event.locals.user) {
+		event.locals.user = DEMO_USER;
+	}
+
+	event.locals.labline = new Labline();
+	event.locals.security = new Security(event);
+	event.locals.db = new ServiceAggregator();
+
+	const result = await resolve(event);
+
+	// https://developer.mozilla.org/en-US/observatory suggestions
+	result.headers.set("referrer-policy", "strict-origin-when-cross-origin");
+	result.headers.set("x-content-type-options", "nosniff");
+	result.headers.set("x-frame-options", "DENY");
+	result.headers.set("cross-origin-resource-policy", "same-origin");
+	result.headers.set("strict-transport-security", "max-age=63072000; includeSubDomains; preload");
+
+	return result;
+};
+
+export const handle = sequence(handleAuth, setLocals);
