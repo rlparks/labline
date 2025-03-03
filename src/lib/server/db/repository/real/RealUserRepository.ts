@@ -57,7 +57,7 @@ export class RealUserRepository implements UserRepository {
 
 	async getUsers(): Promise<UserWithRoles[]> {
 		try {
-			const users = await sql`${SELECT_USERS_QUERY};`;
+			const users = await sql`${SELECT_USERS_QUERY} ORDER BY users.username;`;
 			if (isUserWithRolesArray(users)) {
 				return users;
 			}
