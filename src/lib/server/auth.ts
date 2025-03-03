@@ -112,7 +112,7 @@ export default class Auth {
 		const renewSession = Date.now() >= session.expiresAt.getTime() - DAY_IN_MS * 15;
 		if (renewSession) {
 			session.expiresAt = new Date(Date.now() + DAY_IN_MS * 30);
-			Session.updateSessionExpiresAt(hashedToken, session.expiresAt);
+			this.event.locals.db.sessions.updateSessionById(session.id, session);
 		}
 
 		return { session, user };
