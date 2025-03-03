@@ -101,7 +101,7 @@ export class RealUserService implements UserService {
 
 	private async throwErrorIfFinalSuperadmin(userId: string, errorMessage: string) {
 		const superadminUsers = await this.getUsersByRole("superadmin");
-		if (superadminUsers.length === 1 && superadminUsers[0].id === userId) {
+		if (superadminUsers.length === 1 && superadminUsers[0]!.id === userId) {
 			throw new Error(errorMessage);
 		}
 	}

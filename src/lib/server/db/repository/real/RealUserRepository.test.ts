@@ -51,8 +51,8 @@ test("persists updates to users", async () => {
 	const updatedUser = await repo.updateUserById(insertedUser.id, newUserInfo);
 
 	expect(updatedUser).toBeDefined();
-	expect(updatedUser.username).toStrictEqual(newUserInfo.username);
-	expect(updatedUser.name).toStrictEqual(newUserInfo.name);
+	expect(updatedUser?.username).toStrictEqual(newUserInfo.username);
+	expect(updatedUser?.name).toStrictEqual(newUserInfo.name);
 
 	await repo.deleteUserById(insertedUser.id);
 });
