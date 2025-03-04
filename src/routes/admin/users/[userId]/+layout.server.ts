@@ -1,6 +1,6 @@
+import type { UserWithRoles } from "$lib/types/entity";
 import { error, isHttpError } from "@sveltejs/kit";
 import type { LayoutServerLoad } from "./$types";
-import type { UserWithRoles } from "$lib/types";
 
 export const load = (async (event) => {
 	try {

@@ -1,6 +1,5 @@
-import type { LayoutServerLoad } from "./$types";
 import type { FileStats } from "$lib/types";
-import { getAuthProviderInfo } from "$lib/server/auth";
+import type { LayoutServerLoad } from "./$types";
 
 const USER_NAV_LINKS = [
 	{ href: "/buildings", text: "Search by Building", icon: "domain" },
@@ -14,7 +13,7 @@ const ADMIN_NAV_LINKS = [
 ];
 
 export const load = (async ({ fetch, locals }) => {
-	const authInfo = await getAuthProviderInfo();
+	const authInfo = await locals.auth.getAuthProviderInfo();
 
 	const fileStatsRes = await fetch("/api/status");
 	const fileStats = fileStatsRes.ok ? ((await fileStatsRes.json()) as FileStats) : null;

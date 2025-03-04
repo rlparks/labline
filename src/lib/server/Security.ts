@@ -1,4 +1,4 @@
-import type { Role, UserWithRoles } from "$lib/types";
+import type { Role, UserWithRoles } from "$lib/types/entity";
 import { error, type RequestEvent } from "@sveltejs/kit";
 
 // https://www.captaincodeman.com/securing-your-sveltekit-app

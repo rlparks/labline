@@ -1,14 +1,12 @@
-import * as auth from "$lib/server/auth";
+import { env } from "$env/dynamic/private";
+import { getCurrentFormattedDateTime } from "$lib";
 import { error } from "@sveltejs/kit";
 import type { RequestEvent, RequestHandler } from "./$types";
-import { env } from "$env/dynamic/private";
-import { User } from "$lib/server/db/entity";
-import { getCurrentFormattedDateTime } from "$lib/server";
 
 const { OIDC_CLIENT_ID, OIDC_CLIENT_SECRET, OIDC_USERNAME_CLAIM } = env;
 
 export const POST: RequestHandler = async (event) => {
-	const authInfo = await auth.getAuthProviderInfo();
+	const authInfo = await event.locals.auth.getAuthProviderInfo();
 
 	if (!authInfo) {
 		return error(500, "Auth provider unavailable.");
@@ -152,7 +150,7 @@ function userInfoResponseIsValid(userInfoJson: unknown): userInfoJson is UserInf
 }
 
 async function loginUser(username: string, idToken: string, event: RequestEvent) {
-	const user = await User.getUserByUsername(username);
+	const user = await event.locals.db.users.getUserByUsername(username);
 	if (!user) {
 		console.log(
 			`${getCurrentFormattedDateTime()} · User "${username}" attempted login but does not exist.`,
@@ -160,15 +158,13 @@ async function loginUser(username: string, idToken: string, event: RequestEvent)
 		return error(400, "User does not exist");
 	}
 
-	const ipAddress = event.getClientAddress();
-
 	try {
-		const session = await auth.createSession(user.id, idToken, ipAddress);
+		const session = await event.locals.auth.createSession(user.id, idToken);
 		console.log(
 			`${getCurrentFormattedDateTime()} · User "${username}" logged in, session expiring on ${session.expiresAt.toLocaleDateString()}.`,
 		);
 
-		auth.setSessionTokenCookie(event, session.token, session.expiresAt);
+		event.locals.auth.setSessionTokenCookie(session.token, session.expiresAt);
 	} catch {
 		console.error("Error creating session: ", error);
 	}

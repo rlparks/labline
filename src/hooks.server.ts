@@ -1,51 +1,55 @@
+import ServiceAggregator from "$db/service/ServiceAggregator";
 import { env } from "$env/dynamic/private";
-import { DEMO_USER } from "$lib";
-import { getCurrentFormattedDateTime } from "$lib/server";
+import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
-import * as auth from "$lib/server/auth";
-import { User } from "$lib/server/db/entity";
+import Auth from "$lib/server/auth";
+import { onServerStart } from "$lib/server/init";
 import { Security } from "$lib/server/Security";
-import { error, type Handle } from "@sveltejs/kit";
+import { error, type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
-const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
-const REQUIRED_ENV_VARIABLES = [
-	"DATABASE_URL",
-	"OIDC_DISCOVERY_ENDPOINT",
-	"OIDC_CLIENT_ID",
-	"OIDC_CLIENT_SECRET",
-	"ABSOLUTE_DIR_PATH",
-];
+export const init: ServerInit = async () => {
+	await onServerStart(new ServiceAggregator());
+};
 
-const missingVars = [];
-for (const envVar of REQUIRED_ENV_VARIABLES) {
-	if (!env[envVar]) {
-		missingVars.push(envVar);
+const handleAuth: Handle = async ({ event, resolve }) => {
+	event.locals.db = new ServiceAggregator();
+	event.locals.auth = new Auth(event);
+
+	const sessionToken = event.cookies.get(event.locals.auth.sessionCookieName);
+	if (!sessionToken) {
+		event.locals.user = null;
+		event.locals.session = null;
+		return resolve(event);
 	}
-}
-if (missingVars.length !== 0) {
-	console.log(`${missingVars.join(", ")} must be set`);
-	process.exit(1);
-}
 
-if (env.CREATE_ACCOUNT) {
 	try {
-		console.log("Creating user from CREATE_ACCOUNT...");
-		const newUser = await User.createUser(
-			env.CREATE_ACCOUNT,
-			"Initial User",
-			["admin", "superadmin"],
-			true,
-		);
-		console.log(`Created user ${newUser.username}`);
-	} catch (e) {
-		if (e instanceof Error) {
-			console.log("Error creating initial account: ", e.message);
-		}
-	}
-}
+		const { session, user } = await event.locals.auth.validateSessionToken(sessionToken);
 
-const originalHandle: Handle = async ({ event, resolve }) => {
+		if (session) {
+			event.locals.auth.setSessionTokenCookie(sessionToken, session.expiresAt);
+		} else {
+			event.locals.auth.deleteSessionTokenCookie();
+		}
+
+		event.locals.user = user;
+		event.locals.session = session;
+
+		return resolve(event);
+	} catch (err) {
+		const currentTime = getCurrentFormattedDateTime();
+		if (err instanceof AggregateError) {
+			console.error(`${currentTime} · ${event.getClientAddress()} · ${err.errors.join(", ")}`);
+		} else {
+			console.error(`${currentTime} · ${event.getClientAddress()} · ${err}`);
+		}
+
+		return error(500, "Error connecting to database");
+	}
+};
+
+const setLocals: Handle = async ({ event, resolve }) => {
+	const BYPASS_ACCOUNT_REQUIREMENT = env.BYPASS_ACCOUNT_REQUIREMENT === "true";
 	if (BYPASS_ACCOUNT_REQUIREMENT && !event.locals.user) {
 		event.locals.user = DEMO_USER;
 	}
@@ -65,36 +69,4 @@ const originalHandle: Handle = async ({ event, resolve }) => {
 	return result;
 };
 
-const handleAuth: Handle = async ({ event, resolve }) => {
-	const sessionToken = event.cookies.get(auth.sessionCookieName);
-	if (!sessionToken) {
-		event.locals.user = null;
-		event.locals.session = null;
-		return resolve(event);
-	}
-	try {
-		const { session, user } = await auth.validateSessionToken(sessionToken, event);
-
-		if (session) {
-			auth.setSessionTokenCookie(event, sessionToken, session.expiresAt);
-		} else {
-			auth.deleteSessionTokenCookie(event);
-		}
-
-		event.locals.user = user;
-		event.locals.session = session;
-
-		return resolve(event);
-	} catch (err) {
-		const currentTime = getCurrentFormattedDateTime();
-		if (err instanceof AggregateError) {
-			console.error(`${currentTime} · ${event.getClientAddress()} · ${err.errors.join(", ")}`);
-		}
-
-		console.error(`${currentTime} · ${event.getClientAddress()} · ${err}`);
-
-		return error(500, "Error connecting to database");
-	}
-};
-
-export const handle = sequence(handleAuth, originalHandle);
+export const handle = sequence(handleAuth, setLocals);

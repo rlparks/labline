@@ -1,10 +1,10 @@
-import { User } from "$lib/server/db/entity";
+import { userWithRolesIsValid } from "$lib/types/entity/guards";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
-	const user = await User.getUserById(event.params.userId);
+	const user = await event.locals.db.users.getUserById(event.params.userId);
 
 	// require being superadmin to touch accounts with roles
 	if (user?.roles.length !== 0) {
@@ -17,23 +17,22 @@ export const GET: RequestHandler = async (event) => {
 
 	return json(user);
 };
+
 export const PUT: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
-	const reqJson = (await event.request.json()) as {
-		id: string;
-		username: string;
-		name: string;
-		roles: string[];
-	};
+	const reqJson = await event.request.json();
+
+	if (!userWithRolesIsValid(reqJson)) {
+		return error(400, "Invalid user");
+	}
 
 	try {
-		const existingUser = await User.getUserById(event.params.userId);
+		const existingUser = await event.locals.db.users.getUserById(event.params.userId);
 		if (existingUser?.roles.length !== 0 || reqJson.roles.length !== 0) {
 			event.locals.security.isSuperadmin();
 		}
 
-		const user = await User.updateUserById(event.params.userId, {
-			id: reqJson.id,
+		const user = await event.locals.db.users.updateUserWithRolesById(event.params.userId, {
 			username: reqJson.username,
 			name: reqJson.name,
 			roles: reqJson.roles,
@@ -56,12 +55,12 @@ export const DELETE: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
 	try {
-		const existingUser = await User.getUserById(event.params.userId);
+		const existingUser = await event.locals.db.users.getUserById(event.params.userId);
 		if (existingUser?.roles.length !== 0) {
 			event.locals.security.isSuperadmin();
 		}
 
-		const user = await User.deleteUserById(event.params.userId);
+		const user = await event.locals.db.users.deleteUserById(event.params.userId);
 		return json(user);
 	} catch (err) {
 		if (err instanceof Error) {

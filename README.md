@@ -4,10 +4,6 @@ Quickly see lab contacts in an emergency. Developed for UGA's Environmental Safe
 
 ![home page](/.github/home.png)
 
-After starting the stack for the first time, create the database schema by running
-
-```
-docker exec -it labline npm run db:push
-```
+Currently, the database requires some initial setup using the SQL files in /src/lib/server/db/schema
 
 At any time after this, you can create a new user by setting the environment variable `CREATE_ACCOUNT` to the username of your OIDC account and restarting the labline container.

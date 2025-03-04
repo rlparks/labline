@@ -1,13 +1,12 @@
-import { User } from "$lib/server/db/entity";
+import { postUserWithRolesIsValid } from "$lib/types/entity/guards";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
-import { ROLES_LIST, type Role } from "$lib/types";
 
 export const GET: RequestHandler = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
 	try {
-		const users = await User.getUsers();
+		const users = await event.locals.db.users.getUsers();
 		return json(users);
 	} catch {
 		return error(500, "Error retrieving users");
@@ -19,12 +18,16 @@ export const POST: RequestHandler = async (event) => {
 
 	const reqJson = await event.request.json();
 
-	if (postUserIsValid(reqJson)) {
+	if (postUserWithRolesIsValid(reqJson)) {
 		try {
 			if (reqJson.roles.length !== 0) {
 				event.locals.security.isSuperadmin();
 			}
-			const user = await User.createUser(reqJson.username, reqJson.name, reqJson.roles);
+			const user = await event.locals.db.users.createUser({
+				username: reqJson.username,
+				name: reqJson.name,
+				roles: reqJson.roles,
+			});
 			return json(user, { status: 201 });
 		} catch (err) {
 			if (err instanceof Error) {
@@ -41,34 +44,3 @@ export const POST: RequestHandler = async (event) => {
 		return error(400, "Invalid request");
 	}
 };
-
-type PostUser = {
-	username: string;
-	name: string;
-	roles: Role[];
-};
-
-function postUserIsValid(user: unknown): user is PostUser {
-	let rolesAreValid = true;
-	try {
-		for (const role of (user as PostUser).roles) {
-			if (!ROLES_LIST.includes(role)) {
-				rolesAreValid = false;
-				break;
-			}
-		}
-	} catch {
-		return false;
-	}
-
-	return (
-		typeof user === "object" &&
-		user !== null &&
-		"username" in user &&
-		"name" in user &&
-		"roles" in user &&
-		typeof user.username === "string" &&
-		typeof user.name === "string" &&
-		rolesAreValid
-	);
-}

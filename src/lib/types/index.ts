@@ -1,37 +1,3 @@
-import { ROLES_LIST, type User } from "$lib/server/db/schema";
-
-export type { Session, User, UserRole } from "$lib/server/db/schema";
-
-export type Role = (typeof ROLES_LIST)[number];
-export { ROLES_LIST };
-
-/**
- * Sessions without tokens.
- */
-export interface SafeSession {
-	id: string;
-	userId: string;
-	expiresAt: Date;
-	ipAddress: string | null;
-}
-
-/**
- * `User`s with additional info removed.
- */
-export interface SafeUser {
-	id: string;
-	username: string;
-	name: string;
-}
-
-export interface UserWithSingleRole extends User {
-	role: Role | null;
-}
-
-export interface UserWithRoles extends User {
-	roles: Role[];
-}
-
 /**
  * Lab information obtained from Chematix.
  */
@@ -81,4 +47,12 @@ export interface AuthInfo {
 	userinfoEndpoint: string;
 	endSessionEndpoint: string;
 	state: string;
+}
+
+/**
+ * Number of sessions per user.
+ */
+export interface SessionCount {
+	userId: string;
+	sessionsCount: number;
 }

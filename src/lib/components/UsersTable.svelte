@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { UserWithRoles } from "$lib/types";
+	import type { UserWithRoles } from "$lib/types/entity";
 
 	type Props = {
 		users: UserWithRoles[];

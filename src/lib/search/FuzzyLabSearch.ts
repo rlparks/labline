@@ -1,6 +1,6 @@
-import { FuzzySearch } from "./FuzzySearch";
 import type { Lab } from "$lib/types";
 import Fuse from "fuse.js";
+import { FuzzySearch } from "./FuzzySearch";
 
 /**
  * Fuzzy search for {@link Lab}s.
