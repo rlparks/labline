@@ -3,9 +3,9 @@
 	import { env } from "$env/dynamic/public";
 	import { Footer, Header, Message } from "$lib/components";
 	import ESD from "$lib/images/ESD.png";
-	import "beercss";
-	import "./fonts.css";
-	import "./theme.css";
+	import "./style/beercss/beer.min.css";
+	import "./style/fonts.css";
+	import "./style/theme.css";
 
 	const { children, data } = $props();
 </script>

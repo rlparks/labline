@@ -22,7 +22,7 @@ const config = {
 				"base-uri": ["none"],
 				"form-action": ["self"],
 				"frame-ancestors": ["none"],
-				"font-src": ["self", "https://cdn.jsdelivr.net"], // beercss?
+				"font-src": ["self"],
 				"img-src": ["self", "data:"],
 				"connect-src": ["self", "https://analytics.esd.uga.edu"],
 				"upgrade-insecure-requests": true,
