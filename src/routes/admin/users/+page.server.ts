@@ -5,7 +5,12 @@ import type { PageServerLoad } from "./$types";
 export const load = (async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
-	const usersRes = await event.fetch("/api/users");
+	const shouldGetSessionCount = event.locals.user?.roles.includes("superadmin");
+
+	const usersPromise = event.fetch("/api/users");
+	const sessionCountPromise = shouldGetSessionCount ? event.fetch("/api/sessions") : undefined;
+
+	const [usersRes, sessionCountRes] = await Promise.all([usersPromise, sessionCountPromise]);
 
 	if (!usersRes.ok) {
 		return error(usersRes.status, "Error retrieving users");
@@ -13,9 +18,7 @@ export const load = (async (event) => {
 
 	const users = (await usersRes.json()) as UserWithRoles[];
 
-	if (event.locals.user?.roles.includes("superadmin")) {
-		const sessionCountRes = await event.fetch("/api/sessions");
-
+	if (shouldGetSessionCount && sessionCountRes) {
 		if (!sessionCountRes.ok) {
 			return error(sessionCountRes.status, "Error retrieving session count");
 		}

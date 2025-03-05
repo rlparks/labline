@@ -5,13 +5,15 @@ import type { PageServerLoad } from "./$types";
 export const load = (async ({ fetch, locals }) => {
 	locals.security.isAuthenticated();
 
-	const labsRes = await fetch("/api/labs");
+	const labsPromise = fetch("/api/labs");
+	const buildingsPromise = fetch("/api/buildings");
+	const [labsRes, buildingsRes] = await Promise.all([labsPromise, buildingsPromise]);
+
 	if (!labsRes.ok) {
 		return error(500, "Error retrieving labs");
 	}
 	const labs = (await labsRes.json()) as Lab[];
 
-	const buildingsRes = await fetch("/api/buildings");
 	if (!buildingsRes.ok) {
 		return error(500, "Error retrieving buildings");
 	}
