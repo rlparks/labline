@@ -21,7 +21,7 @@ COPY --from=builder /app/package.json ./
 
 ENV NODE_ENV=production
 
-RUN npm i 
+RUN npm i --omit=dev
 
 # internal port
 EXPOSE 3000
