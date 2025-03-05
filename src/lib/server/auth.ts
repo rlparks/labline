@@ -1,11 +1,10 @@
-import { env } from "$env/dynamic/private";
 import type { AuthInfo } from "$lib/types";
 import { sha256 } from "@oslojs/crypto/sha2";
 import { encodeBase32LowerCase, encodeHexLowerCase } from "@oslojs/encoding";
 import type { RequestEvent } from "@sveltejs/kit";
+import getAuthInfo from "./AuthProvider";
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
-const SCOPES = ["openid", "profile"];
 
 export default class Auth {
 	private event: RequestEvent;
@@ -15,37 +14,8 @@ export default class Auth {
 	}
 
 	async getAuthProviderInfo(): Promise<AuthInfo> {
-		const oidcDiscoveryUrl = env.OIDC_DISCOVERY_ENDPOINT;
-		const clientId = env.OIDC_CLIENT_ID;
-		if (!oidcDiscoveryUrl || !clientId) {
-			throw new Error("OIDC_DISCOVERY_ENDPOINT or OIDC_CLIENT_ID is not set");
-		}
-
-		const result = await fetch(oidcDiscoveryUrl);
-		if (result.ok) {
-			const json = await result.json();
-
-			const state = this.generateSessionToken();
-
-			const authEndpoint = new URL(json.authorization_endpoint);
-			authEndpoint.searchParams.set("response_type", "code");
-			authEndpoint.searchParams.set("scope", SCOPES.join(" "));
-			authEndpoint.searchParams.set("client_id", clientId);
-			authEndpoint.searchParams.set("state", state);
-
-			const tokenEndpoint = String(json.token_endpoint);
-			const userinfoEndpoint = String(json.userinfo_endpoint);
-			const endSessionEndpoint = String(json.end_session_endpoint);
-			return {
-				authEndpoint: authEndpoint.toString(),
-				tokenEndpoint,
-				userinfoEndpoint,
-				endSessionEndpoint,
-				state,
-			};
-		}
-
-		throw new Error("Error retrieving auth provider info");
+		const state = this.generateSessionToken();
+		return getAuthInfo(state);
 	}
 
 	sessionCookieName = "labline-auth-session";
