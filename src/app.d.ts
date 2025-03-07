@@ -2,7 +2,7 @@
 
 import type ServiceAggregator from "$db/service/ServiceAggregator";
 import Labline from "$lib/server/api/Labline";
-import type Auth from "$lib/server/auth";
+import type Auth from "$lib/server/auth/Auth";
 import type { Session, UserWithRoles } from "$lib/types/entity";
 
 // for information about these interfaces
@@ -13,7 +13,7 @@ declare global {
 			user: UserWithRoles | null;
 			session: Session | null;
 			labline: Labline;
-			security: import("$lib/server/Security").Security;
+			security: import("$lib/server/auth/Security").Security;
 			db: ServiceAggregator;
 			auth: Auth;
 		}

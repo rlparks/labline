@@ -2,9 +2,9 @@ import ServiceAggregator from "$db/service/ServiceAggregator";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
 import Labline from "$lib/server/api/Labline";
-import Auth from "$lib/server/auth";
+import Auth from "$lib/server/auth/Auth";
+import { Security } from "$lib/server/auth/Security";
 import { onServerStart } from "$lib/server/init";
-import { Security } from "$lib/server/Security";
 import { error, type Handle, type ServerInit } from "@sveltejs/kit";
 import { sequence } from "@sveltejs/kit/hooks";
 
