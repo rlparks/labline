@@ -1,4 +1,5 @@
 import { postUserWithRolesIsValid } from "$lib/types/entity/guards";
+import { validateUserFields } from "$lib/types/entity/helpers";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -23,6 +24,10 @@ export const POST: RequestHandler = async (event) => {
 			if (reqJson.roles.length !== 0) {
 				event.locals.security.isSuperadmin();
 			}
+
+			// ensure username and name are valid
+			validateUserFields(reqJson);
+
 			const user = await event.locals.db.users.createUser({
 				username: reqJson.username,
 				name: reqJson.name,
