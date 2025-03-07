@@ -1,3 +1,4 @@
+import { logUserAction } from "$lib/server";
 import { userWithRolesIsValid } from "$lib/types/entity/guards";
 import { validateUserFields } from "$lib/types/entity/helpers";
 import { error, isHttpError, json } from "@sveltejs/kit";
@@ -41,6 +42,11 @@ export const PUT: RequestHandler = async (event) => {
 			name: reqJson.name,
 			roles: reqJson.roles,
 		});
+
+		if (event.locals.user) {
+			logUserAction(event.locals.user, `Updated user ${existingUser?.username}`);
+		}
+
 		return json(user);
 	} catch (err) {
 		if (err instanceof Error) {
@@ -65,6 +71,11 @@ export const DELETE: RequestHandler = async (event) => {
 		}
 
 		const user = await event.locals.db.users.deleteUserById(event.params.userId);
+
+		if (event.locals.user) {
+			logUserAction(event.locals.user, `Deleted user ${existingUser?.username}`);
+		}
+
 		return json(user);
 	} catch (err) {
 		if (err instanceof Error) {

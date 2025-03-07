@@ -1,3 +1,4 @@
+import { logUserAction } from "$lib/server";
 import { postUserWithRolesIsValid } from "$lib/types/entity/guards";
 import { validateUserFields } from "$lib/types/entity/helpers";
 import { error, isHttpError, json } from "@sveltejs/kit";
@@ -33,6 +34,11 @@ export const POST: RequestHandler = async (event) => {
 				name: reqJson.name,
 				roles: reqJson.roles,
 			});
+
+			if (event.locals.user) {
+				logUserAction(event.locals.user, `Created user ${user.username}`);
+			}
+
 			return json(user, { status: 201 });
 		} catch (err) {
 			if (err instanceof Error) {
