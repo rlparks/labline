@@ -11,8 +11,10 @@
 	<meta name="description" content="User Management admin page for labline." />
 </svelte:head>
 
-<div class="absolute bottom right">
-	<a href="/admin/users/create" class="button square round extra"><i>add</i></a>
+<div class="space"></div>
+
+<div class="center-align">
+	<a href="/admin/users/create" class="button"><i>add</i><span>Add User</span></a>
 </div>
 
 <UsersTable users={data.users} sessionCount={data.sessionCount} />
