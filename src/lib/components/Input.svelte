@@ -1,0 +1,20 @@
+<script lang="ts">
+	import type { HTMLInputAttributes } from "svelte/elements";
+
+	type Props = {
+		value: string;
+		label: string;
+		icon?: string;
+	} & HTMLInputAttributes;
+	let { value = $bindable(), label, icon, ...rest }: Props = $props();
+
+	const inputId = $props.id();
+</script>
+
+<div class="field label border">
+	<input id={inputId} bind:value {...rest} />
+	<label for={inputId}>{label}</label>
+	{#if icon}
+		<i>{icon}</i>
+	{/if}
+</div>

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
+	import { Input } from "$lib/components";
 	import type { PageData } from "./$types";
 
 	const { data }: { data: PageData } = $props();
@@ -15,29 +16,23 @@
 <h3 class="center-align">{title}</h3>
 
 <form method="POST" action="?/edit" use:enhance>
-	<div class="field label border">
-		<input
-			type="text"
-			id="username"
-			name="username"
-			autocomplete="off"
-			value={data.editUser.username}
-			required
-		/>
-		<label for="username">Username</label>
-	</div>
+	<Input
+		name="username"
+		type="text"
+		autocomplete="off"
+		value={data.editUser.username}
+		label="Username"
+		required
+	/>
 
-	<div class="field label border">
-		<input
-			type="text"
-			id="name"
-			name="name"
-			autocomplete="off"
-			value={data.editUser.name}
-			required
-		/>
-		<label for="name">Name</label>
-	</div>
+	<Input
+		name="name"
+		type="text"
+		autocomplete="off"
+		value={data.editUser.name}
+		label="Name"
+		required
+	/>
 
 	{#if data.showRoles}
 		{#each data.roles as role}

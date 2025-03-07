@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
+	import { Input } from "$lib/components";
 	import type { PageData } from "./$types";
 
 	const title = "Create User";
@@ -15,15 +16,16 @@
 <h3 class="center-align">{title}</h3>
 
 <form method="POST" use:enhance>
-	<div class="field label border">
-		<input type="text" id="username" name="username" autocomplete="off" required />
-		<label for="username">Username</label>
-	</div>
-
-	<div class="field label border">
-		<input type="text" id="name" name="name" autocomplete="off" required />
-		<label for="name">Name</label>
-	</div>
+	<Input
+		name="username"
+		type="text"
+		id="username"
+		autocomplete="off"
+		required
+		label="Username"
+		value=""
+	/>
+	<Input name="name" type="text" id="name" autocomplete="off" required label="Name" value="" />
 
 	{#if data.showRoles}
 		{#each data.roles as role}
