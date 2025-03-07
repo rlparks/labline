@@ -12,8 +12,8 @@
 </script>
 
 <div class="field label border">
-	<input id={inputId} bind:value {...rest} />
-	<label for={inputId}>{label}</label>
+	<input class:active={value} id={inputId} bind:value {...rest} />
+	<label class:active={value} for={inputId}>{label}</label>
 	{#if icon}
 		<i>{icon}</i>
 	{/if}
