@@ -1,23 +1,3 @@
-<!-- 
- @component
- 
- A searchable list of `Lab`s.
-
- ## Props
- 
- | Name | Type | Default | Description |
- | --- | --- | --- | --- |
- | `labs` | `Lab[]` | Required | The labs to display. |
- | `title` | `string` | Required | The title of the search. |
- | `showLabsWhenNoSearch` | `boolean` | Required | Whether to show all labs when no search is applied. |
-
- ## Example
- 
- ```svelte
- <LabsSearch labs={data.labs} {title} showLabsWhenNoSearch={false} />
- ```
-  -->
-
 <script lang="ts">
 	import { Input, LabCard, Message } from "$lib/components";
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
@@ -31,35 +11,63 @@
 	const { labs, title, showLabsWhenNoSearch }: Props = $props();
 
 	let search = $state<string>("");
+	let debouncedSearch = $state<string>("");
+	let debounceTimeout: ReturnType<typeof setTimeout> | null = null;
+	const debounceMs = 300;
+
+	function handleSearchInput() {
+		if (debounceTimeout) {
+			clearTimeout(debounceTimeout);
+		}
+
+		debounceTimeout = setTimeout(() => {
+			debouncedSearch = search;
+			debounceTimeout = null;
+		}, debounceMs);
+	}
 
 	const searcher = new FuzzyLabSearch(labs);
 
-	const filteredLabs = $derived(searcher.search(search));
-	const count = $derived(search ? filteredLabs.length : labs.length);
+	const filteredLabs = $derived(searcher.search(debouncedSearch));
+	const count = $derived(debouncedSearch ? filteredLabs.length : labs.length);
 	const countText = $derived(count === 1 ? "1 lab" : `${count} labs`);
 
-	const labsAreShown = $derived(search || showLabsWhenNoSearch);
+	const labsAreShown = $derived(debouncedSearch || showLabsWhenNoSearch);
 </script>
 
 {#if labs[0]}
 	<h3 class="center-align">{title}{labsAreShown ? ` · ${countText}` : ""}</h3>
-	<Input label="Lab Name, Room Number, Super/PI" icon="search" bind:value={search} />
+	<Input
+		label="Lab Name, Room Number, Super/PI"
+		icon="search"
+		bind:value={search}
+		oninput={(e) => handleSearchInput()}
+	/>
 {/if}
 
-{#if !search}
-	{#if showLabsWhenNoSearch}
-		{#each labs as lab (lab["Lab Name"] + lab["Bldg Number"])}
-			<LabCard {lab} />
-		{/each}
+{#if search === debouncedSearch}
+	{#if !debouncedSearch}
+		{#if showLabsWhenNoSearch}
+			{#each labs as lab (lab["Lab Name"] + lab["Bldg Number"])}
+				<LabCard {lab} />
+			{/each}
+		{:else}
+			<Message
+				iconText="experiment"
+				headerText="No labs found"
+				messageText="Try searching using a lab name, room number, or the name of the supervisor or PI"
+			/>
+		{/if}
 	{:else}
-		<Message
-			iconText="experiment"
-			headerText="No labs found"
-			messageText="Try searching using a lab name, room number, or the name of the supervisor or PI"
-		/>
+		{#each filteredLabs as lab (lab.item["Lab Name"] + lab.item["Bldg Number"])}
+			<LabCard lab={lab.item} />
+		{/each}
 	{/if}
 {:else}
-	{#each filteredLabs as lab (lab.item["Lab Name"] + lab.item["Bldg Number"])}
-		<LabCard lab={lab.item} />
-	{/each}
+	<!-- if search doesn't equal debouncedSearch, we're currently waiting on the debounce timeout -->
+	<Message
+		iconText="pending"
+		headerText="Searching..."
+		messageText="Filtering {labs.length} labs"
+	/>
 {/if}
