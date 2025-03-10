@@ -62,12 +62,11 @@ export default class Auth {
 			return { session: null, user: null };
 		}
 
-		// protect against session hijacking
+		// maintain IP address
 		const ipAddress = this.event.getClientAddress();
 		if (session.ipAddress !== ipAddress) {
-			// session is toast anyway
-			await this.invalidateSession(session.id);
-			return { session: null, user: null };
+			session.ipAddress = ipAddress;
+			await this.event.locals.db.sessions.updateSessionById(session.id, session);
 		}
 
 		const user = await this.event.locals.db.users.getUserById(session.userId);
