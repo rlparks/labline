@@ -5,11 +5,6 @@
 	let moreInfoShown = $state(false);
 </script>
 
-<svelte:head>
-	<title>labline</title>
-	<meta name="description" content="Access UGA Lab Emergency Contacts." />
-</svelte:head>
-
 <!-- we stack -->
 <div class="center-align">
 	<Title scale={1.5} />

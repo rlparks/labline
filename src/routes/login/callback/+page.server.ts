@@ -10,7 +10,10 @@ export const load = (async (event) => {
 		return error(500, "Invalid data returned by SSO provider");
 	}
 
-	return {};
+	return {
+		pageTitle: "SSO Callback",
+		pageDescription: "labline OIDC callback page. How did you end up here?",
+	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

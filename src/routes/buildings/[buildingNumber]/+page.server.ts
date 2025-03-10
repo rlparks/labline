@@ -13,9 +13,14 @@ export const load = (async ({ params, fetch, locals }) => {
 	}
 
 	const labs = await labRes.json();
-
 	if (!labs || labs.length === 0) {
 		return error(404, "Building not found");
 	}
-	return { labs };
+
+	const pageTitle = labs[0] ? `${labs[0]["Bldg Number"]} · ${labs[0]["Bldg Name"]}` : "building";
+	return {
+		labs,
+		pageTitle,
+		pageDescription: `UGA Lab Emergency Contacts for ${pageTitle}`,
+	};
 }) satisfies PageServerLoad;

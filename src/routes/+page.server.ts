@@ -16,5 +16,8 @@ export const load = (async (event) => {
 		return redirect(303, "/");
 	}
 
-	return {};
+	return {
+		pageTitle: "",
+		pageDescription: "Access UGA Lab Emergency Contacts.",
+	};
 }) satisfies PageServerLoad;

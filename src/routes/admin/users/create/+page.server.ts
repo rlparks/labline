@@ -3,7 +3,10 @@ import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
-	return {};
+	return {
+		pageTitle: "Create User",
+		pageDescription: "Create a new labline user.",
+	};
 };
 
 export const actions: Actions = {

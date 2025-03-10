@@ -28,11 +28,6 @@
 	});
 </script>
 
-<svelte:head>
-	<title>labline · SSO Callback</title>
-	<meta name="description" content="labline OIDC callback page. How did you end up here?" />
-</svelte:head>
-
 <h3 class="center-align">OIDC Login</h3>
 {#if !page.error && !paramsError}
 	<p class="center-align">Logging in...</p>

@@ -15,5 +15,9 @@ export const load = (async ({ fetch, locals }) => {
 		return error(404, "No labs found");
 	}
 
-	return { labs };
+	return {
+		labs,
+		pageTitle: "Search All Labs",
+		pageDescription: "UGA Lab Emergency Contacts for All Labs.",
+	};
 }) satisfies PageServerLoad;

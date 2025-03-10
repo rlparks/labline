@@ -1,19 +1,11 @@
 <script lang="ts">
-	import { Message } from "$lib/components";
-	import type { PageData } from "./$types";
-
-	const { data }: { data: PageData } = $props();
 	import { enhance } from "$app/forms";
+	import { Message } from "$lib/components";
 
-	const title = `Delete User · ${data.editUser.username}`;
+	const { data } = $props();
 </script>
 
-<svelte:head>
-	<title>labline · {title}</title>
-	<meta name="description" content="Delete labline user." />
-</svelte:head>
-
-<h3 class="center-align">{title}</h3>
+<h3 class="center-align">{data.pageTitle}</h3>
 <div class="space"></div>
 <Message
 	messageText="Are you sure you want to delete this user?"

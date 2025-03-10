@@ -19,5 +19,5 @@ export const load = (async ({ fetch, locals }) => {
 	}
 	const buildings = (await buildingsRes.json()) as Building[];
 
-	return { labs, buildings };
+	return { labs, buildings, pageTitle: "Summary", pageDescription: "UGA Lab Summary Stats." };
 }) satisfies PageServerLoad;

@@ -41,7 +41,7 @@
 		label="Lab Name, Room Number, Super/PI"
 		icon="search"
 		bind:value={search}
-		oninput={(e) => handleSearchInput()}
+		oninput={() => handleSearchInput()}
 	/>
 {/if}
 
