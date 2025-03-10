@@ -26,6 +26,7 @@ const config = {
 				"img-src": ["self", "data:"],
 				"connect-src": ["self", "https://analytics.esd.uga.edu"],
 				"upgrade-insecure-requests": true,
+				"manifest-src": ["self"],
 			},
 		},
 		alias: {
