@@ -1,8 +1,6 @@
 <script lang="ts">
 	const { data } = $props();
 
-	const title = "Summary";
-
 	const stats = {
 		labsWithBothContacts: 0,
 		labsWithOnlyPrimaryContact: 0,
@@ -33,12 +31,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>labline · {title}</title>
-	<meta name="description" content="UGA Lab Summary Stats." />
-</svelte:head>
-
-<h3 class="center-align">{title}</h3>
+<h3 class="center-align">{data.pageTitle}</h3>
 
 <article class="center-align border">
 	{@render infoLine("Number of buildings", data.buildings.length)}

@@ -27,5 +27,7 @@ export const load = (async ({ fetch, locals, url }) => {
 				? ADMIN_NAV_LINKS
 				: USER_NAV_LINKS,
 		requestDomain: url.origin,
+		pageTitle: "",
+		pageDescription: "",
 	};
 }) satisfies LayoutServerLoad;

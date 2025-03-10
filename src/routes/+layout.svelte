@@ -12,7 +12,7 @@
 
 <svelte:head>
 	<!-- pull from page data -->
-	<title>{page.data.pageTitle}</title>
+	<title>labline {page.data.pageTitle ? "· " + page.data.pageTitle : ""}</title>
 	<meta name="description" content={page.data.pageDescription} />
 	<meta name="og:image" content={`${data.requestDomain}/icon/icon-192.png`} />
 

@@ -11,11 +11,6 @@
 	const filteredBuildings = $derived(searcher.search(search));
 </script>
 
-<svelte:head>
-	<title>labline · Search by Building</title>
-	<meta name="description" content="Search emergency contacts by building." />
-</svelte:head>
-
 <h3 class="center-align">Emergency Contacts</h3>
 
 <h3 class="center-align">Search by Building</h3>

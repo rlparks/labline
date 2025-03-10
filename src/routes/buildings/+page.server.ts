@@ -10,5 +10,9 @@ export const load = (async ({ fetch, locals }) => {
 		return error(buildingRes.status, "Error retrieving buildings");
 	}
 	const buildings = (await buildingRes.json()) as Building[];
-	return { buildings };
+	return {
+		buildings,
+		pageTitle: "Search by Building",
+		pageDescription: "Search emergency contacts by building.",
+	};
 }) satisfies PageServerLoad;
