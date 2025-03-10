@@ -4,7 +4,11 @@ import type { Actions, PageServerLoad, RequestEvent } from "./$types";
 export const load = (async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
-	return {};
+	const parentData = await event.parent();
+	return {
+		pageTitle: `Edit User · ${parentData.editUser.username}`,
+		pageDescription: "Edit labline user.",
+	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

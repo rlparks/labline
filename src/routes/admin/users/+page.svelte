@@ -2,14 +2,7 @@
 	import { UsersTable } from "$lib/components";
 
 	const { data } = $props();
-
-	const title = "Users";
 </script>
-
-<svelte:head>
-	<title>labline · {title}</title>
-	<meta name="description" content="User Management admin page for labline." />
-</svelte:head>
 
 <div class="space"></div>
 

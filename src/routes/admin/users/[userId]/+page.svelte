@@ -4,16 +4,9 @@
 	import type { PageData } from "./$types";
 
 	const { data }: { data: PageData } = $props();
-
-	const title = `Edit User · ${data.editUser.username}`;
 </script>
 
-<svelte:head>
-	<title>labline · {title}</title>
-	<meta name="description" content="Edit labline user." />
-</svelte:head>
-
-<h3 class="center-align">{title}</h3>
+<h3 class="center-align">{data.pageTitle}</h3>
 
 <form method="POST" action="?/edit" use:enhance>
 	<Input

@@ -3,17 +3,10 @@
 	import { Input } from "$lib/components";
 	import type { PageData } from "./$types";
 
-	const title = "Create User";
-
 	let { data }: { data: PageData } = $props();
 </script>
 
-<svelte:head>
-	<title>labline · {title}</title>
-	<meta name="description" content="Create new labline user." />
-</svelte:head>
-
-<h3 class="center-align">{title}</h3>
+<h3 class="center-align">{data.pageTitle}</h3>
 
 <form method="POST" use:enhance>
 	<Input

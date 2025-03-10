@@ -17,7 +17,13 @@ export const load = (async (event) => {
 		return error(401, "somehow here with no session");
 	}
 
-	return { userSessions, currentUserSessionId: event.locals.session.id };
+	const parentData = await event.parent();
+	return {
+		userSessions,
+		currentUserSessionId: event.locals.session.id,
+		pageTitle: `Sessions · ${parentData.editUser.username}`,
+		pageDescription: "Manage labline user sessions.",
+	};
 }) satisfies PageServerLoad;
 
 export const actions: Actions = {

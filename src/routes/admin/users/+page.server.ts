@@ -2,6 +2,11 @@ import type { UserWithRoles } from "$lib/types/entity";
 import { error } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
 
+const titleData = {
+	pageTitle: "Users",
+	pageDescription: "User Management admin page for labline.",
+};
+
 export const load = (async (event) => {
 	event.locals.security.isAuthenticated().isAdmin();
 
@@ -30,9 +35,9 @@ export const load = (async (event) => {
 
 		const sessionCount = mapSessionCount(sessionCountJson);
 
-		return { users, sessionCount };
+		return { users, sessionCount, ...titleData };
 	} else {
-		return { users };
+		return { users, ...titleData };
 	}
 }) satisfies PageServerLoad;
 
