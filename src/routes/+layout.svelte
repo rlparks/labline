@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { navigating } from "$app/state";
+	import { navigating, page } from "$app/state";
 	import { env } from "$env/dynamic/public";
 	import { Footer, Header, Message } from "$lib/components";
 	import ESD from "$lib/images/ESD.png";
@@ -11,6 +11,9 @@
 </script>
 
 <svelte:head>
+	<!-- pull from page data -->
+	<title>{page.data.pageTitle}</title>
+	<meta name="description" content={page.data.pageDescription} />
 	<meta name="og:image" content={`${data.requestDomain}/icon/icon-192.png`} />
 
 	{#if env.PUBLIC_UMAMI_ID}

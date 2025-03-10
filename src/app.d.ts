@@ -17,7 +17,10 @@ declare global {
 			db: ServiceAggregator;
 			auth: Auth;
 		}
-		// interface PageData {}
+		interface PageData {
+			pageTitle: string;
+			pageDescription: string;
+		}
 		// interface PageState {}
 		// interface Platform {}
 	}
