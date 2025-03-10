@@ -11,6 +11,8 @@
 </script>
 
 <svelte:head>
+	<meta name="og:image" content={`${data.requestDomain}/icon/icon-192.png`} />
+
 	{#if env.PUBLIC_UMAMI_ID}
 		<script
 			defer

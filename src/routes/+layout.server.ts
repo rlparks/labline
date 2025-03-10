@@ -12,7 +12,7 @@ const ADMIN_NAV_LINKS = [
 	{ href: "/admin/users", text: "Admin", icon: "admin_panel_settings" },
 ];
 
-export const load = (async ({ fetch, locals }) => {
+export const load = (async ({ fetch, locals, url }) => {
 	const authInfo = await locals.auth.getAuthProviderInfo();
 
 	const fileStatsRes = await fetch("/api/status");
@@ -26,5 +26,6 @@ export const load = (async ({ fetch, locals }) => {
 			locals.user?.roles.includes("admin") || locals.user?.roles.includes("superadmin")
 				? ADMIN_NAV_LINKS
 				: USER_NAV_LINKS,
+		requestDomain: url.origin,
 	};
 }) satisfies LayoutServerLoad;
