@@ -105,6 +105,17 @@ async function getUserInfo(accessToken: string, userInfoEndpoint: string) {
 
 	const userInfoJson = await userInfoResponse.json();
 
+	// keycloak openid profile
+	// {
+	//     sub: '251dba32-36f1-4bbc-8814-bde842cc7cea',
+	//     email_verified: true,
+	//     name: 'Rebecca Parks',
+	//     preferred_username: 'rebecca',
+	//     given_name: 'Rebecca',
+	//     family_name: 'Parks',
+	//     email: 'redacted_from_git',
+	// }
+
 	// authentik openid profile
 	// {
 	//     sub: '559d7b0af124e9fa495c0cf00f2c0f337458e2337488faf7f9c02e5222f912b0',
