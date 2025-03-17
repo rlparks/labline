@@ -1,4 +1,4 @@
-import type { UserWithRoles } from "$lib/types/entity";
+import type { InsertBuildingAlias, UserWithRoles } from "$lib/types/entity";
 
 /**
  * @param newUser the user to validate
@@ -19,5 +19,27 @@ export function validateUserFields(newUser: Omit<UserWithRoles, "id">) {
 	}
 	if (newUser.name.length === 0) {
 		throw new Error("Name cannot be empty");
+	}
+}
+
+/**
+ *
+ * @param newBuildingAlias the new BuildingAlias to validate
+ * @throws in various ways if the BuildingAlias is invalid
+ */
+export function validateBuildingAliasFields(newBuildingAlias: InsertBuildingAlias) {
+	const BUILDING_NUMBER_LENGTH = 4;
+	const MAX_ALIAS_LENGTH = 40;
+
+	if (newBuildingAlias.buildingNumber.length !== BUILDING_NUMBER_LENGTH) {
+		throw new Error(`Building Number must be exactly ${BUILDING_NUMBER_LENGTH} characters`);
+	}
+
+	if (newBuildingAlias.alias.length === 0) {
+		throw new Error(`Alias cannot be empty`);
+	}
+
+	if (newBuildingAlias.alias.length > MAX_ALIAS_LENGTH) {
+		throw new Error(`Alias cannot be longer than ${MAX_ALIAS_LENGTH} characters`);
 	}
 }
