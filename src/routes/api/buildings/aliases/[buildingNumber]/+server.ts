@@ -26,3 +26,14 @@ export const PUT: RequestHandler = async (event) => {
 	}
 	return error(400, "Invalid building alias");
 };
+
+export const DELETE: RequestHandler = async (event) => {
+	event.locals.security.isSuperadmin();
+
+	const buildingNumber = event.params.buildingNumber;
+
+	const deletedBuildingAlias =
+		await event.locals.db.buildingAliases.deleteBuildingAliasByBuildingNumber(buildingNumber);
+
+	return json(deletedBuildingAlias);
+};
