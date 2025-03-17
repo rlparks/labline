@@ -109,4 +109,22 @@ export class RealBuildingAliasRepository implements BuildingAliasRepository {
 
 		throw new Error("Building alias data malformed!");
 	}
+
+	async deleteBuildingAliasByBuildingNumber(
+		buildingNumber: string,
+	): Promise<BuildingAlias | undefined> {
+		try {
+			const [buildingAlias] = await sql`DELETE FROM building_alias
+                                                WHERE building_number = ${buildingNumber}
+                                                RETURNING ${BUILDING_ALIAS_COLUMNS};`;
+
+			if (buildingAliasIsValid(buildingAlias) || buildingAlias === undefined) {
+				return buildingAlias;
+			}
+		} catch (err) {
+			hideError(err, `RealBuildingAliasRepository deleteBuildingAliasByBuildingNumber: `);
+		}
+
+		throw new Error("Building alias data malformed!");
+	}
 }

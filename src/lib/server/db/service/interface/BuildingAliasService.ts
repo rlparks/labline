@@ -58,4 +58,13 @@ export interface BuildingAliasService {
 	 * @throws on DB connection error
 	 */
 	deleteBuildingAliasById(buildingAliasId: string): Promise<BuildingAlias | undefined>;
+
+	/**
+	 * Delete a `BuildingAlias` from the database by building number.
+	 *
+	 * @param buildingNumber the building number of the `BuildingAlias` to delete
+	 * @returns the deleted `BuildingAlias` or undefined if it didn't exist
+	 * @throws on DB connection error
+	 */
+	deleteBuildingAliasByBuildingNumber(buildingNumber: string): Promise<BuildingAlias | undefined>;
 }

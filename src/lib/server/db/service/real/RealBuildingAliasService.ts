@@ -45,4 +45,10 @@ export class RealBuildingAliasService implements BuildingAliasService {
 	async deleteBuildingAliasById(buildingAliasId: string): Promise<BuildingAlias | undefined> {
 		return await this.buildingAliasRepository.deleteBuildingAliasById(buildingAliasId);
 	}
+
+	async deleteBuildingAliasByBuildingNumber(
+		buildingNumber: string,
+	): Promise<BuildingAlias | undefined> {
+		return await this.buildingAliasRepository.deleteBuildingAliasByBuildingNumber(buildingNumber);
+	}
 }
