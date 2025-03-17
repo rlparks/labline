@@ -9,6 +9,11 @@
 			href: "/admin/users",
 			icon: "person",
 		},
+		{
+			name: "Building Aliases",
+			href: "/admin/alias",
+			icon: "menu_open",
+		},
 	];
 </script>
 
