@@ -1,6 +1,6 @@
 import { buildingAliasArrayIsValid } from "$lib/types/entity/guards";
-import { error } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import { error, redirect } from "@sveltejs/kit";
+import type { Actions, PageServerLoad } from "./$types";
 
 export const load = (async (event) => {
 	event.locals.security.isSuperadmin();
@@ -18,3 +18,26 @@ export const load = (async (event) => {
 		return error(500, "Building Alias error");
 	}
 }) satisfies PageServerLoad;
+
+export const actions = {
+	create: async (event) => {
+		event.locals.security.isSuperadmin();
+
+		const formBody = await event.request.formData();
+		const data = Object.fromEntries(formBody);
+
+		const creationRes = await event.fetch("/api/buildings/aliases", {
+			method: "POST",
+			body: JSON.stringify(data),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+
+		if (!creationRes.ok) {
+			console.log(await creationRes.json());
+		}
+
+		return redirect(303, "/admin/aliases");
+	},
+} satisfies Actions;

@@ -9,15 +9,7 @@
 <h3 class="center-align">{data.pageTitle}</h3>
 
 <form method="POST" use:enhance>
-	<Input
-		name="username"
-		type="text"
-		id="username"
-		autocomplete="off"
-		required
-		label="Username"
-		value=""
-	/>
+	<Input name="username" type="text" autocomplete="off" required label="Username" value="" />
 	<Input name="name" type="text" id="name" autocomplete="off" required label="Name" value="" />
 
 	{#if data.showRoles}
