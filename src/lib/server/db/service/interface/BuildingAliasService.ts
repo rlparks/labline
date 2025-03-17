@@ -4,7 +4,7 @@ import type { BuildingAlias, InsertBuildingAlias } from "$lib/types/entity";
  * Exposes `BuildingAlias` data to application.
  * Currently just passes through Repository methods.
  */
-export default interface BuildingAliasRepository {
+export interface BuildingAliasService {
 	/**
 	 * Retrieve all entries from the database.
 	 */

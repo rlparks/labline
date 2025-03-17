@@ -1,8 +1,8 @@
 import type { BuildingAliasRepository } from "$db/repository/interface/BuildingAliasRepository";
-import type BuildingAliasService from "$db/service/interface/BuildingAliasService";
+import type { BuildingAliasService } from "$db/service/interface/BuildingAliasService";
 import type { BuildingAlias, InsertBuildingAlias } from "$lib/types/entity";
 
-export default class RealBuildingAliasService implements BuildingAliasService {
+export class RealBuildingAliasService implements BuildingAliasService {
 	private readonly buildingAliasRepository: BuildingAliasRepository;
 
 	constructor(buildingAliasRepository: BuildingAliasRepository) {
