@@ -11,7 +11,7 @@
 		},
 		{
 			name: "Building Aliases",
-			href: "/admin/alias",
+			href: "/admin/aliases",
 			icon: "menu_open",
 		},
 	];
