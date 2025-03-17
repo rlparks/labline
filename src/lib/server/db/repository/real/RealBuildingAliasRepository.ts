@@ -10,7 +10,8 @@ export class RealBuildingAliasRepository implements BuildingAliasRepository {
 	async getBuildingAliases(): Promise<BuildingAlias[]> {
 		try {
 			const aliases = await sql`SELECT ${BUILDING_ALIAS_COLUMNS}
-                                                FROM building_alias;`;
+                                                FROM building_alias
+                                                ORDER BY building_number;`;
 
 			if (buildingAliasArrayIsValid(aliases)) {
 				return aliases;

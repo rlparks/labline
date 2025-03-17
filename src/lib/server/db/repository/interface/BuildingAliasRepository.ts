@@ -5,7 +5,7 @@ import type { BuildingAlias, InsertBuildingAlias } from "$lib/types/entity";
  */
 export interface BuildingAliasRepository {
 	/**
-	 * Retrieve all entries from the database.
+	 * Retrieve all entries from the database, ordered by building number.
 	 */
 	getBuildingAliases(): Promise<BuildingAlias[]>;
 
