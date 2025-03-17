@@ -3,3 +3,7 @@
 
 	let { data }: { data: PageData } = $props();
 </script>
+
+<div>
+	{JSON.stringify(data.aliases)}
+</div>
