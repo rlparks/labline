@@ -2,6 +2,7 @@ import type { SessionCount } from "$lib/types";
 import {
 	ROLES_LIST,
 	type BuildingAlias,
+	type InsertBuildingAlias,
 	type Role,
 	type SafeSession,
 	type Session,
@@ -156,18 +157,27 @@ export function sessionCountArrayIsValid(array: unknown): array is SessionCount[
 	return true;
 }
 
-export function buildingAliasIsValid(buildingAlias: unknown): buildingAlias is BuildingAlias {
+export function insertBuildingAliasIsValid(
+	buildingAlias: unknown,
+): buildingAlias is InsertBuildingAlias {
 	if (!buildingAlias) return false;
 
-	const tempBuildingAlias = buildingAlias as BuildingAlias;
+	const tempBuildingAlias = buildingAlias as InsertBuildingAlias;
 
 	return (
-		idIsValid(tempBuildingAlias?.id) &&
 		Boolean(tempBuildingAlias.buildingNumber) &&
 		typeof tempBuildingAlias.buildingNumber === "string" &&
 		Boolean(tempBuildingAlias.alias) &&
 		typeof tempBuildingAlias.alias === "string"
 	);
+}
+
+export function buildingAliasIsValid(buildingAlias: unknown): buildingAlias is BuildingAlias {
+	if (!buildingAlias) return false;
+
+	const tempBuildingAlias = buildingAlias as BuildingAlias;
+
+	return idIsValid(tempBuildingAlias?.id) && insertBuildingAliasIsValid(tempBuildingAlias);
 }
 
 export function buildingAliasArrayIsValid(array: unknown): array is BuildingAlias[] {
