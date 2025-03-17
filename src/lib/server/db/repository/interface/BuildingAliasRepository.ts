@@ -5,6 +5,11 @@ import type { BuildingAlias, InsertBuildingAlias } from "$lib/types/entity";
  */
 export interface BuildingAliasRepository {
 	/**
+	 * Retrieve all entries from the database.
+	 */
+	getBuildingAliases(): Promise<BuildingAlias[]>;
+
+	/**
 	 * Find a `BuildingAlias` by ID.
 	 *
 	 * @param buildingAliasId the `BuildingAlias` to search for
@@ -27,6 +32,7 @@ export interface BuildingAliasRepository {
 	 *
 	 * @param newBuildingAlias the `BuildingAlias` to insert
 	 * @returns the new `BuildingAlias`
+	 * @throws if it randomly generates a duplicate ID
 	 * @throws on DB connection error
 	 */
 	createBuildingAlias(newBuildingAlias: InsertBuildingAlias): Promise<BuildingAlias>;
@@ -40,7 +46,7 @@ export interface BuildingAliasRepository {
 	 */
 	updateBuildingAliasById(
 		buildingAliasId: string,
-		newBuildingAlias: BuildingAlias,
+		newBuildingAlias: InsertBuildingAlias,
 	): Promise<BuildingAlias | undefined>;
 
 	/**

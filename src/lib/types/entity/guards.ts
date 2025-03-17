@@ -1,6 +1,7 @@
 import type { SessionCount } from "$lib/types";
 import {
 	ROLES_LIST,
+	type BuildingAlias,
 	type Role,
 	type SafeSession,
 	type Session,
@@ -150,6 +151,28 @@ export function sessionCountIsValid(sessionCount: unknown): sessionCount is Sess
 export function sessionCountArrayIsValid(array: unknown): array is SessionCount[] {
 	for (const potentialSessionCount of array as SessionCount[]) {
 		if (!sessionCountIsValid(potentialSessionCount)) return false;
+	}
+
+	return true;
+}
+
+export function buildingAliasIsValid(buildingAlias: unknown): buildingAlias is BuildingAlias {
+	if (!buildingAlias) return false;
+
+	const tempBuildingAlias = buildingAlias as BuildingAlias;
+
+	return (
+		idIsValid(tempBuildingAlias?.id) &&
+		Boolean(tempBuildingAlias.buildingNumber) &&
+		typeof tempBuildingAlias.buildingNumber === "string" &&
+		Boolean(tempBuildingAlias.alias) &&
+		typeof tempBuildingAlias.alias === "string"
+	);
+}
+
+export function buildingAliasArrayIsValid(array: unknown): array is BuildingAlias[] {
+	for (const potentialBuildingAlias of array as BuildingAlias[]) {
+		if (!buildingAliasIsValid(potentialBuildingAlias)) return false;
 	}
 
 	return true;
