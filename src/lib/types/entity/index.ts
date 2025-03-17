@@ -42,3 +42,5 @@ export interface BuildingAlias {
 	buildingNumber: string;
 	alias: string;
 }
+
+export type InsertBuildingAlias = Omit<BuildingAlias, "id">;

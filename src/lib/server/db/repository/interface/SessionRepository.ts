@@ -57,7 +57,7 @@ export interface SessionRepository {
 	 *
 	 * @param sessionId the ID of the `Session` to update
 	 * @param newSession the contents to replace it with
-	 * @returns the updated `Session`
+	 * @returns the updated `Session` or undefined
 	 * @throws on DB connection error
 	 */
 	updateSessionById(
