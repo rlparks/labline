@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { AliasTable } from "$lib/components";
 	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
@@ -12,6 +13,4 @@
 	</a>
 </div>
 
-<div>
-	{JSON.stringify(data.aliases)}
-</div>
+<AliasTable aliases={data.aliases} />
