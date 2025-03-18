@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
-	import type { PageData } from "./$types";
 
-	let { data }: { data: PageData } = $props();
+	let { data, form } = $props();
 </script>
 
 <h3 class="center-align">{data.pageTitle}</h3>
+
+<p class="center-align error-text">{form?.message}</p>
 
 <form method="POST" action="?/edit" use:enhance>
 	<input name="id" value={data.alias.id} hidden />
@@ -32,7 +33,7 @@
 	<nav>
 		<button class="no-margin" type="submit">Save</button>
 		<div class="max"></div>
-		<a href={`/admin/aliases/${data.alias.buildingNumber}/delete`} class="button border"
+		<a href={`/admin/aliases/${data.alias.id}/delete`} class="button border"
 			><i>delete</i><span>Delete</span></a
 		>
 	</nav>

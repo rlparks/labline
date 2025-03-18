@@ -1,5 +1,5 @@
 import { buildingAliasIsValid } from "$lib/types/entity/guards";
-import { error, redirect } from "@sveltejs/kit";
+import { error, fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad, RequestEvent } from "./$types";
 
 export const load = (async (event) => {
@@ -57,7 +57,7 @@ async function passThroughRequest(
 
 	if (!res.ok) {
 		const resBody = await res.json();
-		return error(res.status, resBody.message || errorMessage);
+		return fail(res.status, { message: resBody.message || errorMessage });
 	}
 
 	return redirect(303, "/admin/aliases");
