@@ -5,7 +5,7 @@ import type { Actions, PageServerLoad, RequestEvent } from "./$types";
 export const load = (async (event) => {
 	event.locals.security.isSuperadmin();
 
-	const aliasRes = await event.fetch(`/api/aliases/${event.params.buildingNumber}`);
+	const aliasRes = await event.fetch(`/api/aliases/${event.params.aliasId}`);
 	const alias = await aliasRes.json();
 
 	if (buildingAliasIsValid(alias)) {
@@ -23,7 +23,7 @@ export const actions: Actions = {
 	edit: async (event) => {
 		return await passThroughRequest(
 			event,
-			`/api/aliases/${event.params.buildingNumber}`,
+			`/api/aliases/${event.params.aliasId}`,
 			"PUT",
 			"Error updating alias",
 		);
@@ -31,7 +31,7 @@ export const actions: Actions = {
 	delete: async (event) => {
 		return await passThroughRequest(
 			event,
-			`/api/aliases/${event.params.buildingNumber}`,
+			`/api/aliases/${event.params.aliasId}`,
 			"DELETE",
 			"Error deleting alias",
 		);
