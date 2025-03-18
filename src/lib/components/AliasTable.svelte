@@ -21,7 +21,9 @@
 				<td>{alias.buildingNumber}</td>
 				<td>{alias.alias}</td>
 				<td>
-					<a class="button circle border" href="/admin/aliases/{alias.id}"><i>edit</i></a>
+					<a class="button circle border" href="/admin/aliases/{alias.buildingNumber}"
+						><i>edit</i></a
+					>
 				</td>
 			</tr>
 		{/each}

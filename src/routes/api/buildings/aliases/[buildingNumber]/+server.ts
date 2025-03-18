@@ -9,6 +9,10 @@ export const GET: RequestHandler = async (event) => {
 
 	const alias =
 		await event.locals.db.buildingAliases.getBuildingAliasByBuildingNumber(buildingNumber);
+
+	if (!alias) {
+		return error(404, "Alias not found");
+	}
 	return json(alias);
 };
 
