@@ -4,8 +4,6 @@
 	let { data }: { data: PageData } = $props();
 </script>
 
-<svelte:body onkeydown={keyHandler} />
-
 <div class="space"></div>
 
 <div class="center-align">

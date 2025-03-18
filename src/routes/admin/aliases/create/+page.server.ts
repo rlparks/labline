@@ -1,4 +1,4 @@
-import { error, redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load = (async (event) => {
@@ -26,7 +26,7 @@ export const actions = {
 
 		if (!creationRes.ok) {
 			const body = await creationRes.json();
-			return error(creationRes.status, body.message || "Error creating alias");
+			return fail(creationRes.status, { message: body.message || "Error creating alias" });
 		}
 
 		return redirect(303, "/admin/aliases");
