@@ -2,11 +2,11 @@
 	import type { HTMLInputAttributes } from "svelte/elements";
 
 	type Props = {
-		value: string;
+		value?: string;
 		label: string;
 		icon?: string;
 	} & HTMLInputAttributes;
-	let { value = $bindable(), label, icon, ...rest }: Props = $props();
+	let { value = $bindable(""), label, icon, ...rest }: Props = $props();
 
 	const inputId = $props.id();
 </script>

@@ -29,7 +29,7 @@ export function validateUserFields(newUser: Omit<UserWithRoles, "id">) {
  */
 export function validateBuildingAliasFields(newBuildingAlias: InsertBuildingAlias) {
 	const BUILDING_NUMBER_LENGTH = 4;
-	const MAX_ALIAS_LENGTH = 40;
+	const MAX_ALIAS_LENGTH = 50;
 
 	if (newBuildingAlias.buildingNumber.length !== BUILDING_NUMBER_LENGTH) {
 		throw new Error(`Building Number must be exactly ${BUILDING_NUMBER_LENGTH} characters`);
