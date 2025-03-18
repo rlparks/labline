@@ -1,15 +1,16 @@
 import { buildingAliasIsValid } from "$lib/types/entity/guards";
-import { error } from "@sveltejs/kit";
-import type { PageServerLoad } from "./$types";
+import { error, redirect } from "@sveltejs/kit";
+import type { Actions, PageServerLoad, RequestEvent } from "./$types";
 
 export const load = (async (event) => {
 	event.locals.security.isSuperadmin();
 
-	const aliasRes = await event.fetch(`/api/buildings/aliases/${event.params.buildingNumber}`);
+	const aliasRes = await event.fetch(`/api/aliases/${event.params.buildingNumber}`);
 	const alias = await aliasRes.json();
 
 	if (buildingAliasIsValid(alias)) {
 		return {
+			alias,
 			pageTitle: `Edit Alias · ${alias.buildingNumber}`,
 			pageDescription: "Edit labline building alias.",
 		};
@@ -17,3 +18,47 @@ export const load = (async (event) => {
 		return error(aliasRes.status, alias.message ?? "Error loading alias");
 	}
 }) satisfies PageServerLoad;
+
+export const actions: Actions = {
+	edit: async (event) => {
+		return await passThroughRequest(
+			event,
+			`/api/aliases/${event.params.buildingNumber}`,
+			"PUT",
+			"Error updating alias",
+		);
+	},
+	delete: async (event) => {
+		return await passThroughRequest(
+			event,
+			`/api/aliases/${event.params.buildingNumber}`,
+			"DELETE",
+			"Error deleting alias",
+		);
+	},
+};
+
+async function passThroughRequest(
+	event: RequestEvent,
+	path: string,
+	method: "PUT" | "DELETE",
+	errorMessage: string,
+) {
+	const formData = await event.request.formData();
+	const body = Object.fromEntries(formData.entries());
+
+	const res = await event.fetch(path, {
+		method: method,
+		body: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+
+	if (!res.ok) {
+		const resBody = await res.json();
+		return error(res.status, resBody.message || errorMessage);
+	}
+
+	return redirect(303, "/admin/aliases");
+}

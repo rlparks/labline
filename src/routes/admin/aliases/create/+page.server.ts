@@ -16,7 +16,7 @@ export const actions = {
 		const formBody = await event.request.formData();
 		const data = Object.fromEntries(formBody);
 
-		const creationRes = await event.fetch("/api/buildings/aliases", {
+		const creationRes = await event.fetch("/api/aliases", {
 			method: "POST",
 			body: JSON.stringify(data),
 			headers: {

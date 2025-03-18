@@ -5,7 +5,7 @@ import type { PageServerLoad } from "./$types";
 export const load = (async (event) => {
 	event.locals.security.isSuperadmin();
 
-	const aliasesRes = await event.fetch("/api/buildings/aliases");
+	const aliasesRes = await event.fetch("/api/aliases");
 	const aliases = await aliasesRes.json();
 
 	if (buildingAliasArrayIsValid(aliases)) {
