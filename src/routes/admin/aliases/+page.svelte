@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { AliasTable } from "$lib/components";
+	import { AliasTable, Message } from "$lib/components";
 	import type { PageData } from "./$types";
 
 	let { data }: { data: PageData } = $props();
@@ -13,4 +13,13 @@
 	</a>
 </div>
 
-<AliasTable aliases={data.aliases} />
+{#if data.aliases.length > 0}
+	<AliasTable aliases={data.aliases} />
+{:else}
+	<div class="space"></div>
+	<Message
+		headerText="No aliases found"
+		messageText="Try creating one using the Create Alias button"
+		iconText="domain_disabled"
+	/>
+{/if}
