@@ -26,6 +26,13 @@ export interface Building {
 }
 
 /**
+ * Building with optional alias.
+ */
+export interface BuildingWithAlias extends Building {
+	alias?: string;
+}
+
+/**
  * File stats for the Chematix lab file.
  */
 export interface FileStats {

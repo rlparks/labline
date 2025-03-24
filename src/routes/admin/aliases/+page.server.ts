@@ -15,6 +15,6 @@ export const load = (async (event) => {
 			aliases,
 		};
 	} else {
-		return error(500, "Building Alias error");
+		return error(aliasesRes.status, aliases.message || "Building Alias error");
 	}
 }) satisfies PageServerLoad;
