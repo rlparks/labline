@@ -33,8 +33,8 @@
 	<nav>
 		<button class="no-margin" type="submit">Save</button>
 		<div class="max"></div>
-		<a href={`/admin/aliases/${data.alias.id}/delete`} class="button border"
-			><i>delete</i><span>Delete</span></a
-		>
+		<a href={`/admin/aliases/${data.alias.id}/delete`} class="button border">
+			<i>delete</i><span>Delete</span>
+		</a>
 	</nav>
 </form>

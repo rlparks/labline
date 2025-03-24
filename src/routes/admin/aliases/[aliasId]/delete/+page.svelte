@@ -20,7 +20,7 @@
 			<i>delete</i><span>Delete</span>
 		</button>
 	</form>
-	<a href={`/admin/aliases/${data.alias.id}`} class="button border"
-		><i>cancel</i><span>Cancel</span></a
-	>
+	<a href={`/admin/aliases/${data.alias.id}`} class="button border">
+		<i>cancel</i><span>Cancel</span>
+	</a>
 {/snippet}
