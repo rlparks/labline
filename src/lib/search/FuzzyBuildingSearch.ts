@@ -1,4 +1,4 @@
-import type { Building } from "$lib/types";
+import type { Building, BuildingWithAlias } from "$lib/types";
 import Fuse from "fuse.js";
 import { FuzzySearch } from "./FuzzySearch";
 
@@ -6,9 +6,9 @@ import { FuzzySearch } from "./FuzzySearch";
  * Fuzzy search for {@link Building}s.
  */
 export class FuzzyBuildingSearch extends FuzzySearch<Building> {
-	fuse: Fuse<Building>;
+	fuse: Fuse<BuildingWithAlias>;
 	private static FUSE_BUILDING_OPTIONS = {
-		keys: ["name", "number"],
+		keys: ["name", "number", "alias"],
 	};
 
 	constructor(items: Building[]) {
