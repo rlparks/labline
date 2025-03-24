@@ -17,10 +17,13 @@ export const load = (async ({ params, fetch, locals }) => {
 		return error(404, "Building not found");
 	}
 
+	const alias = await locals.db.buildingAliases.getBuildingAliasByBuildingNumber(buildingNumber);
+
 	const pageTitle = labs[0] ? `${labs[0]["Bldg Number"]} · ${labs[0]["Bldg Name"]}` : "building";
 	return {
 		labs,
 		pageTitle,
 		pageDescription: `UGA Lab Emergency Contacts for ${pageTitle}`,
+		alias,
 	};
 }) satisfies PageServerLoad;
