@@ -1,3 +1,4 @@
+import AliasTable from "./AliasTable.svelte";
 import Attribution from "./Attribution.svelte";
 import BuildingCard from "./BuildingCard.svelte";
 import Footer from "./Footer.svelte";
@@ -11,6 +12,7 @@ import Title from "./Title.svelte";
 import UsersTable from "./UsersTable.svelte";
 
 export {
+	AliasTable,
 	Attribution,
 	BuildingCard,
 	Footer,

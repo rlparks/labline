@@ -1,19 +1,11 @@
 <script lang="ts">
 	import { page } from "$app/state";
 
-	const { children } = $props();
-
-	const pages = [
-		{
-			name: "Users",
-			href: "/admin/users",
-			icon: "person",
-		},
-	];
+	const { data, children } = $props();
 </script>
 
 <nav class="tabbed">
-	{#each pages as pageLink}
+	{#each data.pages as pageLink}
 		<a class:active={page.url.pathname === pageLink.href} href={pageLink.href}>
 			<i>{pageLink.icon}</i>
 			<span>{pageLink.name}</span>

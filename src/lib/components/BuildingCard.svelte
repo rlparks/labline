@@ -1,26 +1,8 @@
-<!-- 
-@component
-
-A card displaying information about a building. Responsive to screen width.
-
-## Props
-| Name | Type | Default | Description |
-| --- | --- | --- | --- |
-| `building` | `Building` | Required | The building to display. |
-
-## Example
-
-```svelte
-<BuildingCard {building} />
-```
-
--->
-
 <script lang="ts">
-	import type { Building } from "$lib/types";
+	import type { BuildingWithAlias } from "$lib/types";
 
 	type Props = {
-		building: Building;
+		building: BuildingWithAlias;
 	};
 	const { building }: Props = $props();
 </script>
@@ -29,6 +11,9 @@ A card displaying information about a building. Responsive to screen width.
 	<nav>
 		<div>
 			<h5>{building.name}</h5>
+			{#if building.alias}
+				<h5 class="small">{building.alias}</h5>
+			{/if}
 			<p>{building.number}</p>
 		</div>
 		<div class="max"></div>

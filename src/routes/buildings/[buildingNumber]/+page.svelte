@@ -4,4 +4,6 @@
 	const { data } = $props();
 </script>
 
-<LabsSearch labs={data.labs} title={data.pageTitle} showLabsWhenNoSearch={true} />
+<h3 class="center-align">{data.pageTitle}{data.alias ? ` · ${data.alias.alias}` : ""}</h3>
+
+<LabsSearch labs={data.labs} showLabsWhenNoSearch={true} />

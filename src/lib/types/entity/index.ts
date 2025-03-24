@@ -31,3 +31,16 @@ export interface UserRole {
 	userId: string;
 	role: Role;
 }
+
+/**
+ * Represents a connection between the building info
+ * recieved from the Chematix file and the name(s)
+ * the building commonly goes by.
+ */
+export interface BuildingAlias {
+	id: string;
+	buildingNumber: string;
+	alias: string;
+}
+
+export type InsertBuildingAlias = Omit<BuildingAlias, "id">;

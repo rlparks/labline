@@ -1,24 +1,15 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
-	import type { PageData } from "./$types";
 
-	let { data }: { data: PageData } = $props();
+	let { data } = $props();
 </script>
 
 <h3 class="center-align">{data.pageTitle}</h3>
 
 <form method="POST" use:enhance>
-	<Input
-		name="username"
-		type="text"
-		id="username"
-		autocomplete="off"
-		required
-		label="Username"
-		value=""
-	/>
-	<Input name="name" type="text" id="name" autocomplete="off" required label="Name" value="" />
+	<Input name="username" type="text" autocomplete="off" required label="Username" />
+	<Input name="name" type="text" id="name" autocomplete="off" required label="Name" />
 
 	{#if data.showRoles}
 		{#each data.roles as role}

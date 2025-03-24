@@ -102,7 +102,6 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			console.log(err);
 			hideError(err, "RealUserRepository updateUserById: ");
 		}
 
@@ -119,7 +118,6 @@ export class RealUserRepository implements UserRepository {
 				return user;
 			}
 		} catch (err) {
-			console.log(err);
 			hideError(err, "RealUserRepository deleteUserById: ");
 		}
 

@@ -2,13 +2,13 @@
 	import { Input, LabCard, Message } from "$lib/components";
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
 	import type { Lab } from "$lib/types";
+	import { slide } from "svelte/transition";
 
 	type Props = {
 		labs: Lab[];
-		title: string;
 		showLabsWhenNoSearch: boolean;
 	};
-	const { labs, title, showLabsWhenNoSearch }: Props = $props();
+	const { labs, showLabsWhenNoSearch }: Props = $props();
 
 	let search = $state<string>("");
 	let debouncedSearch = $state<string>("");
@@ -36,7 +36,9 @@
 </script>
 
 {#if labs[0]}
-	<h3 class="center-align">{title}{labsAreShown ? ` · ${countText}` : ""}</h3>
+	{#if labsAreShown}
+		<h3 transition:slide class="center-align">{countText}</h3>
+	{/if}
 	<Input
 		label="Lab Name, Room Number, Super/PI"
 		icon="search"

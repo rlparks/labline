@@ -6,4 +6,6 @@
 
 <h3 class="center-align">Emergency Contacts</h3>
 
-<LabsSearch labs={data.labs} title={data.pageTitle} showLabsWhenNoSearch={false} />
+<h3 class="center-align">{data.pageTitle}</h3>
+
+<LabsSearch labs={data.labs} showLabsWhenNoSearch={false} />
