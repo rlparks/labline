@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
-	import type { PageData } from "./$types";
 
-	const { data }: { data: PageData } = $props();
+	const { data } = $props();
 </script>
 
 <h3 class="center-align">{data.pageTitle}</h3>
