@@ -2,6 +2,7 @@
 	import { Input, LabCard, Message } from "$lib/components";
 	import { FuzzyLabSearch } from "$lib/search/FuzzyLabSearch";
 	import type { Lab } from "$lib/types";
+	import { slide } from "svelte/transition";
 
 	type Props = {
 		labs: Lab[];
@@ -36,7 +37,7 @@
 
 {#if labs[0]}
 	{#if labsAreShown}
-		<h3 class="center-align">{countText}</h3>
+		<h3 transition:slide class="center-align">{countText}</h3>
 	{/if}
 	<Input
 		label="Lab Name, Room Number, Super/PI"
