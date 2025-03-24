@@ -11,7 +11,8 @@ export const load = (async (event) => {
 		{
 			name: "superadmin",
 			value: "superadmin",
-			description: "Has full control over all accounts and can manage sessions",
+			description:
+				"Has full control over all accounts and can manage sessions and building aliases",
 		},
 	] satisfies DisplayRole[];
 
