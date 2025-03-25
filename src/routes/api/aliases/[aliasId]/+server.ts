@@ -1,6 +1,7 @@
 import { logUserAction } from "$lib/server";
 import { buildingAliasIsValid } from "$lib/types/entity/guards";
 import { validateBuildingAliasFields } from "$lib/types/entity/helpers";
+import { validateBuildingNumberExists } from "$lib/types/helpers";
 import { error, isHttpError, json } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
@@ -28,6 +29,11 @@ export const PUT: RequestHandler = async (event) => {
 			if (aliasId !== body.id) {
 				return error(400, "ID mismatch!");
 			}
+
+			await validateBuildingNumberExists(
+				await event.locals.labline.getBuildings(),
+				body.buildingNumber,
+			);
 
 			const alias = await event.locals.db.buildingAliases.updateBuildingAliasById(aliasId, body);
 
