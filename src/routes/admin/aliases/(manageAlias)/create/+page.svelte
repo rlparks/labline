@@ -14,11 +14,16 @@
 
 <h3 class="center-align">{data.pageTitle}</h3>
 
+{#if matchingBuilding}
+	<div class="chip" transition:slide>
+		<i>domain</i>
+		<span>{matchingBuilding.name}</span>
+	</div>
+{/if}
+
 <p class="center-align error-text">{form?.message}</p>
+
 <form method="POST" use:enhance>
-	{#if matchingBuilding}
-		<div transition:slide>{matchingBuilding.name}</div>
-	{/if}
 	<Input
 		name="buildingNumber"
 		type="text"
