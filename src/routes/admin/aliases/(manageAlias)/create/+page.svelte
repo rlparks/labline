@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
-	import { slide } from "svelte/transition";
 	import type { PageProps } from "./$types";
 
 	let { data, form }: PageProps = $props();
@@ -16,12 +15,10 @@
 
 <p class="center-align error-text">{form?.message}</p>
 
-{#if matchingBuilding}
-	<div class="chip" transition:slide>
-		<i>domain</i>
-		<span>{matchingBuilding.name}</span>
-	</div>
-{/if}
+<div class="chip">
+	<i>domain</i>
+	<span>{matchingBuilding?.name ?? "No building match"}</span>
+</div>
 
 <form method="POST" use:enhance>
 	<Input
