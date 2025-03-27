@@ -3,11 +3,21 @@
 	import { Input } from "$lib/components";
 
 	let { data, form } = $props();
+
+	let buildingNumber = $state(data.alias.buildingNumber);
+	let matchingBuilding = $derived(
+		data.buildings.find((building) => building.number === buildingNumber),
+	);
 </script>
 
 <h3 class="center-align">{data.pageTitle}</h3>
 
 <p class="center-align error-text">{form?.message}</p>
+
+<div class="chip">
+	<i>domain</i>
+	<span>{matchingBuilding?.name ?? "No building match"}</span>
+</div>
 
 <form method="POST" action="?/edit" use:enhance>
 	<input name="id" value={data.alias.id} hidden />
@@ -16,7 +26,7 @@
 		name="buildingNumber"
 		type="text"
 		autocomplete="off"
-		value={data.alias.buildingNumber}
+		bind:value={buildingNumber}
 		label="Building Number"
 		required
 	/>
