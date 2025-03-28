@@ -35,7 +35,10 @@ export const PUT: RequestHandler = async (event) => {
 				body.buildingNumber,
 			);
 
-			const alias = await event.locals.db.buildingAliases.updateBuildingAliasById(aliasId, body);
+			const alias = await event.locals.db.buildingAliases.updateBuildingAliasById(aliasId, {
+				buildingNumber: body.buildingNumber.trim(),
+				alias: body.alias.trim(),
+			});
 
 			if (!alias) {
 				return error(404, "Alias not found");

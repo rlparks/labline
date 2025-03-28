@@ -25,7 +25,10 @@ export const POST: RequestHandler = async (event) => {
 				body.buildingNumber,
 			);
 
-			const insertedBuildingAlias = await event.locals.db.buildingAliases.createBuildingAlias(body);
+			const insertedBuildingAlias = await event.locals.db.buildingAliases.createBuildingAlias({
+				buildingNumber: body.buildingNumber.trim(),
+				alias: body.alias.trim(),
+			});
 
 			if (event.locals.user) {
 				logUserAction(event.locals.user, `Created alias ${body.buildingNumber} -> ${body.alias}`);
