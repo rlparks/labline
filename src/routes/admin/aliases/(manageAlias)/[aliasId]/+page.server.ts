@@ -42,7 +42,7 @@ async function passThroughRequest(
 	event: RequestEvent,
 	path: string,
 	method: "PUT" | "DELETE",
-	errorMessage: string,
+	fallbackErrorMessage: string,
 ) {
 	const formData = await event.request.formData();
 	const body = Object.fromEntries(formData.entries());
@@ -57,7 +57,7 @@ async function passThroughRequest(
 
 	if (!res.ok) {
 		const resBody = await res.json();
-		return fail(res.status, { message: resBody.message || errorMessage });
+		return fail(res.status, { message: resBody.message || fallbackErrorMessage });
 	}
 
 	return redirect(303, "/admin/aliases");

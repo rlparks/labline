@@ -34,7 +34,7 @@ async function passThroughRequest(
 	event: RequestEvent,
 	path: string,
 	method: string,
-	errorMessage: string,
+	fallbackErrorMessage: string,
 ) {
 	const formData = await event.request.formData();
 	const username = formData.get("username");
@@ -56,7 +56,7 @@ async function passThroughRequest(
 
 	if (!res.ok) {
 		const resBody = await res.json();
-		return fail(res.status, { message: resBody.message || errorMessage });
+		return fail(res.status, { message: resBody.message || fallbackErrorMessage });
 	}
 
 	return redirect(303, "/admin/users");
