@@ -31,7 +31,7 @@
 	/>
 
 	{#if data.showRoles}
-		{#each data.roles as role}
+		{#each data.roles as role (role.name + role.value)}
 			<div>
 				<label class="checkbox">
 					<input

@@ -5,7 +5,7 @@
 </script>
 
 <nav class="tabbed">
-	{#each data.pages as pageLink}
+	{#each data.pages as pageLink (pageLink.href + pageLink.name)}
 		<a class:active={page.url.pathname === pageLink.href} href={pageLink.href}>
 			<i>{pageLink.icon}</i>
 			<span>{pageLink.name}</span>

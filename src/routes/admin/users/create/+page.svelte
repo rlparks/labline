@@ -16,7 +16,7 @@
 	<Input name="name" type="text" id="name" autocomplete="off" required label="Name" />
 
 	{#if data.showRoles}
-		{#each data.roles as role}
+		{#each data.roles as role (role.name + role.value)}
 			<div>
 				<label class="checkbox">
 					<input name={role.value} type="checkbox" />

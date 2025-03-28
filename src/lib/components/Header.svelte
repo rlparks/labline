@@ -93,7 +93,7 @@ The header (navigation bar) of the application.
 </header>
 
 {#snippet navButtons()}
-	{#each navLinks as link}
+	{#each navLinks as link (link.href + link.text)}
 		{@render navButton(link.href, link.icon, link.text)}
 	{/each}
 {/snippet}
