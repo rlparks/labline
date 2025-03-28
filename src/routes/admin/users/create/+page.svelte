@@ -2,7 +2,7 @@
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
 
-	let { data, form } = $props();
+	const { data, form } = $props();
 </script>
 
 <h3 class="center-align">{data.pageTitle}</h3>
