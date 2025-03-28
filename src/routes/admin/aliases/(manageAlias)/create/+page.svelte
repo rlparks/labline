@@ -1,9 +1,8 @@
 <script lang="ts">
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
-	import type { PageProps } from "./$types";
 
-	let { data, form }: PageProps = $props();
+	let { data, form } = $props();
 
 	let buildingNumber = $state("");
 	let matchingBuilding = $derived(
@@ -13,7 +12,9 @@
 
 <h3 class="center-align">{data.pageTitle}</h3>
 
-<p class="center-align error-text">{form?.message}</p>
+{#if form?.message}
+	<p class="center-align error-text">{form.message}</p>
+{/if}
 
 <div class="chip">
 	<i>domain</i>

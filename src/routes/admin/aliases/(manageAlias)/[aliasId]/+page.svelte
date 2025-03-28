@@ -12,7 +12,9 @@
 
 <h3 class="center-align">{data.pageTitle}</h3>
 
-<p class="center-align error-text">{form?.message}</p>
+{#if form?.message}
+	<p class="center-align error-text">{form.message}</p>
+{/if}
 
 <div class="chip">
 	<i>domain</i>
