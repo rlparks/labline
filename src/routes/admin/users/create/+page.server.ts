@@ -1,4 +1,4 @@
-import { error, redirect } from "@sveltejs/kit";
+import { fail, redirect } from "@sveltejs/kit";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async (event) => {
@@ -34,7 +34,7 @@ export const actions: Actions = {
 
 		if (!res.ok) {
 			const resBody = await res.json();
-			return error(res.status, resBody.message || "Error creating user");
+			return fail(res.status, { message: resBody.message || "Error creating user" });
 		}
 
 		return redirect(303, "/admin/users");
