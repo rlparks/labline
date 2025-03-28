@@ -1,9 +1,10 @@
+import { env } from "$env/dynamic/private";
 import type { Building, FileStats, Lab } from "$lib/types";
 import Papa from "papaparse";
 import { FileHelper } from "./FileHelper";
 
-// 10 minutes
-const CACHE_TTL_MS = 10 * 60 * 1000;
+const ttlMin = env.LABS_CACHE_TTL_MIN ? parseInt(env.LABS_CACHE_TTL_MIN) : 0;
+const cacheTtlMs = ttlMin * 60 * 1000;
 
 const cache: {
 	labs: Lab[] | undefined;
@@ -18,7 +19,7 @@ function cacheIsValid() {
 
 	const nowMs = Date.now();
 
-	return nowMs - cache.lastUpdatedAt < CACHE_TTL_MS;
+	return nowMs - cache.lastUpdatedAt < cacheTtlMs;
 }
 
 /**
