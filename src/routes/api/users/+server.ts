@@ -30,8 +30,8 @@ export const POST: RequestHandler = async (event) => {
 			validateUserFields(reqJson);
 
 			const user = await event.locals.db.users.createUser({
-				username: reqJson.username,
-				name: reqJson.name,
+				username: reqJson.username.trim(),
+				name: reqJson.name.trim(),
 				roles: reqJson.roles,
 			});
 
