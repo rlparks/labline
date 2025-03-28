@@ -110,7 +110,7 @@ A card displaying information about a lab. Responsive to screen width.
 	<div class="right-align-if-l">
 		<h6><strong>Primary Contact:</strong></h6>
 		<p>
-			{#each emergencyContacts.primary as contact}
+			{#each emergencyContacts.primary as contact (contact.text + contact.phoneNumber)}
 				{contact.text}<a class="link" href="tel:{removeNonDigits(contact.phoneNumber)}"
 					>{contact.phoneNumber}</a
 				>
@@ -119,7 +119,7 @@ A card displaying information about a lab. Responsive to screen width.
 
 		<h6><strong>Secondary Contact:</strong></h6>
 		<p>
-			{#each emergencyContacts.secondary as contact}
+			{#each emergencyContacts.secondary as contact (contact.text + contact.phoneNumber)}
 				{contact.text}<a class="link" href="tel:{removeNonDigits(contact.phoneNumber)}"
 					>{contact.phoneNumber}</a
 				>

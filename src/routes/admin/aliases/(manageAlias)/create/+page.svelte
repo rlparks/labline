@@ -2,7 +2,7 @@
 	import { enhance } from "$app/forms";
 	import { Input } from "$lib/components";
 
-	let { data, form } = $props();
+	const { data, form } = $props();
 
 	let buildingNumber = $state("");
 	let matchingBuilding = $derived(

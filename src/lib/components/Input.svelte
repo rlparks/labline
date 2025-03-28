@@ -6,6 +6,7 @@
 		label: string;
 		icon?: string;
 	} & HTMLInputAttributes;
+	// "let" because of bindable
 	let { value = $bindable(""), label, icon, ...rest }: Props = $props();
 
 	const inputId = $props.id();

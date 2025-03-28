@@ -16,7 +16,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each aliases as alias}
+		{#each aliases as alias (alias.id)}
 			<tr>
 				<td>{alias.buildingNumber}</td>
 				<td>{alias.alias}</td>

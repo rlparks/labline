@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { AliasTable, Message } from "$lib/components";
 
-	let { data } = $props();
+	const { data } = $props();
 </script>
 
 <div class="space"></div>

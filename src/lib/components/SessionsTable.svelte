@@ -20,7 +20,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each sessions as session}
+		{#each sessions as session (session.id)}
 			<tr>
 				<td>{session.id}</td>
 				<!-- slightly cheating with types here -->
