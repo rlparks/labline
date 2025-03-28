@@ -8,11 +8,13 @@ services:
     environment:
       DATABASE_URL: postgres://root:mysecretpassword@labline-db:5432/local
       ABSOLUTE_DIR_PATH: /opt/labline
+      LABS_CACHE_TTL_MIN: 10
+      BYPASS_ACCOUNT_REQUIREMENT: false
+      CREATE_ACCOUNT: exampleusername
       OIDC_DISCOVERY_ENDPOINT: https://example.com/.well-known
       OIDC_CLIENT_ID: example
       OIDC_CLIENT_SECRET: example
       OIDC_USERNAME_CLAIM: preferred_username
-      CREATE_ACCOUNT: exampleusername
       # proxy settings
       ADDRESS_HEADER: x-forwarded-for
       XFF_DEPTH: 1

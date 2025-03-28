@@ -16,6 +16,10 @@ export const load = (async ({ fetch, locals }) => {
 	}
 
 	return {
+		// just sending this 2.2k length array to the client takes 80ms of
+		// the 140ms load time :)
+		// could be optimized with a promise, but that wouldn't really
+		// improve the UX as there is already a loading indicator on nav
 		labs,
 		pageTitle: "Search All Labs",
 		pageDescription: "UGA Lab Emergency Contacts for All Labs.",

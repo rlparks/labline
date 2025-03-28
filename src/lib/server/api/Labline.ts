@@ -1,6 +1,26 @@
+import { env } from "$env/dynamic/private";
 import type { Building, FileStats, Lab } from "$lib/types";
 import Papa from "papaparse";
 import { FileHelper } from "./FileHelper";
+
+const ttlMin = env.LABS_CACHE_TTL_MIN ? parseInt(env.LABS_CACHE_TTL_MIN) : 0;
+const cacheTtlMs = ttlMin * 60 * 1000;
+
+const cache: {
+	labs: Lab[] | undefined;
+	lastUpdatedAt: number | undefined;
+} = {
+	labs: undefined,
+	lastUpdatedAt: undefined, // in milliseconds
+};
+
+function cacheIsValid() {
+	if (!cache.lastUpdatedAt || !cache.labs || cache.labs.length === 0) return false;
+
+	const nowMs = Date.now();
+
+	return nowMs - cache.lastUpdatedAt < cacheTtlMs;
+}
 
 /**
  * The Labline API
@@ -17,6 +37,10 @@ export default class Labline {
 	 * @throws if the file was not found on the server
 	 */
 	async getLabs(): Promise<Lab[]> {
+		if (cacheIsValid() && cache.labs) {
+			return cache.labs;
+		}
+
 		try {
 			const file = await this.fileHelper.readLabFile();
 
@@ -29,7 +53,10 @@ export default class Labline {
 				labs.data.pop();
 			}
 
-			return labs.data;
+			cache.labs = labs.data;
+			cache.lastUpdatedAt = Date.now();
+
+			return cache.labs;
 		} catch {
 			throw new Error("File not found");
 		}
