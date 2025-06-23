@@ -1,3 +1,4 @@
+import { dev } from "$app/environment";
 import ServiceAggregator from "$db/service/ServiceAggregator";
 import { env } from "$env/dynamic/private";
 import { DEMO_USER, getCurrentFormattedDateTime } from "$lib";
@@ -57,7 +58,15 @@ const setLocals: Handle = async ({ event, resolve }) => {
 	event.locals.labline = new Labline();
 	event.locals.security = new Security(event);
 
+	const start = performance.now();
+
 	const result = await resolve(event);
+
+	if (dev && !event.isSubRequest) {
+		console.log(
+			`${event.request.method} ${event.url.pathname}: ${(performance.now() - start).toFixed(2)}ms`,
+		);
+	}
 
 	// https://developer.mozilla.org/en-US/observatory suggestions
 	result.headers.set("referrer-policy", "strict-origin-when-cross-origin");
