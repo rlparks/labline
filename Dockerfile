@@ -1,4 +1,4 @@
-FROM node:22 as builder
+FROM node:22 AS builder
 
 WORKDIR /app
 
@@ -6,22 +6,17 @@ COPY package.json ./
 
 RUN npm i
 
-# copy code
 COPY . .
 
-RUN npm run build
+RUN corepack enable pnpm && pnpm run build
 
-# lighter image
-FROM node:22-slim as server
+FROM node:22-slim AS server
 
 WORKDIR /app
 
 COPY --from=builder /app/build ./build
-COPY --from=builder /app/package.json ./
 
 ENV NODE_ENV=production
-
-RUN npm i --omit=dev
 
 # internal port
 EXPOSE 3000
