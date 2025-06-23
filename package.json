@@ -45,5 +45,13 @@
 	},
 	"overrides": {
 		"cookie": "^0.7.0"
+	},
+	"pnpm": {
+		"onlyBuiltDependencies": [
+			"esbuild"
+		],
+		"overrides": {
+			"cookie": "^0.7.0"
+		}
 	}
 }
